@@ -38,12 +38,7 @@ namespace FBXLoader
 	bool Load(const std::string &fileName,
 		// [out] Test nmodels provided will only have one mesh, but other assets may have multiple
 		// meshes using the same rig to create a model
-		std::vector<Mesh > &meshes,
-		// [out] A container of all the joint transforms found. As these will all be in the same 
-		// hierarchy, you may only need the root instead of a list of all nodes.
-		std::vector<TransformNode> &transformHierarchy,
-		// [out] The loaded animation
-		Animation &animation)
+		std::vector<Mesh > &meshes)
 	{
 		// Get an FBX manager
 		FbxManager* manager = FbxManager::Create();
@@ -112,20 +107,6 @@ namespace FBXLoader
 			return false;
 		}
 
-		// Our list of unique joints
-		std::vector< FbxNode* > fbx_joints;
-
-		// Load hierarchy
-		if (LoadHierarchy(scene, transformHierarchy, fbx_joints) == false)
-		{
-			return false;
-		}
-
-		// Link hierarchy
-		if (LinkHierarchy(transformHierarchy, fbx_joints) == false)
-		{
-			return false;
-		}
 
 		// Load Mesh data
 		for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
@@ -139,11 +120,7 @@ namespace FBXLoader
 			{
 				return false;
 			}
-			if (LoadSkin(mesh_attribute, mesh, transformHierarchy, fbx_joints, 
-				control_point_indices) == false)
-			{
-				return false;
-			}
+			
 			if (LoadTexture(mesh_attribute, mesh) == false)
 			{
 				return false;
@@ -152,53 +129,10 @@ namespace FBXLoader
 			meshes.push_back(mesh);
 		}
 
-		// Get the number of animation stacks
-		int num_anim_stacks = scene->GetSrcObjectCount< FbxAnimStack >();
-
-		FbxAnimStack* anim_stack;
-		for (int i = 0; i < num_anim_stacks; ++i)
-		{
-			// Get the current animation stack
-			anim_stack = scene->GetSrcObject< FbxAnimStack >(i);
-
-			animation.SetName(anim_stack->GetName());
-
-			if (LoadAnimation(anim_stack, transformHierarchy, animation, fbx_joints) == false)
-			{
-				return false;
-			}
-		}
-
-		// Perform key reduction on the animation
-		KeyReduction(animation);
+		
 
 		return true;
 	}
-
-	bool LoadHierarchy(FbxScene* scene, std::vector<TransformNode> &transformHierarchy,
-		std::vector< FbxNode* >& fbx_joints)
-	{
-		return false;
-/*
-		TODO
-		The FBXLoader::LoadHierarchy function will load a vector of all FbxNode objects 
-		that have skeleton node attributes or mesh attributes attached. You can use the 
-		FbxScene::GetSrcObjectCount and FbxScene::GetSrcObject functions to iterate through 
-		all of the FbxNode objects in the scene. When you find an FbxNode with a skeleton or 
-		mesh attribute attached, add an entry to both the fbx_joints container and the 
-		transformHierarchy container. Those containers are parallel containers and will be used 
-		in the LinkHierarchy method to setup the parent and child relationships in the hierarchy.
-		Make sure to set the 
-		HierarchyNode objects name. The name can be obtained by calling 
-		FbxNodeAttribute::GetName. The following API functions are relevant to this function:
-			•	FbxScene::GetSrcObjectCount
-			•	FbxScene::GetSrcObject
-			•	FbxNode::GetNodeAttributeCount
-			•	FbxNode::GetNodeAttributeByIndex
-			•	FbxNodeAttribute::GetAttributeType
-*/
-	}
-
 
 	bool LoadMesh(FbxMesh* fbx_mesh, Mesh& mesh,
 		std::vector< FbxNode* >& fbx_joints,
