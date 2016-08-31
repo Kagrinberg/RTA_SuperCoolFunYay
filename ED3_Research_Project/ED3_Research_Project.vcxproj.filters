@@ -82,6 +82,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Project\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="FBXManager.cpp">
+      <Filter>Project\FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -135,6 +138,9 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Camera.h">
       <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXManager.h">
+      <Filter>Project\FBX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

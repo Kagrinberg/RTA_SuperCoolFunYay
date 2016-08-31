@@ -53,6 +53,71 @@ bool Texture::LoadEntry(const char * filename)				// Load a TGA file
 	return true;															// All went well, continue on
 }
 
+bool Texture::ProcessTextures(FbxMesh* fbx_mesh)
+{
+	FbxProperty property;
+
+	if (fbx_mesh->GetNode() == NULL)
+		return false;
+
+	int material_count = fbx_mesh->GetNode()->GetSrcObjectCount< FbxSurfaceMaterial >();
+
+	for (int material_index = 0; material_index < material_count; ++material_index)
+	{
+		FbxSurfaceMaterial* surface_material = fbx_mesh->GetNode()->GetSrcObject< FbxSurfaceMaterial >(material_index);
+
+		if (surface_material == 0)
+			continue;
+
+		int texture_index;
+
+		FBXSDK_FOR_EACH_TEXTURE(texture_index)
+		{
+			property = surface_material->FindProperty(FbxLayerElement::sTextureChannelNames[texture_index]);
+
+			if (property.IsValid() == false)
+				continue;
+
+			int texture_count = property.GetSrcObjectCount< FbxTexture >();
+
+			for (int i = 0; i < texture_count; ++i)
+			{
+				// Ignore layered textures
+
+				FbxTexture* texture = property.GetSrcObject< FbxTexture >(i);
+				if (texture == 0)
+					continue;
+
+				FbxFileTexture* file_texture = FbxCast< FbxFileTexture >(texture);
+				if (file_texture == 0)
+					continue;
+
+				std::string texture_name = file_texture->GetFileName();
+
+				// TODO : something with the texture name here....
+
+				//this gets just the texture name itself not the file address
+				std::string::size_type pos = texture_name.find_last_of("/\\");
+				if (pos != std::string::npos)
+				{
+					texture_name = texture_name.substr(pos + 1);
+				}
+
+
+				//add texture to the resource manager if it does not already exist
+				Texture newTexture;
+
+				newTexture.LoadEntry(texture_name.c_str());
+
+
+
+			}
+		}
+	}
+
+	return true;
+}
+
 bool Texture::LoadUncompressedTGA(const char * filename, FILE * fTGA)	// Load an uncompressed TGA (note, much of this code is based on NeHe's 
 {																			// TGA Loading code nehe.gamedev.net)
 	if(fread(tga.header, sizeof(tga.header), 1, fTGA) == 0)					// Read TGA header

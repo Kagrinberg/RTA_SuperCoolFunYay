@@ -6,6 +6,8 @@
 #include <stdio.h>										// Standard I/O header 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+#include <fbxsdk.h>
+#include <string>
 
 static const GLubyte uTGAcompare[12] = {0,0,2, 0,0,0,0,0,0,0,0,0};	// Uncompressed TGA Header
 static const GLubyte cTGAcompare[12] = {0,0,10,0,0,0,0,0,0,0,0,0};	// Compressed TGA Header
@@ -49,6 +51,8 @@ public:
 	bool LoadEntry(const char * filename);
 
 	unsigned int getTexID() { return texID; };
+
+	bool ProcessTextures(FbxMesh* fbx_mesh);
 
 };
 
