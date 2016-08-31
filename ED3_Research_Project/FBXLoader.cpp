@@ -153,7 +153,18 @@ namespace FBXLoader
 			// End For each vertex in current polygon
 		// End For each polygon in mesh
 
+		//not working with control points yet
 		FbxVector4 * allCPs = fbx_mesh->GetControlPoints();
+
+		int polygonCount = fbx_mesh->GetPolygonCount();
+
+		for (int i = 0; i < polygonCount; i++)
+		{
+
+		}
+
+
+
 
 
 
@@ -205,11 +216,21 @@ namespace FBXLoader
 
 					// TODO : something with the texture name here....
 
-					/*std::string::size_type pos = texture_name.find_last_of("/\\");
+					//this gets just the texture name itself not the file address
+					std::string::size_type pos = texture_name.find_last_of("/\\");
 					if (pos != std::string::npos)
 					{
 						texture_name = texture_name.substr(pos + 1);
-					}*/
+					}
+
+
+					//add texture to the resource manager if it does not already exist
+					Texture newTexture;
+
+					newTexture.LoadEntry(texture_name.c_str());
+					
+
+
 				}
 			}
 		}

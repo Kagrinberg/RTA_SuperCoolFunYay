@@ -7,6 +7,7 @@
 #include "Registry.h"
 #include "Transform.h"
 #include "ShaderManager.h"
+#include "Camera.h"
 //FBX
 //Import fbx
 //Animate it.
@@ -31,8 +32,9 @@ glm::mat4 scaleMatrix;
 glm::mat4 tempMatrix1;
 
 glm::mat4 M;
-glm::mat4 V;
 glm::mat4 P;
+
+Camera myCamera;
 
 float theta;
 float scaleAmount;
@@ -138,7 +140,7 @@ void InitializeMatrices(){
 	transMatrix = glm::translate(transMatrix, glm::vec3(0.0f, -0.0f, -1.2f));
 
 	M = glm::mat4(1.0f);
-	V = glm::mat4(1.0f);
+	myCamera.setMatrix(glm::mat4(1.0f));
 	P = glm::mat4(1.0f);
 
 }
@@ -171,7 +173,7 @@ void Render(){
 	M = transMatrix * tempMatrix1;
 
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, glm::value_ptr(M));
-	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(V));
+	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
 	glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(P));
 	glUniform4fv(lightID, 1, glm::value_ptr(light));
 
