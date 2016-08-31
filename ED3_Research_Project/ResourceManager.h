@@ -5,6 +5,7 @@
 #include "Utilities.h"
 #include "TGA\Texture.h"
 #include "EntityManager.h"
+#include "FBXManager.h"
 
 class ResourceManager{
 
@@ -32,7 +33,6 @@ public:
 	ResourceManager();
 
 	void LoadLevel(const char * p_name);
-	void LoadResourcePack(const char * p_path);
 	void LoadPrefab(const char * p_path);
 
 	unsigned int LoadMesh(const char * p_model);

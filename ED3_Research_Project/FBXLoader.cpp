@@ -136,6 +136,7 @@ namespace FBXLoader
 	bool LoadMesh(FbxMesh* fbx_mesh, Mesh& mesh,
 		std::vector< unsigned int >& control_point_indices)
 	{
+		
 		return false;
 		// TODO
 		// Get control points - fbx_mesh->GetControlPoints()

@@ -98,6 +98,8 @@ void Mesh::GenerateIndices(){
 
 	}
 
+	GenerateBuffers();
+
 }
 
 void Mesh::GenerateBuffers(){
@@ -120,7 +122,6 @@ void Mesh::GenerateBuffers(){
 	glBufferSubData(GL_ARRAY_BUFFER, 3*vertices_size, 3*vertices_size, &indexed_normals[0]);
 
 	glBufferSubData(GL_ARRAY_BUFFER, 6*vertices_size, 2*vertices_size, &indexed_uvs[0]);
-
 
 
 	//Create Index Buffer
