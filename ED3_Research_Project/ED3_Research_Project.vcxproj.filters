@@ -26,6 +26,9 @@
     <Filter Include="Project\Shader\Shaders">
       <UniqueIdentifier>{ce37c25b-47b7-4559-a8f5-4c43fac1221c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\FBX">
+      <UniqueIdentifier>{c48625b6-80a8-4c2e-b978-f32337a9b47c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderable.cpp">
@@ -73,6 +76,9 @@
     <ClCompile Include="RenderingManager.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Project\FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -119,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="RenderingManager.h">
       <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Project\FBX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
