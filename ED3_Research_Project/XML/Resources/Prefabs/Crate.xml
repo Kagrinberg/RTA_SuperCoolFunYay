@@ -1,0 +1,47 @@
+<Prefab>
+	
+	<Name>Crate</Name>
+
+	<Components>
+
+		<Transform>
+
+			<Position>
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Position>
+			
+			<Rotation>
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Rotation>
+
+			<Scale>
+				<X>1</X>
+				<Y>1</Y>
+				<Z>1</Z>
+			</Scale>
+
+		</Transform>
+
+		<Renderable>
+
+			<Mesh>
+				<Name>Cube</Name>
+				<Location>Mesh/cube.obj</Location>
+			</Mesh>
+
+			<Material>
+				<Name>Crate</Name>
+				<Shininess>90.0f</Shininess>
+				<Diffuse>Textures/crate.tga</Diffuse>
+				<Specular>Textures/crate_specular.tga</Specular>
+			</Material>
+
+		</Renderable>
+
+	</Components>
+
+</Prefab>

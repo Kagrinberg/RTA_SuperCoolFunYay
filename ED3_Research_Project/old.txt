@@ -1,0 +1,436 @@
+	//int bmpWidth = -1;
+	//int bmpHeight = -1;
+	//int bmpSize = -1;
+	//Util::loadBitmapFromFile("Textures/Crate24bit.bmp", &bmpWidth, &bmpHeight, &bmpSize, (unsigned char**)&imageData);
+	//
+
+	//glGenTextures(1, &texBufferID);				// Create an ID for a texture buffer
+	//glBindTexture (GL_TEXTURE_2D, texBufferID);	// Bind that buffer so we can then fill it (in next line)
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bmpWidth, bmpHeight, 0, GL_BGR, GL_UNSIGNED_BYTE, imageData);
+
+	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set the preferences
+	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	//texID = glGetUniformLocation(shaderProgramID, "texture");
+	//glActiveTexture(GL_TEXTURE0);				// Turn on texture unit 0
+	//glUniform1i(texID, 0);						// Tell "s_vTexCoord" to use the 0th texture unit
+
+
+		////glBindTexture(GL_TEXTURE_2D, textureTGA[1].texID);	
+	//glBindTexture (GL_TEXTURE_2D, textureTGA[1].texID);
+
+	//transMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	//rotYMatrix = glm::rotate(glm::mat4(), 3.14159f + theta, glm::vec3(0.0f, 0.0f, 1.0f));
+	//tempMatrix1 = rotYMatrix * scaleMatrix;
+	//M = transMatrix * tempMatrix1;
+
+	//glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, glm::value_ptr(M));
+	//glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(V));
+	//glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(P));
+	//glUniformMatrix4fv(rotMatrixID, 1, GL_FALSE, glm::value_ptr(rotMatrix));
+	//glUniform4fv(lightID, 1, glm::value_ptr(light));
+
+	//glDrawElements(GL_TRIANGLES, NUM_INDICIES, GL_UNSIGNED_INT, NULL);
+
+	//glBindTexture(GL_TEXTURE_2D, textureTGA[0].texID);
+
+
+	////scaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.15f,0.15f,0.15f));
+	//rotYMatrix = glm::rotate(glm::mat4(), theta, glm::vec3(0.4f, 1.0f, 0.0f));
+	////transMatrix = glm::translate(transMatrix, glm::vec3(0.00001f, 0.0f, 0.0f));
+
+	//tempMatrix1 = rotYMatrix * scaleMatrix;
+
+
+	
+	//int textureCoordOffset = 6*model.getVertices().size()*sizeof(float);
+	//int normalOffset = 3*model.getVertices().size()*sizeof(float);
+	//glVertexAttribPointer(positionID, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//glVertexAttribPointer(texCoordID, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(textureCoordOffset));
+	//glVertexAttribPointer(normalID, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(normalOffset));
+	//glEnableVertexAttribArray(positionID);
+	//glEnableVertexAttribArray(texCoordID);
+	//glEnableVertexAttribArray(normalID);
+
+
+		////Vertex Layout
+	//glGenVertexArrays(1, &vao);
+	//glBindVertexArray(vao);
+
+	//glGenBuffers(1, &vbo);
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+
+	//glBufferData(GL_ARRAY_BUFFER, 8*model.getVertices().size()*sizeof(float), NULL, GL_STATIC_DRAW);
+
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, 3*model.getVertices().size()*sizeof(float), &model.getVertices()[0]);
+
+	//glBufferSubData(GL_ARRAY_BUFFER, 3*model.getVertices().size()*sizeof(float), 3*model.getVertices().size()*sizeof(float), &model.getNormals()[0]);
+
+	//glBufferSubData(GL_ARRAY_BUFFER, 6*model.getVertices().size()*sizeof(float),2*model.getVertices().size()*sizeof(float), &model.getUvs()[0]);
+
+	//unsigned int vertexbuffer;
+	//glGenBuffers(1, &vertexbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	//glBufferData(GL_ARRAY_BUFFER, model.getVertices().size() * sizeof(glm::vec3), &model.getVertices()[0], GL_STATIC_DRAW);
+
+	//unsigned int uvbuffer;
+	//glGenBuffers(1, &uvbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	//glBufferData(GL_ARRAY_BUFFER, model.getUvs().size() * sizeof(glm::vec2), &model.getUvs()[0], GL_STATIC_DRAW);
+
+	//unsigned int normalbuffer;
+	//glGenBuffers(1, &normalbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	//glBufferData(GL_ARRAY_BUFFER, model.getNormals().size() * sizeof(glm::vec3), &model.getNormals()[0], GL_STATIC_DRAW);
+
+	//glGenBuffers(1, &indexBufferID);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.getIndices().size() * sizeof(unsigned int), &model.getIndices()[0] , GL_STATIC_DRAW);
+
+a
+	/*glBufferData(GL_ARRAY_BUFFER, 8*NUM_VERTICIES*sizeof(float), NULL, GL_STATIC_DRAW);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 3*NUM_VERTICIES*sizeof(float), vertices);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 3*NUM_VERTICIES*sizeof(float), 3*NUM_VERTICIES*sizeof(float), normals);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 6*NUM_VERTICIES*sizeof(float),2*NUM_VERTICIES*sizeof(float), uvs);
+
+	glGenBuffers(1, & indexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, NUM_INDICIES * sizeof(unsigned int), indices, GL_STATIC_DRAW);*/
+
+	//positionID = glGetAttribLocation(shaderProgramID, "s_vPosition");
+	//normalID = glGetAttribLocation(shaderProgramID, "s_vNormal");
+	//texCoordID = glGetAttribLocation(shaderProgramID, "s_vTexCoord");
+
+	//if(LoadTGA(&textureTGA[0], "Textures/talon.tga") && LoadTGA(&textureTGA[1], "Textures/stone5_c.tga")){
+	//	for(unsigned int i = 0; i < 2; i++){
+	//		glGenTextures(1, &textureTGA[i].texID);	
+	//		glBindTexture(GL_TEXTURE_2D, textureTGA[i].texID);
+	//		glTexImage2D(GL_TEXTURE_2D, 0, textureTGA[i].bpp / 8, textureTGA[i].width, textureTGA[i].height, 0, textureTGA[i].type, GL_UNSIGNED_BYTE, textureTGA[i].imageData);
+	//		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	//		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+	//		if (textureTGA[i].imageData)					
+	//		{
+	//			free(textureTGA[i].imageData);		
+	//		}
+	//	}
+	//}
+
+	
+		/*
+		//Set material Amient
+		pMaterialAtribElement = pMaterialElement->FirstChildElement("Ambient");
+		//pMaterialAtribElement->QueryFloatAttribute("X", &material->ambient.x);
+		//pMaterialAtribElement->QueryFloatAttribute("Y", &material->ambient.y);
+		//pMaterialAtribElement->QueryFloatAttribute("Z", &material->ambient.z);
+		//pMaterialAtribElement->QueryFloatAttribute("W", &material->ambient.w);
+		//Set material Diffuse
+		pMaterialAtribElement = pMaterialElement->FirstChildElement("Diffuse");
+		//pMaterialAtribElement->QueryFloatAttribute("X", &material->diffuse.x);
+		//pMaterialAtribElement->QueryFloatAttribute("Y", &material->diffuse.y);
+		//pMaterialAtribElement->QueryFloatAttribute("Z", &material->diffuse.z);
+		//pMaterialAtribElement->QueryFloatAttribute("W", &material->diffuse.w);
+		//Set material Specular
+		pMaterialAtribElement = pMaterialElement->FirstChildElement("Specular");
+		//pMaterialAtribElement->QueryFloatAttribute("X", &material->specular.x);
+		//pMaterialAtribElement->QueryFloatAttribute("Y", &material->specular.y);
+		//pMaterialAtribElement->QueryFloatAttribute("Z", &material->specular.z);
+		//pMaterialAtribElement->QueryFloatAttribute("W", &material->specular.w);
+		*/
+
+			//// Header info found at http://atlc.sourceforge.net/bmp.html
+	//void loadBitmapFromFile(const char* filename, int* width, int* height, int* size, unsigned char** pixel_data) {
+	//	FILE* fp = fopen(filename, "r");
+	//	if (fp == NULL) {
+	//		printf ("Couldn't open file... aborting\n");
+	//	}
+	//	short identifier = -1;
+	//	fread(&identifier, 1, sizeof(short), fp); printf ("Identifer is: %c\n", identifier);
+	//	int filesize = -1;
+	//	fread(&filesize, 1, sizeof(int), fp); printf ("filesize is: %d\n", filesize);
+	//	int reserved = -1;
+	//	fread(&reserved, 1, sizeof(int), fp); printf ("reserved is: %d\n", reserved);
+	//	int bitmap_offset = -1;
+	//	fread(&bitmap_offset, 1, sizeof(int), fp); printf ("bitmap_offset is: %d\n", bitmap_offset);
+	//	int bitmap_header_size = -1;
+	//	fread(&bitmap_header_size, 1, sizeof(int), fp); printf ("bitmap_header_size is: %d\n", bitmap_header_size);
+	//	int bitmap_width = -1;
+	//	fread(&bitmap_width, 1, sizeof(int), fp); printf ("bitmap_width is: %d\n", bitmap_width);
+	//	int bitmap_height = -1;
+	//	fread(&bitmap_height, 1, sizeof(int), fp); printf ("bitmap_height is: %d\n", bitmap_height);
+	//	short bitmap_planes = -1;
+	//	fread(&bitmap_planes, 1, sizeof(short), fp); printf ("bitmap_planes is: %d\n", bitmap_planes);
+	//	short bits_per_pixel= -1;
+	//	fread(&bits_per_pixel, 1, sizeof(short), fp); printf ("bits_per_pixel is: %d\n", bits_per_pixel);
+	//	int compression = -1;
+	//	fread(&compression, 1, sizeof(int), fp); printf ("compression is: %d\n", compression);
+	//	int bitmap_data_size = -1;
+	//	fread(&bitmap_data_size, 1, sizeof(int), fp); printf ("bitmap_data_size is: %d\n", bitmap_data_size);
+	//	int hresolution = -1;
+	//	fread(&hresolution, 1, sizeof(int), fp); printf ("hresolution is: %d\n", hresolution);
+	//	int vresolution = -1;
+	//	fread(&vresolution, 1, sizeof(int), fp); printf ("vresolution is: %d\n", vresolution);
+	//	int num_colors = -1;
+	//	fread(&num_colors, 1, sizeof(int), fp); printf ("num_colors is: %d\n", num_colors);
+	//	int num_important_colors = -1;
+	//	fread(&num_important_colors, 1, sizeof(int), fp); printf ("num_important_colors is: %d\n", num_important_colors);
+
+	//	// Jump to the data already!
+	//	fseek (fp, bitmap_offset, SEEK_SET);
+	//	unsigned char* data = new unsigned char[bitmap_data_size];
+	//	// Read data in BGR format
+	//	fread (data, sizeof(unsigned char), bitmap_data_size, fp);
+
+	//	// Make pixel_data point to the pixels
+	//	*pixel_data = data;
+	//	*size = bitmap_data_size;
+	//	*width = bitmap_width;
+	//	*height = bitmap_height;
+	//	fclose(fp);
+	//}
+
+	//void ResourceManager::LoadResourcePack(const char * path){
+//
+//	std::string file_Path = "XML/";
+//	file_Path.append(path);
+//
+//	tinyxml2::XMLDocument doc;
+//	tinyxml2::XMLError eResult = doc.LoadFile( file_Path.c_str() );
+//
+//	tinyxml2::XMLNode * pResourcePack = doc.FirstChild();
+//
+//	tinyxml2::XMLElement * pResources = pResourcePack->FirstChildElement("Resources");
+//
+//	tinyxml2::XMLElement * pResource = pResources->FirstChildElement("Resource");
+//
+//	while(pResource != nullptr){
+//
+//		const char * ResourceType = nullptr;
+//		ResourceType = pResource->Attribute("Type");
+//
+//		const char * ResourceName = nullptr;
+//		ResourceType = pResource->Attribute("Name");
+//
+//		if(ResourceType == "Mesh"){
+//			LoadMesh(ResourceName);
+//		}else if(ResourceType == "Material"){
+//			LoadMaterial(ResourceName);
+//		}else if(ResourceType == "Prefab"){
+//			LoadPrefab(ResourceName);
+//		}
+//
+//		pResource = pResource->NextSiblingElement();
+//
+//	}
+//
+//
+//}
+//
+//void ResourceManager::LoadMesh(const char * path){
+//
+//	std::string file_Path = "XML/Resources/Meshs/";
+//	file_Path.append(path);
+//
+//	tinyxml2::XMLDocument doc;
+//	tinyxml2::XMLError eResult = doc.LoadFile( file_Path.c_str() );
+//
+//	tinyxml2::XMLNode * pMesh = doc.FirstChild();
+//
+//	tinyxml2::XMLElement * pVariable = pMesh->FirstChildElement("Variable");
+//
+//	const char * FilePath = nullptr;
+//	FilePath = pVariable->Attribute("FilePath");
+//
+//	LoadMesh(FilePath);
+//
+//}
+//
+//void ResourceManager::LoadMaterial(const char * path){
+//
+//	std::string file_Path = "XML/Resources/Materials/";
+//	file_Path.append(path);
+//
+//	tinyxml2::XMLDocument doc;
+//	tinyxml2::XMLError eResult = doc.LoadFile( file_Path.c_str() );
+//
+//	tinyxml2::XMLNode * pMaterial = doc.FirstChild();
+//
+//	Material * _Material;
+//
+//	const char * Name = nullptr;
+//	Name = pMaterial->ToElement()->Attribute("Name");
+//
+//	const char * filePath = nullptr;
+//
+//	tinyxml2::XMLElement * pVariable = pMaterial->FirstChildElement("Variable");
+//
+//
+//	pVariable->Name();
+//	//Set the material shininess
+//	float shininess;
+//	pVariable->QueryFloatAttribute("Shininess", &shininess);
+//	_Material->setShininess(shininess);
+//
+//	//Set material Diffuse
+//	pVariable = pVariable->NextSiblingElement("Variable");
+//	filePath = pVariable->Attribute("Value");
+//	unsigned int diffuseID = LoadTexture(filePath);
+//	_Material->setDiffuseID(diffuseID);
+//
+//	//Set material Specular
+//	pVariable = pVariable->NextSiblingElement("Variable");
+//	filePath = pVariable->Attribute("Value");
+//	unsigned int specularID = LoadTexture(filePath);
+//	_Material->setSpecularID(specularID);
+//
+//
+//
+//
+//	//LoadMesh(FilePath);
+//
+//
+//}
+//void ResourceManager::LoadResources(){
+//
+//	//Load Resources XML file
+//	tinyxml2::XMLDocument doc;
+//	tinyxml2::XMLError eResult = doc.LoadFile( "XML/Resources/Cube.xml" );
+//
+//	//Get pointer to the Root Node.
+//	tinyxml2::XMLNode * pRoot = doc.FirstChild();
+//
+//	//Get the Resources Element.
+//	//tinyxml2::XMLElement * pElement = pRoot->FirstChildElement("Resources");
+//	//Get the first Resource in Resources
+//	tinyxml2::XMLElement * pResourceElement = pRoot->FirstChildElement("Resource");
+//
+//	//Go through all the Resources.
+//	unsigned int count = 0;
+//	while(pResourceElement != nullptr){
+//
+//		tinyxml2::XMLElement * pAtribElement;
+//
+//		//Get the name of the resource
+//		const char * resourceName = nullptr;
+//		resourceName = pResourceElement->Attribute("Name");	
+//
+//		//Get mesh fp Attribute and save into mFilePath
+//		const char * mFilePath = nullptr;
+//		pAtribElement = pResourceElement->FirstChildElement("Mesh");
+//		mFilePath = pAtribElement->Attribute("File");
+//		unsigned int modelID = LoadModel(mFilePath);
+//
+//		//Get and create the material
+//		Material * material = new Material;
+//
+//		tinyxml2::XMLElement * pMaterialElement = pResourceElement->FirstChildElement(Stringification(Material));
+//
+//		//Set the material shininess
+//		float shininess;
+//		pMaterialElement->QueryFloatAttribute("Shininess", &shininess);
+//		material->setShininess(shininess);
+//
+//		//Set material Diffuse
+//		const char * diffuseFilePath = nullptr;
+//		pAtribElement = pMaterialElement->FirstChildElement("Diffuse");
+//		diffuseFilePath = pAtribElement->Attribute("File");
+//		unsigned int diffuseID = LoadTexture(diffuseFilePath);
+//		material->setDiffuseID(diffuseID);
+//
+//		//Set material Specular
+//		const char * specularFilePath = nullptr;
+//		pAtribElement = pMaterialElement->FirstChildElement("Specular");
+//		specularFilePath = pAtribElement->Attribute("File");
+//		unsigned int specularID = LoadTexture(specularFilePath);
+//		material->setSpecularID(specularID);
+//
+//		//Add the material
+//		materials[count].resource = material;
+//		materials[count].refCount++;
+//
+//		//Get mesh fp Attribute and save into mFilePath
+//		glm::vec3 position;
+//		pAtribElement = pResourceElement->FirstChildElement("Position");
+//		pAtribElement->QueryFloatAttribute("x", &position.x);
+//		pAtribElement->QueryFloatAttribute("y", &position.y);
+//		pAtribElement->QueryFloatAttribute("z", &position.z);
+//
+//		//Get mesh fp Attribute and save into mFilePath
+//		glm::vec3 rotation;
+//		pAtribElement = pResourceElement->FirstChildElement("Rotation");
+//		pAtribElement->QueryFloatAttribute("x", &rotation.x);
+//		pAtribElement->QueryFloatAttribute("y", &rotation.y);
+//		pAtribElement->QueryFloatAttribute("z", &rotation.z);
+//
+//		//Get mesh fp Attribute and save into mFilePath
+//		glm::vec3 scale;
+//		pAtribElement = pResourceElement->FirstChildElement("Scale");
+//		pAtribElement->QueryFloatAttribute("x", &scale.x);
+//		pAtribElement->QueryFloatAttribute("y", &scale.y);
+//		pAtribElement->QueryFloatAttribute("z", &scale.z);
+//
+//		//Create Prefab
+//		Prefab * _Prefab = new Prefab();
+//		_Prefab->setName(resourceName);
+//		_Prefab->setPosition(position);
+//		_Prefab->setRotation(rotation);
+//		_Prefab->setScale(scale);
+//		_Prefab->setMesh(meshs[modelID].resource);
+//		_Prefab->setMaterial(materials[count].resource);
+//
+//		_EntityManager->addPrefab(_Prefab);
+//
+//		//Add Resource to reasources.
+//		resources.push_back(Resource(modelID, count));
+//
+//		//Increase Count for next resource.
+//		count++;
+//
+//		//Go to the next element in resources.
+//		pResourceElement = pResourceElement->NextSiblingElement("Resource");
+//	}
+//}
+
+//SHow at bind pose
+//Take mesh back off show first frame of animation
+//Weight of bones
+//My position = 0
+
+//void RenderingManager::RenderAll(){
+//
+//	for(unsigned int i = 0; i < MAX_RENDERABLES; i++){
+//		unsigned int mID = resources[i].getMeshID();
+//		unsigned int matID = resources[i].getMaterialID();
+//		unsigned int dID = materials[matID].resource->getDiffuseID();
+//		unsigned int sID = materials[matID].resource->getSpecularID();
+//		unsigned int t0ID = textures[dID].resource->getTexID();
+//		unsigned int t1ID = textures[sID].resource->getTexID();
+//		unsigned int matDiffuseLoc = glGetUniformLocation(4, "material.diffuse");
+//		unsigned int matSpecularLoc = glGetUniformLocation(4, "material.specular");
+//		unsigned int matShininessLoc = glGetUniformLocation(4, "material.shininess");
+//		glUniform1i(matDiffuseLoc, 0);
+//		glUniform1i(matSpecularLoc, 1);
+//		glUniform1f(matShininessLoc, materials[matID].resource->getShininess());
+//		glActiveTexture(GL_TEXTURE0);
+//		glBindTexture(GL_TEXTURE_2D, t0ID);
+//		glActiveTexture(GL_TEXTURE1);
+//		glBindTexture(GL_TEXTURE_2D, t1ID);
+//		meshs[mID].resource->setActive();
+//		glDrawElements(GL_TRIANGLES, meshs[mID].resource->getIndices().size(), GL_UNSIGNED_INT, NULL);
+//	}
+//
+//}
+
+	char* vertexShaderSourceCode = Util::readFile("Shaders/vertexShader.glsl");
+	char* fragmentShaderSourceCode = Util::readFile("Shaders/fragmentShader.glsl");
+	char* geomShaderSourceCode = Util::readFile("Shaders/geometryShader.glsl");
+	unsigned int vertShaderID = Util::createShader(vertexShaderSourceCode, GL_VERTEX_SHADER);
+	unsigned int fragShaderID = Util::createShader(fragmentShaderSourceCode, GL_FRAGMENT_SHADER);
+	unsigned int geomShaderID = Util::createShader(geomShaderSourceCode, GL_GEOMETRY_SHADER);
+	shaderProgramID = Util::createShaderProgram(vertShaderID, fragShaderID, geomShaderID);

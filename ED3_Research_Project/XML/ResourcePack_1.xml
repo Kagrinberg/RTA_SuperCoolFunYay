@@ -1,0 +1,16 @@
+<ResourcePack name="ResourcePack_1">
+
+	<Resources>
+
+		<!--Meshs-->
+		<Resource Type="Mesh" Name="Cube"/>
+
+		<!--Materials-->
+		<Resource Type="Material" Name="Crate"/>
+
+		<!--Prefabs-->
+		<Resource Type="Prefab" Name="Cube"/>
+
+	</Resources>
+	
+</ResourcePack>

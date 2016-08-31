@@ -1,0 +1,5 @@
+<Material Name="Crate">
+	<Variable Name="Shininess">90.0f</Variable>
+	<Variable Name="Diffuse" Value="Textures/crate.tga"/>
+	<Variable Name="Specular" Value="Textures/crate_specular.tga"/>
+</Material>

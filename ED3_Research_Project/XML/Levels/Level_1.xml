@@ -1,0 +1,17 @@
+<Level Name="Level_1">
+
+	<Entities>
+
+		<Entity>
+			<Name>Crate</Name>
+			<Prefab>Crate</Prefab>
+		</Entity>
+
+		<Entity>
+			<Name>Crate2</Name>
+			<Prefab>Crate2</Prefab>
+		</Entity>
+		
+	</Entities>
+
+</Level>

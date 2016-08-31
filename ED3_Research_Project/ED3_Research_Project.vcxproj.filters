@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Project">
+      <UniqueIdentifier>{e341481e-6a28-42cf-b733-9b055b811ec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Shader">
+      <UniqueIdentifier>{d9b2d0ae-1760-4091-aaff-f9fa7812a14d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Utility">
+      <UniqueIdentifier>{18557cfa-2fd7-432f-9e19-8b9e5a5f6cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Entity">
+      <UniqueIdentifier>{82ec2718-2fac-44ee-ace7-08a6ee7543b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Components">
+      <UniqueIdentifier>{12f1c067-40b3-4fd5-a48f-bf5213c3f131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Resource">
+      <UniqueIdentifier>{db3dc587-1b67-4341-8917-681beff1c2ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Shader\Shaders">
+      <UniqueIdentifier>{ce37c25b-47b7-4559-a8f5-4c43fac1221c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Renderable.cpp">
+      <Filter>Project\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Project\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Project\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="TGA\Texture.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Project\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Project\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Registry.cpp">
+      <Filter>Project\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>Project\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>Project\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingManager.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Component.h">
+      <Filter>Project\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h">
+      <Filter>Project\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Project\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Project\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Project\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Registry.h">
+      <Filter>Project\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>Project\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>Project\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="TGA\Texture.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Project\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingManager.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\fragmentShader.glsl">
+      <Filter>Project\Shader\Shaders</Filter>
+    </None>
+    <None Include="Shaders\geometryShader.glsl">
+      <Filter>Project\Shader\Shaders</Filter>
+    </None>
+    <None Include="Shaders\vertexShader.glsl">
+      <Filter>Project\Shader\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="old.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

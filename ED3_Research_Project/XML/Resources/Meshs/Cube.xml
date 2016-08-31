@@ -1,0 +1,3 @@
+<Mesh Name="Cube">
+	<Variable Name="FilePath" FilePath="Mesh/cube.obj"/>
+</Mesh>
