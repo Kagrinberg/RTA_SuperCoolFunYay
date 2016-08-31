@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <Windows.h>
 #include "FBXLoader.h"
 #include <set>
 
@@ -19,7 +19,6 @@ namespace FBXLoader
 	// return:                      True on success, false on failure.
 	////////////////////////////////////////////////////////////////////////////
 	bool LoadMesh(FbxMesh* fbx_mesh, Mesh& mesh,
-		std::vector< FbxNode* >& fbx_joints,
 		std::vector< unsigned int >& control_point_indices);
 
 
@@ -116,7 +115,7 @@ namespace FBXLoader
 			Mesh mesh;
 			std::vector< unsigned int > control_point_indices;
 
-			if (LoadMesh(mesh_attribute, mesh, fbx_joints, control_point_indices) == false)
+			if (LoadMesh(mesh_attribute, mesh, control_point_indices) == false)
 			{
 				return false;
 			}
@@ -135,7 +134,6 @@ namespace FBXLoader
 	}
 
 	bool LoadMesh(FbxMesh* fbx_mesh, Mesh& mesh,
-		std::vector< FbxNode* >& fbx_joints,
 		std::vector< unsigned int >& control_point_indices)
 	{
 		return false;
@@ -154,6 +152,11 @@ namespace FBXLoader
 				// array, assuming you are using index arrays which you generally should be
 			// End For each vertex in current polygon
 		// End For each polygon in mesh
+
+		FbxVector4 * allCPs = fbx_mesh->GetControlPoints();
+
+
+
 
 	}
 
