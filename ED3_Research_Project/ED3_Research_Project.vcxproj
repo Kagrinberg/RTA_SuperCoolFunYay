@@ -50,7 +50,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\glew-2.0.0\include;..\freeglut-3.0.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\FBX\2016.1.1\include;..\glew-2.0.0\include;..\freeglut-3.0.0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -64,7 +64,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\glew-2.0.0\include;..\freeglut-3.0.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\FBX\2016.1.1\include;..\glew-2.0.0\include;..\freeglut-3.0.0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

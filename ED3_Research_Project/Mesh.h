@@ -40,6 +40,10 @@ public:
 	void GenerateBuffers();
 	bool getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result);
 
+	void setVertices(std::vector< glm::vec3 > p_vertices) { vertices = p_vertices; };
+	void setUvs(std::vector< glm::vec2 > p_uvs) { uvs = p_uvs; };
+	void setNormals(std::vector< glm::vec3 > p_normals) { normals = p_normals; };
+
 	std::vector<glm::vec3> getVertices() { return indexed_vertices; };
 	std::vector<glm::vec2> getUvs() { return indexed_uvs; };
 	std::vector<glm::vec3> getNormals() { return indexed_normals; };
