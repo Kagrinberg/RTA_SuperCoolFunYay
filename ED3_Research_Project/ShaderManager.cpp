@@ -3,6 +3,12 @@
 #include <fstream>
 #include <iostream>
 
+ShaderManager::~ShaderManager() {
+	for (auto it = m_programs.begin(); it != m_programs.end(); it++) {
+		glDeleteProgram(it->second);
+	}
+}
+
 void ShaderManager::CreateProgram(const std::string& p_shaderName, const std::string& p_vertexShaderFilename, const std::string& p_fragmentShaderFilename){
 		//read the shader files and save the code
 	std::string vertex_shader_code = ReadShader(p_vertexShaderFilename);

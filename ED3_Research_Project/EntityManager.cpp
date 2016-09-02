@@ -6,6 +6,16 @@
 #include "Renderable.h"
 #include "Transform.h"
 
+EntityManager::~EntityManager() {
+	for (auto it = m_entities.begin(); it != m_entities.end(); it++) {
+		delete it->second.resource;
+	}
+
+	for (auto it = m_prefabs.begin(); it != m_prefabs.end(); it++) {
+		delete it->second.resource;
+	}
+}
+
 void EntityManager::addPrefab(Prefab * p){
 
 	Util::AddEntry(p, m_prefabs);

@@ -8,11 +8,16 @@
 #include "Transform.h"
 #include "ShaderManager.h"
 #include "Camera.h"
-//FBX
-//Import fbx
-//Animate it.
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 RenderingManager * renderingManager;
+ResourceManager * resourceManager;
+EntityManager * entityManager;
+ShaderManager * shaderManager;
+
 unsigned int program;
 
 #pragma region GLOBAL_VARIABLES
@@ -41,16 +46,21 @@ float scaleAmount;
 #pragma endregion GLOBAL_VARIABLES
 
 #pragma region FUNCTION_PROTOTYPES
-bool LoadTGA(Texture *, char *);	
 GLenum Initialize(int argc, char** argv);
 void Reshape(int width, int height);
 void Render();
 void InitializeMatrices();
 void InitializeRegistry();
-void InitializeSettings();
+void CleanUp();
 #pragma endregion FUNCTION_PROTOTYPES
 
 int main(int argc, char** argv){
+
+	_CrtDumpMemoryLeaks();
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+
+	_CrtSetBreakAlloc(-1);
 
 	//Initialize Glut and setup window
 	if(Initialize(argc, argv) != GLEW_OK){
@@ -58,18 +68,21 @@ int main(int argc, char** argv){
 		return 1;
 	}
 
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+
 	//Print version of openGL
 	printf("%s\n", glGetString(GL_VERSION));
 
 	//Allocate all of the managers
-	ResourceManager * resourceManager = ResourceManager::getInstance();
-	EntityManager * entityManager = new EntityManager();
-	ShaderManager * shaderManager = new ShaderManager();
+	resourceManager = new ResourceManager();
 	renderingManager = new RenderingManager();
+	entityManager = new EntityManager();
+	shaderManager = new ShaderManager();
 
 	//Add delegates between managers
 	resourceManager->setEntityManager(entityManager);
 	entityManager->setRenderingManager(renderingManager);
+	renderingManager->setResourceManager(resourceManager);
 
 	//Load Level
 	resourceManager->LoadLevel("Level_1");
@@ -83,7 +96,11 @@ int main(int argc, char** argv){
 	modelMatrixID = glGetUniformLocation(program, "mM");
 	lightID = glGetUniformLocation(program, "vLight");
 
+
 	glutMainLoop();
+
+
+	CleanUp();
 
 	return 0;
 }
@@ -186,3 +203,13 @@ void Render(){
 
 }
 
+
+
+//CleanUP
+void CleanUp() {
+	delete Registry::getInstance();
+	delete resourceManager;
+	delete renderingManager;
+	delete entityManager;
+	delete shaderManager;
+}

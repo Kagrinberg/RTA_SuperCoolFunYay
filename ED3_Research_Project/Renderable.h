@@ -1,11 +1,15 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
+
+
 #include "Component.h"
 #include "Mesh.h"
 #include "TGA/Texture.h"
 #include "Material.h"
 #include "Entity.h"
+#include "FBXManager.h"
+#include "ResourceManager.h"
 
 class Renderable : public Component{
 
@@ -16,7 +20,7 @@ private:
 	unsigned int m_meshID;
 	unsigned int m_materialID;
 
-	void LoadFromXML(tinyxml2::XMLElement * e);
+	void LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resourceManager);
 
 public:
 

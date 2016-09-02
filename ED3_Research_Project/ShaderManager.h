@@ -12,6 +12,7 @@ private:
 
 public:
 
+	~ShaderManager();
 	void CreateProgram(const std::string& p_shaderName, const std::string& p_vertexShaderFilename, const std::string& p_fragmentShaderFilename);
 	unsigned int GetShader(const std::string&);
 
