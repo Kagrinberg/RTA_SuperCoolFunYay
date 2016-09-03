@@ -141,6 +141,55 @@ void Mesh::GenerateBuffers(){
 	glEnableVertexAttribArray(2);
 }
 
+bool Mesh::LoadMesh(FbxScene* scene)
+{
+	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
+	{
+		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
+
+		FbxVector4 *verts = mesh->GetControlPoints();
+
+		for (int polyCount = 0; polyCount < mesh->GetPolygonCount(); ++polyCount)
+		{
+			if (mesh->GetPolygonSize(polyCount) > 3) return false;
+			for (int polyVertCounter = 2; polyVertCounter > 0; ++polyVertCounter)
+			{
+				int polyVertIndex = mesh->GetPolygonVertex(polyCount, polyVertCounter);
+				FbxVector4 fbxVert = verts[polyVertIndex];
+
+				glm::vec3 vert;
+				vert.x = fbxVert[0];
+				vert.y = fbxVert[1];
+				vert.z = fbxVert[2];
+
+				vertices.push_back(vert);
+
+				FbxVector4 fbxNormal;
+				mesh->GetPolygonVertexNormal(polyCount, polyVertIndex, fbxNormal);
+				glm::vec3 normal;
+				normal.x = fbxNormal[0];
+				normal.y = fbxNormal[1];
+				normal.z = fbxNormal[2];
+
+				FbxVector2 fbxUV;
+				FbxStringList nameList;
+				bool unMapped;
+				mesh->GetUVSetNames(nameList);
+
+				mesh->GetPolygonVertexUV(polyCount, polyVertIndex, nameList.GetStringAt(0), fbxUV, unMapped);
+				glm::vec2 uv;
+				uv.x = fbxUV[0];
+				uv.y = 1 - fbxUV[1];
+
+				uvs.push_back(uv);
+			}
+		}
+	}
+
+	GenerateIndices();
+	GenerateBuffers();
+}
+
 bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result){
 	std::map<PackedVertex, unsigned int>::iterator it = VertexToOutIndex.find(packed);
 	if(it == VertexToOutIndex.end()){
