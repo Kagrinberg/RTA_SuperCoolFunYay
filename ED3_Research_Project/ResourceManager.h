@@ -23,13 +23,14 @@ private:
 
 public:
 
-	void setEntityManager(EntityManager * p_entityManager) { m_entityManager = p_entityManager; };
 
 	ResourceManager();
 	~ResourceManager();
 
 	void LoadLevel(const char * p_name);
 	void LoadPrefab(const char * p_path);
+	void setEntityManager(EntityManager * p_entityManager) { m_entityManager = p_entityManager; };
+
 
 	unsigned int LoadMesh(const char * p_model);
 	unsigned int LoadTexture(const char * p_texture);
@@ -38,6 +39,8 @@ public:
 	Mesh * getMesh(unsigned int hashID) { return m_meshes[hashID].resource; };
 	Material * getMaterial(unsigned int hashID) { return m_materials[hashID].resource; };
 	Texture * getTexture(unsigned int hashID) { return m_textures[hashID].resource; };
+
+	FBXManager * getFBXManager() { return m_fbxManager; }
 
 };
 
