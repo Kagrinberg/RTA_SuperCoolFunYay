@@ -163,13 +163,6 @@ namespace FBXLoader
 		{
 
 		}
-
-
-
-
-
-
-
 	}
 
 
