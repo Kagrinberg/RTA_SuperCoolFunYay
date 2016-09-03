@@ -4,20 +4,15 @@
 
 void Renderable::LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resourceManager){
 
-	//FBXManager * manager = p_resourceManager->getFBXManager();
-
-	//manager->LoadFBX("");
 
 	tinyxml2::XMLElement * pElement = e->FirstChildElement("Mesh");
 	tinyxml2::XMLElement * pChildElement = pElement->FirstChildElement("Location");
 
-	//FbxScene * scene = manager->LoadFBX(pChildElement->GetText());
+	const char * aname = pChildElement->GetText();
 
-	//FbxMesh* mesh_attribute = scene->GetSrcObject< FbxMesh >(0);
+	m_meshID = p_resourceManager->LoadMeshFBX(pChildElement->GetText());
 
-
-
-	m_meshID = p_resourceManager->LoadMesh(pChildElement->GetText());
+	//m_meshID = p_resourceManager->LoadMesh(pChildElement->GetText());
 
 	pElement = pElement->NextSiblingElement("Material");
 	pChildElement = pElement->FirstChildElement("Name");
