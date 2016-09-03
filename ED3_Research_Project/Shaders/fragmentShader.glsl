@@ -22,6 +22,8 @@ void main () {
 	vec3 E = normalize(-fE);
 	vec3 H = normalize(L + E);
 	
+	vec4 ambient_final = vec4(0.0,0.0,0.0,1.0);
+
 	float diffuse_intensity = max(dot(N,L), 0.0);
 	vec4 texDiffuse = texture(material.diffuse, texCoord);
 	vec4 diffuse_final = vec4((diffuse_intensity * texDiffuse.xyz), texDiffuse.w);
@@ -30,5 +32,5 @@ void main () {
 	vec4 texSpecular = texture(material.specular, texCoord);
 	vec4 spec_final = vec4((spec_intensity * texSpecular.xyz), texSpecular.w);
 	
-	fColor = spec_final + diffuse_final;
+	fColor = clamp(ambient_final + spec_final + diffuse_final, 0, 1);
 }

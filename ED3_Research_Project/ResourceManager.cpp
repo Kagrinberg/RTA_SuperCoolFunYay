@@ -109,6 +109,23 @@ unsigned int ResourceManager::LoadMesh(const char * mesh){
 	return LoadEntry(mesh, m_meshes);
 }
 
+unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
+
+	unsigned int id = Util::fnvHash(mesh);
+	std::map<unsigned int, Util::entry<Mesh>>::iterator it = m_meshes.find(id);
+	//if entry doesnt exist add it.
+	if (it == m_meshes.end()) {
+		FbxScene * scene = m_fbxManager->LoadFBX(mesh);
+		Mesh * temp = new Mesh();
+		temp->LoadMesh(scene);
+		m_meshes[id].resource = temp;
+	}
+	//Other wise increase the refrence count and return the id.
+	m_meshes[id].refCount++;
+	return id;
+}
+
+
 unsigned int ResourceManager::LoadTexture(const char * texture){
 	return LoadEntry(texture, m_textures);
 }

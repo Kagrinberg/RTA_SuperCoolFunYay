@@ -2,14 +2,16 @@
 
 	<Entities>
 
+
+
 		<Entity>
-			<Name>Crate</Name>
-			<Prefab>Crate</Prefab>
+			<Name>FBXTEST</Name>
+			<Prefab>FBXTest</Prefab>
 		</Entity>
 
 		<Entity>
-			<Name>Crate2</Name>
-			<Prefab>Crate2</Prefab>
+			<Name>GroundPlane</Name>
+			<Prefab>GroundPlane</Prefab>
 		</Entity>
 		
 	</Entities>
