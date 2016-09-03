@@ -46,13 +46,11 @@ float scaleAmount;
 #pragma endregion GLOBAL_VARIABLES
 
 #pragma region FUNCTION_PROTOTYPES
-bool LoadTGA(Texture *, char *);	
 GLenum Initialize(int argc, char** argv);
 void Reshape(int width, int height);
 void Render();
 void InitializeMatrices();
 void InitializeRegistry();
-void InitializeSettings();
 void CleanUp();
 #pragma endregion FUNCTION_PROTOTYPES
 
