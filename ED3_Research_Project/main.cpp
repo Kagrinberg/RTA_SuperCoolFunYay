@@ -46,13 +46,11 @@ float scaleAmount;
 #pragma endregion GLOBAL_VARIABLES
 
 #pragma region FUNCTION_PROTOTYPES
-bool LoadTGA(Texture *, char *);	
 GLenum Initialize(int argc, char** argv);
 void Reshape(int width, int height);
 void Render();
 void InitializeMatrices();
 void InitializeRegistry();
-void InitializeSettings();
 void CleanUp();
 #pragma endregion FUNCTION_PROTOTYPES
 
@@ -183,11 +181,11 @@ void Render(){
 
 	glUseProgram(program);
 
-	theta+= 0.00015f;
+	theta=1.0000f;
 	scaleAmount= abs(sin(theta));
 
-	scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scaleAmount, scaleAmount,scaleAmount));
-	rotYMatrix = glm::rotate(glm::mat4x4(1.0f), theta, glm::vec3(0.5f, 0.0f, 0.0f));
+	//scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scaleAmount, scaleAmount,scaleAmount));
+	//rotYMatrix = glm::rotate(glm::mat4x4(1.0f), theta, glm::vec3(0.5f, 0.1f, 0.0f));
 	
 	tempMatrix1 = rotYMatrix * scaleMatrix;
 	M = transMatrix * tempMatrix1;

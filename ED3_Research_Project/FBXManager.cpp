@@ -64,10 +64,10 @@ FbxScene * FBXManager::LoadFBX(const char * filepath) {
 	}
 
 	// If multiple materials are applied to a single mesh, split the mesh into separate meshes
-	if (converter.SplitMeshesPerMaterial(scene, true) == false)
-	{
-		return false;
-	}
+	//if (converter.SplitMeshesPerMaterial(scene, true) == false)
+	//{
+	//	return false;
+	//}
 
 	return scene;
 

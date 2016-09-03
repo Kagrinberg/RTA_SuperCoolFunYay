@@ -7,8 +7,8 @@
 		<Transform>
 
 			<Position>
-				<X>0.1</X>
-				<Y>0.1</Y>
+				<X>0</X>
+				<Y>0</Y>
 				<Z>0</Z>
 			</Position>
 			
@@ -30,7 +30,7 @@
 
 			<Mesh>
 				<Name>Box_Idle</Name>
-				<Location>FBXOBJ/Box_Idle.fbx</Location>
+				<Location>FBXOBJ/BOX.fbx</Location>
 			</Mesh>
 
 			<Material>
