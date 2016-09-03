@@ -152,7 +152,7 @@ bool Mesh::LoadMesh(FbxScene* scene)
 		for (int polyCount = 0; polyCount < mesh->GetPolygonCount(); ++polyCount)
 		{
 			if (mesh->GetPolygonSize(polyCount) > 3) return false;
-			for (int polyVertCounter = 2; polyVertCounter > 0; ++polyVertCounter)
+			for (int polyVertCounter = 0; polyVertCounter < 3; --polyVertCounter)
 			{
 				int polyVertIndex = mesh->GetPolygonVertex(polyCount, polyVertCounter);
 				FbxVector4 fbxVert = verts[polyVertIndex];
@@ -170,6 +170,7 @@ bool Mesh::LoadMesh(FbxScene* scene)
 				normal.x = fbxNormal[0];
 				normal.y = fbxNormal[1];
 				normal.z = fbxNormal[2];
+				normals.push_back(normal);
 
 				FbxVector2 fbxUV;
 				FbxStringList nameList;
