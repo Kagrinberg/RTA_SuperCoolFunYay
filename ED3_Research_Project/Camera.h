@@ -11,6 +11,7 @@ class Camera
 	glm::vec3 camera_pos_;
 	glm::quat camera_orientation_;
 	const float camera_speed_ = 0.5;
+	POINT mousePrev;
 
 public:
 	Camera();
