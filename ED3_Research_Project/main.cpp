@@ -8,16 +8,13 @@
 #include "Transform.h"
 #include "ShaderManager.h"
 #include "Camera.h"
+#include "XTime.h"
+//FBX
+//Import fbx
+//Animate it.
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
-RenderingManager * renderingManager;
 ResourceManager * resourceManager;
-EntityManager * entityManager;
-ShaderManager * shaderManager;
-
+RenderingManager * renderingManager;
 unsigned int program;
 
 #pragma region GLOBAL_VARIABLES
@@ -40,27 +37,23 @@ glm::mat4 M;
 glm::mat4 P;
 
 Camera myCamera;
+XTime timer;
 
 float theta;
 float scaleAmount;
 #pragma endregion GLOBAL_VARIABLES
 
 #pragma region FUNCTION_PROTOTYPES
+bool LoadTGA(Texture *, char *);	
 GLenum Initialize(int argc, char** argv);
 void Reshape(int width, int height);
 void Render();
 void InitializeMatrices();
 void InitializeRegistry();
-void CleanUp();
+void InitializeSettings();
 #pragma endregion FUNCTION_PROTOTYPES
 
 int main(int argc, char** argv){
-
-	_CrtDumpMemoryLeaks();
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
-
-	_CrtSetBreakAlloc(-1);
 
 	//Initialize Glut and setup window
 	if(Initialize(argc, argv) != GLEW_OK){
@@ -68,16 +61,16 @@ int main(int argc, char** argv){
 		return 1;
 	}
 
-	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+	timer.Restart();
 
 	//Print version of openGL
 	printf("%s\n", glGetString(GL_VERSION));
 
 	//Allocate all of the managers
 	resourceManager = new ResourceManager();
+	EntityManager * entityManager = new EntityManager();
+	ShaderManager * shaderManager = new ShaderManager();
 	renderingManager = new RenderingManager();
-	entityManager = new EntityManager();
-	shaderManager = new ShaderManager();
 
 	//Add delegates between managers
 	resourceManager->setEntityManager(entityManager);
@@ -96,11 +89,7 @@ int main(int argc, char** argv){
 	modelMatrixID = glGetUniformLocation(program, "mM");
 	lightID = glGetUniformLocation(program, "vLight");
 
-
 	glutMainLoop();
-
-
-	CleanUp();
 
 	return 0;
 }
@@ -175,6 +164,8 @@ void Reshape(int width, int height){
 
 void Render(){
 
+	timer.Signal();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
@@ -188,6 +179,8 @@ void Render(){
 	
 	tempMatrix1 = rotYMatrix * scaleMatrix;
 	M = transMatrix * tempMatrix1;
+
+	myCamera.update(timer.Delta());
 
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, glm::value_ptr(M));
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
@@ -203,13 +196,3 @@ void Render(){
 
 }
 
-
-
-//CleanUP
-void CleanUp() {
-	delete Registry::getInstance();
-	delete resourceManager;
-	delete renderingManager;
-	delete entityManager;
-	delete shaderManager;
-}
