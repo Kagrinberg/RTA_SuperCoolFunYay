@@ -4,8 +4,10 @@
 #include <vector>
 #include "Utilities.h"
 #include "TGA\Texture.h"
-#include "EntityManager.h"
+#include "Material.h"
 #include "FBXManager.h"
+
+class EntityManager;
 
 class ResourceManager{
 
@@ -13,7 +15,7 @@ private:
 
 	EntityManager * m_entityManager;
 
-	static ResourceManager * s_instance;
+	FBXManager * m_fbxManager;
 
 	std::map<unsigned int, Util::entry<Mesh>> m_meshes;
 	std::map<unsigned int, Util::entry<Texture>> m_textures;
@@ -23,27 +25,19 @@ public:
 
 	void setEntityManager(EntityManager * p_entityManager) { m_entityManager = p_entityManager; };
 
-	static ResourceManager * getInstance()
-	{
-		if (!s_instance)
-			s_instance = new ResourceManager;
-		return s_instance;
-	}
-
 	ResourceManager();
+	~ResourceManager();
 
 	void LoadLevel(const char * p_name);
 	void LoadPrefab(const char * p_path);
 
 	unsigned int LoadMesh(const char * p_model);
 	unsigned int LoadTexture(const char * p_texture);
-	unsigned int LoadMaterial(Material * p_material);
+	Material * LoadMaterial(const char * material);
 
 	Mesh * getMesh(unsigned int hashID) { return m_meshes[hashID].resource; };
 	Material * getMaterial(unsigned int hashID) { return m_materials[hashID].resource; };
 	Texture * getTexture(unsigned int hashID) { return m_textures[hashID].resource; };
-
-	void Render();
 
 };
 

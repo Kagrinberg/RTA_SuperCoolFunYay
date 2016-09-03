@@ -23,11 +23,11 @@ void RenderingManager::RenderAll(){
 
 		unsigned int meshID = m_renderables[i]->getMeshID();
 		unsigned int materialID = m_renderables[i]->getMaterialID();
-		Material * material = ResourceManager::getInstance()->getMaterial(materialID);
+		Material * material = m_resourceManager->getMaterial(materialID);
 		unsigned int diffuseID = material->getDiffuseID();
 		unsigned int specularID = material->getSpecularID();
-		unsigned int texture0ID = ResourceManager::getInstance()->getTexture(diffuseID)->getTexID();
-		unsigned int texture1ID = ResourceManager::getInstance()->getTexture(specularID)->getTexID();
+		unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTexID();
+		unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTexID();
 		unsigned int matDiffuseLoc = glGetUniformLocation(3, "material.diffuse");
 		unsigned int matSpecularLoc = glGetUniformLocation(3, "material.specular");
 		unsigned int matShininessLoc = glGetUniformLocation(3, "material.shininess");
@@ -38,7 +38,7 @@ void RenderingManager::RenderAll(){
 		glBindTexture(GL_TEXTURE_2D, texture0ID);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture1ID);
-		Mesh * mesh = ResourceManager::getInstance()->getMesh(meshID);
+		Mesh * mesh = m_resourceManager->getMesh(meshID);
 		mesh->setActive();
 		glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, NULL);
 	}

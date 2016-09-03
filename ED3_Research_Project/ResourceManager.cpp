@@ -1,11 +1,29 @@
 #include "ResourceManager.h"
 #include "tinyxml2.h"
 #include "Registry.h"
-
-ResourceManager * ResourceManager::s_instance = nullptr;
+#include "EntityManager.h"
 
 ResourceManager::ResourceManager(){
-	
+	m_fbxManager = new FBXManager();
+}
+
+ResourceManager::~ResourceManager() {
+	delete m_fbxManager;
+
+	for (auto it = m_meshes.begin(); it != m_meshes.end(); it++) {
+		delete it->second.resource;
+	}
+
+	for (auto it = m_materials.begin(); it != m_materials.end(); it++) {
+		delete it->second.resource;
+	}
+
+	for (auto it = m_textures.begin(); it != m_textures.end(); it++) {
+		delete it->second.resource;
+	}
+
+
+
 }
 
 void ResourceManager::LoadLevel(const char * name){
@@ -72,10 +90,10 @@ void ResourceManager::LoadPrefab(const char * path){
 
 		if(functionPointer != nullptr){
 			Component * comp = functionPointer();
-			comp->LoadFromXML(pComponent);
+			comp->LoadFromXML(pComponent, this);
 			_Prefab->addComponent(hash, comp);
 		}else{
-			printf("Could not load component (%s) in the prefab (%s).", cp_componentName, prefab_Name);
+			printf("Could not load component (%s) in the prefab (%s).", cp_componentName, prefab_Name.c_str());
 		}
 	
 
@@ -95,6 +113,17 @@ unsigned int ResourceManager::LoadTexture(const char * texture){
 	return LoadEntry(texture, m_textures);
 }
 
-unsigned int ResourceManager::LoadMaterial(Material * material){
-	return AddEntry(material, m_materials);
+Material * ResourceManager::LoadMaterial(const char * material){
+
+	unsigned int id = Util::fnvHash(material);
+	std::map<unsigned int, Util::entry<Material>>::iterator it = m_materials.find(id);
+	Material * _material = nullptr;
+	if (it == m_materials.end()) {
+		_material = new Material();
+		_material->setName(material);
+		m_materials[id].resource = _material;
+	}
+	m_materials[id].refCount++;
+	return _material;
+
 }

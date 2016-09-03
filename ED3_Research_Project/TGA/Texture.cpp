@@ -4,6 +4,11 @@ Texture::Texture(){
 
 }
 
+Texture::~Texture() {
+
+
+}
+
 bool Texture::LoadEntry(const char * filename)				// Load a TGA file
 {
 	FILE * fTGA;												// File pointer to texture file
@@ -46,9 +51,9 @@ bool Texture::LoadEntry(const char * filename)				// Load a TGA file
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-	if (imageData)					
+	if (imageData)
 	{
-		free(imageData);		
+		free(imageData);
 	}
 	return true;															// All went well, continue on
 }
@@ -108,8 +113,6 @@ bool Texture::ProcessTextures(FbxMesh* fbx_mesh)
 				Texture newTexture;
 
 				newTexture.LoadEntry(texture_name.c_str());
-
-
 
 			}
 		}
@@ -379,7 +382,12 @@ bool Texture::LoadCompressedTGA(const char * filename, FILE * fTGA)		// Load COM
 		}
 	}
 
+
+
 	while(currentpixel < pixelcount);													// Loop while there are still pixels left
 	fclose(fTGA);																		// Close the file
+
+	free(colorbuffer);
+
 	return true;																		// return success
 }

@@ -18,6 +18,8 @@ private:
 
 public:
 
+	~EntityManager();
+
 	void setRenderingManager(RenderingManager * p_renderingManager) { m_renderingManager = p_renderingManager; };
 
 	void addPrefab(Prefab * p_prefab);

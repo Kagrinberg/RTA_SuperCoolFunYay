@@ -23,6 +23,7 @@ public:
 
 public:
 
+	~Entity();
 
 	const char * getName() { return m_name.c_str(); };
 	Transform * getTransform() { return m_transform; };
@@ -30,7 +31,6 @@ public:
 	void setName(std::string p_name) { m_name = p_name; };
 	void setTransform(Transform * p_transform) { m_transform = p_transform; };
 
-	//Component * getComponent(std::string p_componentName);
 
 };
 
