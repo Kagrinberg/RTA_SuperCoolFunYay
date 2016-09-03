@@ -15,6 +15,8 @@
 
 ResourceManager * resourceManager;
 RenderingManager * renderingManager;
+EntityManager * entityManager;
+ShaderManager * shaderManager;
 unsigned int program;
 
 #pragma region GLOBAL_VARIABLES
@@ -51,9 +53,15 @@ void Render();
 void InitializeMatrices();
 void InitializeRegistry();
 void InitializeSettings();
+void CleanUp();
 #pragma endregion FUNCTION_PROTOTYPES
 
 int main(int argc, char** argv){
+
+	_CrtDumpMemoryLeaks();
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+	_CrtSetBreakAlloc(-1);
 
 	//Initialize Glut and setup window
 	if(Initialize(argc, argv) != GLEW_OK){
@@ -68,8 +76,8 @@ int main(int argc, char** argv){
 
 	//Allocate all of the managers
 	resourceManager = new ResourceManager();
-	EntityManager * entityManager = new EntityManager();
-	ShaderManager * shaderManager = new ShaderManager();
+	entityManager = new EntityManager();
+	shaderManager = new ShaderManager();
 	renderingManager = new RenderingManager();
 
 	//Add delegates between managers
@@ -90,6 +98,8 @@ int main(int argc, char** argv){
 	lightID = glGetUniformLocation(program, "vLight");
 
 	glutMainLoop();
+
+	CleanUp();
 
 	return 0;
 }
@@ -113,6 +123,8 @@ GLenum Initialize(int argc, char** argv){
 
 	glEnable (GL_TEXTURE_2D);
 	glEnable(GL_MULTISAMPLE); 
+
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
 
 	//Intialize Matricies.
@@ -196,3 +208,10 @@ void Render(){
 
 }
 
+void CleanUp() {
+	delete resourceManager;
+	delete entityManager;
+	delete shaderManager;
+	delete renderingManager;
+	delete Registry::getInstance();
+}

@@ -4,9 +4,9 @@
 
 void Renderable::LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resourceManager){
 
-	FBXManager * manager = p_resourceManager->getFBXManager();
+	//FBXManager * manager = p_resourceManager->getFBXManager();
 
-	manager->LoadFBX("");
+	//manager->LoadFBX("");
 
 	tinyxml2::XMLElement * pElement = e->FirstChildElement("Mesh");
 	tinyxml2::XMLElement * pChildElement = pElement->FirstChildElement("Location");
