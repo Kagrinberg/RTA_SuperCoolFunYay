@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "ShaderManager.h"
 #include "Camera.h"
+#include "XTime.h"
 //FBX
 //Import fbx
 //Animate it.
@@ -36,6 +37,10 @@ glm::mat4 P;
 
 Camera myCamera;
 
+POINT mousePrev;
+
+XTime timer;
+
 float theta;
 float scaleAmount;
 #pragma endregion GLOBAL_VARIABLES
@@ -57,6 +62,8 @@ int main(int argc, char** argv){
 		fprintf(stderr, "Could Not Initialize Glew.");
 		return 1;
 	}
+
+	timer.Restart();
 
 	//Print version of openGL
 	printf("%s\n", glGetString(GL_VERSION));
@@ -158,6 +165,8 @@ void Reshape(int width, int height){
 
 void Render(){
 
+	timer.Signal();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
@@ -171,6 +180,50 @@ void Render(){
 	
 	tempMatrix1 = rotYMatrix * scaleMatrix;
 	M = transMatrix * tempMatrix1;
+
+	POINT mouseCur;
+
+	GetCursorPos(&mouseCur);
+
+	glm::vec2 rotation = { 0,0 };
+	glm::vec3 directions = { 0,0,0 };
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		
+
+		rotation.x = (mouseCur.x - mousePrev.x) * 0.03f;
+		rotation.y = (mouseCur.y - mousePrev.y) * 0.03f;
+
+		
+	}
+	else
+	{
+		mousePrev.x = 0;
+		mousePrev.y = 0;
+		rotation.x = 0;
+		rotation.y = 0;
+	}
+	
+	mousePrev = mouseCur;
+
+	if (GetAsyncKeyState('D')) directions.y = -1;
+	if (GetAsyncKeyState('A')) directions.y = 1;
+	if (GetAsyncKeyState('W')) directions.x = 1;
+	if (GetAsyncKeyState('S')) directions.x = -1;
+	if (GetAsyncKeyState('E')) directions.z = 1;
+	if (GetAsyncKeyState('Q')) directions.z = -1;
+
+	
+
+	if (GetKeyState('R') & 0x80)
+	{
+		myCamera.reset();
+
+	}
+	else
+	{
+		myCamera.move(directions, rotation, timer.Delta());
+	}
 
 	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, glm::value_ptr(M));
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));

@@ -85,6 +85,9 @@
     <ClCompile Include="FBXManager.cpp">
       <Filter>Project\FBX</Filter>
     </ClCompile>
+    <ClCompile Include="XTime.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -141,6 +144,9 @@
     </ClInclude>
     <ClInclude Include="FBXManager.h">
       <Filter>Project\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="XTime.h">
+      <Filter>Project\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
