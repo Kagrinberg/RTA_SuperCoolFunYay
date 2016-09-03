@@ -1,6 +1,6 @@
 <Prefab>
 	
-	<Name>Crate2</Name>
+	<Name>FBXTest</Name>
 
 	<Components>
 
@@ -29,8 +29,8 @@
 		<Renderable>
 
 			<Mesh>
-				<Name>Talon</Name>
-				<Location>Mesh/talon.obj</Location>
+				<Name>Box_Idle</Name>
+				<Location>FBXOBJ/Box_Idle.fbx</Location>
 			</Mesh>
 
 			<Material>

@@ -156,20 +156,13 @@ namespace FBXLoader
 
 		//not working with control points yet
 		FbxVector4 * allCPs = fbx_mesh->GetControlPoints();
-
+		
 		int polygonCount = fbx_mesh->GetPolygonCount();
 
 		for (int i = 0; i < polygonCount; i++)
 		{
 
 		}
-
-
-
-
-
-
-
 	}
 
 
@@ -228,6 +221,7 @@ namespace FBXLoader
 					//add texture to the resource manager if it does not already exist
 					Texture newTexture;
 
+					//Dont do this
 					newTexture.LoadEntry(texture_name.c_str());
 					
 

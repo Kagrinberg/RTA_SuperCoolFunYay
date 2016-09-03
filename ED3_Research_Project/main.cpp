@@ -13,6 +13,7 @@
 //Import fbx
 //Animate it.
 
+ResourceManager * resourceManager;
 RenderingManager * renderingManager;
 unsigned int program;
 
@@ -66,7 +67,7 @@ int main(int argc, char** argv){
 	printf("%s\n", glGetString(GL_VERSION));
 
 	//Allocate all of the managers
-	ResourceManager * resourceManager = ResourceManager::getInstance();
+	resourceManager = new ResourceManager();
 	EntityManager * entityManager = new EntityManager();
 	ShaderManager * shaderManager = new ShaderManager();
 	renderingManager = new RenderingManager();
@@ -74,6 +75,7 @@ int main(int argc, char** argv){
 	//Add delegates between managers
 	resourceManager->setEntityManager(entityManager);
 	entityManager->setRenderingManager(renderingManager);
+	renderingManager->setResourceManager(resourceManager);
 
 	//Load Level
 	resourceManager->LoadLevel("Level_1");

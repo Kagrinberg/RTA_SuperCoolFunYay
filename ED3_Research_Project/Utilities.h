@@ -33,6 +33,7 @@ namespace Util
 			temp->LoadEntry(filePath);
 			map[id].resource = temp;
 		}
+		//Other wise increase the refrence count and return the id.
 		map[id].refCount++;
 		return id;
 	}

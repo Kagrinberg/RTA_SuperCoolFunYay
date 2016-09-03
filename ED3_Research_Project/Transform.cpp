@@ -2,7 +2,7 @@
 #include "tinyxml2.h"
 #include "ResourceManager.h"
 
-void Transform::LoadFromXML(tinyxml2::XMLElement * e){
+void Transform::LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resourceManager){
 	
 	tinyxml2::XMLElement * pElement = e->FirstChildElement("Position");
 	tinyxml2::XMLElement * pChildElement = pElement->FirstChildElement();

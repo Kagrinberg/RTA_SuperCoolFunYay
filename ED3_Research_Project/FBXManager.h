@@ -13,6 +13,7 @@ private:
 public:
 
 	FBXManager();
+	~FBXManager();
 
 	FbxScene * LoadFBX(const char * filepath);
 

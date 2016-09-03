@@ -46,6 +46,7 @@ private:
 public:
 
 	Texture();
+	~Texture();
 	bool LoadUncompressedTGA(const char *, FILE *);	// Load an Uncompressed file
 	bool LoadCompressedTGA(const char *, FILE *);		// Load a Compressed file
 	bool LoadEntry(const char * filename);

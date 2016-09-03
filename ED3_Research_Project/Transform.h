@@ -12,7 +12,7 @@ private:
 	glm::vec3 m_vRotation;
 	glm::vec3 m_vScale;
 
-	void LoadFromXML(tinyxml2::XMLElement * e);
+	void LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resourceManager);
 
 public:
 

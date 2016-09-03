@@ -11,6 +11,11 @@ FBXManager::FBXManager() {
 
 }
 
+
+FBXManager::~FBXManager() {
+	manager->Destroy();
+}
+
 FbxScene * FBXManager::LoadFBX(const char * filepath) {
 
 	// Create importer
