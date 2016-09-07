@@ -79,14 +79,20 @@
     <ClCompile Include="FBXLoader.cpp">
       <Filter>Project\FBX</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Project\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="FBXManager.cpp">
       <Filter>Project\FBX</Filter>
     </ClCompile>
     <ClCompile Include="XTime.cpp">
       <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Project\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingManager.cpp">
+      <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,14 +145,20 @@
       <Filter>Project\FBX</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Camera.h">
-      <Filter>Project\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="FBXManager.h">
       <Filter>Project\FBX</Filter>
     </ClInclude>
     <ClInclude Include="XTime.h">
       <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Project\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingManager.h">
+      <Filter>Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

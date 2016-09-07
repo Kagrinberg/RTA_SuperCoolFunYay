@@ -8,13 +8,13 @@
 
 			<Position>
 				<X>0</X>
-				<Y>0</Y>
+				<Y>0.5</Y>
 				<Z>0</Z>
 			</Position>
 			
 			<Rotation>
 				<X>0</X>
-				<Y>0</Y>
+				<Y>45</Y>
 				<Z>0</Z>
 			</Rotation>
 
@@ -29,13 +29,13 @@
 		<Renderable>
 
 			<Mesh>
-				<Name>Box_Idle</Name>
+				<Name>Box</Name>
 				<Location>FBXOBJ/BOX.fbx</Location>
 			</Mesh>
 
 			<Material>
 				<Name>Crate</Name>
-				<Shininess>90.0f</Shininess>
+				<Shininess>120.0f</Shininess>
 				<Diffuse>Textures/crate.tga</Diffuse>
 				<Specular>Textures/crate_specular.tga</Specular>
 			</Material>

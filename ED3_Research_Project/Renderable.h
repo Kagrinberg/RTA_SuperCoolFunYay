@@ -24,7 +24,7 @@ private:
 
 public:
 
-	Component * copy();
+	Component * CopyComponent();
 	static Component * CreateInstance();
 	void setParent(Entity * p_Entity){ m_parent = p_Entity; };
 

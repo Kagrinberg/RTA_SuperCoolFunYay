@@ -2,17 +2,61 @@
 
 	<Entities>
 
-
+		<Entity>
+			<Name>DirectionalLight</Name>
+			<Prefab>DirectionalLight</Prefab>
+		</Entity>
 
 		<Entity>
-			<Name>FBXTEST</Name>
-			<Prefab>FBXTest</Prefab>
+			<Name>PointLight</Name>
+			<Prefab>PointLight</Prefab>
+		</Entity>
+
+		<Entity>
+			<Name>SpotLight</Name>
+			<Prefab>SpotLight</Prefab>
+		</Entity>
+
+		<Entity>
+			<Name>Grenade</Name>
+			<Prefab>Grenade</Prefab>
 		</Entity>
 
 		<Entity>
 			<Name>GroundPlane</Name>
 			<Prefab>GroundPlane</Prefab>
 		</Entity>
+
+		<Entity>
+			<Name>Grenade</Name>
+			<Prefab>Grenade</Prefab>
+		</Entity>
+
+		<Entity>
+			<Name>GroundPlane</Name>
+			<Prefab>GroundPlane</Prefab>
+		</Entity>
+		
+		<Entity>
+			<Name>Grenade</Name>
+			<Prefab>Grenade</Prefab>
+		</Entity>
+
+		<Entity>
+			<Name>GroundPlane</Name>
+			<Prefab>GroundPlane</Prefab>
+		</Entity>
+		
+		<Entity>
+			<Name>Grenade</Name>
+			<Prefab>Grenade</Prefab>
+		</Entity>
+
+		<Entity>
+			<Name>GroundPlane</Name>
+			<Prefab>GroundPlane</Prefab>
+		</Entity>
+		
 		
 	</Entities>
 

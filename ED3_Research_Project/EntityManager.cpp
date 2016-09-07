@@ -5,6 +5,7 @@
 #include "rlutil.h"
 #include "Renderable.h"
 #include "Transform.h"
+#include "Light.h"
 
 EntityManager::~EntityManager() {
 	for (auto it = m_entities.begin(); it != m_entities.end(); it++) {
@@ -36,7 +37,7 @@ void EntityManager::addEntity(const char * entityName, const char * prefabName){
 	entity->setName(entityName);
 
 	for(auto & current : m_prefabs[hashPrefab].resource->getComponents()){
-		entity->m_components[current.first] = current.second->copy();
+		entity->m_components[current.first] = current.second->CopyComponent();
 		Renderable * renderable = dynamic_cast<Renderable *>(entity->m_components[current.first]);
 		if(renderable != nullptr){
 			renderable->setParent(entity);
@@ -45,6 +46,10 @@ void EntityManager::addEntity(const char * entityName, const char * prefabName){
 		Transform * transform = dynamic_cast<Transform *>(entity->m_components[current.first]);
 		if(transform != nullptr){
 			entity->setTransform(transform);
+		}
+		Light * light = dynamic_cast<Light *>(entity->m_components[current.first]);
+		if (light != nullptr) {
+			m_lightingManager->addLight(light);
 		}
 	}
 

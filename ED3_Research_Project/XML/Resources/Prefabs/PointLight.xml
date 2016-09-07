@@ -1,0 +1,91 @@
+<Prefab>
+	
+	<Name>PointLight</Name>
+
+	<Components>
+
+		<Transform>
+
+			<Position>
+				<X>0.0</X>
+				<Y>3.0</Y>
+				<Z>0.0</Z>
+			</Position>
+			
+			<Rotation>
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Rotation>
+
+			<Scale>
+				<X>0.25</X>
+				<Y>0.25</Y>
+				<Z>0.25</Z>
+			</Scale>
+
+		</Transform>
+
+		<Renderable>
+
+			<Mesh>
+				<Name>Box</Name>
+				<Location>FBXOBJ/BOX.fbx</Location>
+			</Mesh>
+
+			<Material>
+				<Name>Light</Name>
+				<Shininess>0.0f</Shininess>
+				<Diffuse>Textures/WhiteTGA.tga</Diffuse>
+				<Specular>Textures/WhiteTGA.tga</Specular>
+			</Material>
+
+		</Renderable>
+
+		<Light>
+            
+			<Type>Point</Type>
+
+			<Position>
+				<X>0.0</X>
+				<Y>3.0</Y>
+				<Z>0.0</Z>
+			</Position>
+
+			<Direction>
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Direction>
+
+			<Ambient>
+				<X>0.009</X>
+				<Y>0.009</Y>
+				<Z>0.007</Z>
+			</Ambient>
+
+			<Diffuse>
+				<X>0.9</X>
+				<Y>0.9</Y>
+				<Z>0.7</Z>
+			</Diffuse>
+
+			<Specular>
+				<X>0.9</X>
+				<Y>0.9</Y>
+				<Z>0.7</Z>
+			</Specular>
+
+			<Constant>1.0</Constant>
+			<Linear>0.9</Linear>
+			<Quadratic>0.32</Quadratic>
+
+			<CutOff>1.0</CutOff>
+			<OuterCutOff>1.0</OuterCutOff>
+
+		</Light>
+
+
+	</Components>
+
+</Prefab>

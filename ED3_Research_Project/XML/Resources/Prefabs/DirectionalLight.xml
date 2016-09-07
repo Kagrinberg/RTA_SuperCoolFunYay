@@ -1,0 +1,53 @@
+<Prefab>
+	
+	<Name>DirectionalLight</Name>
+
+	<Components>
+
+		<Light>
+            
+			<Type>Directional</Type>
+
+			<Position>
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Position>
+
+			<Direction>
+				<X>0</X>
+				<Y>1</Y>
+				<Z>1</Z>
+			</Direction>
+
+			<Ambient>
+				<X>0.05f</X>
+				<Y>0.05f</Y>
+				<Z>0.1f</Z>
+			</Ambient>
+
+			<Diffuse>
+				<X>0.2f</X>
+				<Y>0.2f</Y>
+				<Z>0.7f</Z>
+			</Diffuse>
+
+			<Specular>
+				<X>0.7f</X>
+				<Y>0.7f</Y>
+				<Z>0.7f</Z>
+			</Specular>
+
+			<Constant>1.0</Constant>
+			<Linear>1.0</Linear>
+			<Quadratic>1.0</Quadratic>
+
+			<CutOff>1.0</CutOff>
+			<OuterCutOff>1.0</OuterCutOff>
+
+		</Light>
+
+
+	</Components>
+
+</Prefab>

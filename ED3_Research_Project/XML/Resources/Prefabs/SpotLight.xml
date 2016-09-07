@@ -1,0 +1,53 @@
+<Prefab>
+	
+	<Name>SpotLight</Name>
+
+	<Components>
+
+		<Light>
+            
+			<Type>Spot</Type>
+
+			<Position>
+				<X>-2.0</X>
+				<Y>2.0</Y>
+				<Z>2.0</Z>
+			</Position>
+
+			<Direction>
+				<X>90</X>
+				<Y>-90</Y>
+				<Z>0</Z>
+			</Direction>
+
+			<Ambient>
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Ambient>
+
+			<Diffuse>
+				<X>0.9</X>
+				<Y>0.9</Y>
+				<Z>0.7</Z>
+			</Diffuse>
+
+			<Specular>
+				<X>0.45</X>
+				<Y>0.45</Y>
+				<Z>0.35</Z>
+			</Specular>
+
+			<Constant>1.0</Constant>
+			<Linear>0.9</Linear>
+			<Quadratic>0.32</Quadratic>
+
+			<CutOff>16.5</CutOff>
+			<OuterCutOff>17.0</OuterCutOff>
+
+		</Light>
+
+
+	</Components>
+
+</Prefab>

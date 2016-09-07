@@ -123,12 +123,10 @@ void Mesh::GenerateBuffers(){
 
 	glBufferSubData(GL_ARRAY_BUFFER, 6*vertices_size, 2*vertices_size, &indexed_uvs[0]);
 
-
 	//Create Index Buffer
 	glGenBuffers(1, &indexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0] , GL_STATIC_DRAW);
-
 
 	unsigned int textureCoordOffset = 6*vertices_size;
 	unsigned int normalOffset = 3*vertices_size;
