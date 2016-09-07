@@ -181,7 +181,7 @@ void Render(){
 
 	glUseProgram(program);
 
-	myCamera.update(timer.Delta());
+	myCamera.update(static_cast<float>(timer.Delta()));
 
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
 	glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(P));

@@ -1,6 +1,7 @@
 #ifndef __TEXTURE_H__
 #define __TEXTURE_H__
 
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <windows.h>									// Standard windows header
 #include <stdio.h>										// Standard I/O header 
