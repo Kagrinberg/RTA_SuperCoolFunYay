@@ -47,7 +47,7 @@ void LightingManager::ActivateLights() {
 
 
 void LightingManager::ActivateDirectionalLight(unsigned int index) {
-	std::string uniformName = "dirLight[";
+	std::string uniformName = "dirLights[";
 	uniformName.append(std::to_string(m_numDirectionalLights));
 	uniformName.append("].");
 
@@ -79,7 +79,6 @@ void LightingManager::ActivateDirectionalLight(unsigned int index) {
 	glUniform3f(specularLocation, v_specular.x, v_specular.y, v_specular.z);
 
 	m_numDirectionalLights++;
-
 }
 
 void LightingManager::ActivatePointLight(unsigned int index) {

@@ -8,11 +8,6 @@
 		</Entity>
 
 		<Entity>
-			<Name>PointLight</Name>
-			<Prefab>PointLight</Prefab>
-		</Entity>
-
-		<Entity>
 			<Name>SpotLight</Name>
 			<Prefab>SpotLight</Prefab>
 		</Entity>
@@ -25,38 +20,7 @@
 		<Entity>
 			<Name>GroundPlane</Name>
 			<Prefab>GroundPlane</Prefab>
-		</Entity>
-
-		<Entity>
-			<Name>Grenade</Name>
-			<Prefab>Grenade</Prefab>
-		</Entity>
-
-		<Entity>
-			<Name>GroundPlane</Name>
-			<Prefab>GroundPlane</Prefab>
-		</Entity>
-		
-		<Entity>
-			<Name>Grenade</Name>
-			<Prefab>Grenade</Prefab>
-		</Entity>
-
-		<Entity>
-			<Name>GroundPlane</Name>
-			<Prefab>GroundPlane</Prefab>
-		</Entity>
-		
-		<Entity>
-			<Name>Grenade</Name>
-			<Prefab>Grenade</Prefab>
-		</Entity>
-
-		<Entity>
-			<Name>GroundPlane</Name>
-			<Prefab>GroundPlane</Prefab>
-		</Entity>
-		
+		</Entity>		
 		
 	</Entities>
 

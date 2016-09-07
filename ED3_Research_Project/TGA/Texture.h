@@ -55,7 +55,6 @@ public:
 	unsigned int getTexID() { return texID; };
 
 	bool ProcessTextures(FbxMesh* fbx_mesh);
-
 };
 
 
