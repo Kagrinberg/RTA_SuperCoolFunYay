@@ -3,75 +3,75 @@
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
 bool Mesh::LoadEntry(const char * path){
-
-	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<glm::vec3> temp_vertices;
-	std::vector<glm::vec2> temp_uvs;
-	std::vector<glm::vec3> temp_normals;
-
-	FILE * file;
-	fopen_s(&file, path, "r");
-	if( file == NULL ){
-		printf("Impossible to open the file !\n");
-		return false;
-	}
-
-	while( true ){
-
-		char lineHeader[128];
-		// read the first word of the line
-		int res = fscanf_s(file, "%s", lineHeader, 128);
-		if (res == EOF)
-			break; // EOF = End Of File. Quit the loop.
-
-		// else : parse lineHeader
-		if ( strcmp( lineHeader, "v" ) == 0 ){
-			glm::vec3 vertex;
-			fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z, 128);
-			temp_vertices.push_back(vertex);
-		}else if ( strcmp( lineHeader, "vt" ) == 0 ){
-			glm::vec2 uv;
-			fscanf_s(file, "%f %f\n", &uv.x, &uv.y, 128);
-			temp_uvs.push_back(uv);
-		}else if ( strcmp( lineHeader, "vn" ) == 0 ){
-			glm::vec3 normal;
-			fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z, 128);
-			temp_normals.push_back(normal);
-		}else if ( strcmp( lineHeader, "f" ) == 0 ){
-			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2], 128);
-			if (matches != 9){
-				printf("File can't be read by our simple parser : ( Try exporting with other options\n");
-				return false;
-			}
-			for (unsigned int i = 0; i < 3; i++){
-				vertexIndices.push_back(vertexIndex[i]);
-				uvIndices.push_back(uvIndex[i]);
-				normalIndices.push_back(normalIndex[i]);
-			}
-		}
-	}
-	// For each vertex of each triangle
-	for( unsigned int i=0; i < vertexIndices.size(); i++ ){
-		unsigned int vertexIndex = vertexIndices[i];
-		glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
-		vertices.push_back(vertex);
-	}
-	for( unsigned int i=0; i < uvIndices.size(); i++ ){
-		unsigned int uvIndex = uvIndices[i];
-		glm::vec2 uv = temp_uvs[ uvIndex-1 ];
-		uvs.push_back(uv);
-	}
-	for( unsigned int i=0; i < uvIndices.size(); i++ ){
-		unsigned int normalIndex = normalIndices[i];
-		glm::vec3 normal = temp_normals[ normalIndex-1 ];
-		normals.push_back(normal);
-	}
-	//Generate New Indices
-	GenerateIndices();
-
-	GenerateBuffers();
-
+	//
+	//std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+	//std::vector<glm::vec3> temp_vertices;
+	//std::vector<glm::vec2> temp_uvs;
+	//std::vector<glm::vec3> temp_normals;
+	//
+	//FILE * file;
+	//fopen_s(&file, path, "r");
+	//if( file == NULL ){
+	//	printf("Impossible to open the file !\n");
+	//	return false;
+	//}
+	//
+	//while( true ){
+	//
+	//	char lineHeader[128];
+	//	// read the first word of the line
+	//	int res = fscanf_s(file, "%s", lineHeader, 128);
+	//	if (res == EOF)
+	//		break; // EOF = End Of File. Quit the loop.
+	//
+	//	// else : parse lineHeader
+	//	if ( strcmp( lineHeader, "v" ) == 0 ){
+	//		glm::vec3 vertex;
+	//		fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z, 128);
+	//		temp_vertices.push_back(vertex);
+	//	}else if ( strcmp( lineHeader, "vt" ) == 0 ){
+	//		glm::vec2 uv;
+	//		fscanf_s(file, "%f %f\n", &uv.x, &uv.y, 128);
+	//		temp_uvs.push_back(uv);
+	//	}else if ( strcmp( lineHeader, "vn" ) == 0 ){
+	//		glm::vec3 normal;
+	//		fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z, 128);
+	//		temp_normals.push_back(normal);
+	//	}else if ( strcmp( lineHeader, "f" ) == 0 ){
+	//		unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+	//		int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2], 128);
+	//		if (matches != 9){
+	//			printf("File can't be read by our simple parser : ( Try exporting with other options\n");
+	//			return false;
+	//		}
+	//		for (unsigned int i = 0; i < 3; i++){
+	//			vertexIndices.push_back(vertexIndex[i]);
+	//			uvIndices.push_back(uvIndex[i]);
+	//			normalIndices.push_back(normalIndex[i]);
+	//		}
+	//	}
+	//}
+	//// For each vertex of each triangle
+	//for( unsigned int i=0; i < vertexIndices.size(); i++ ){
+	//	unsigned int vertexIndex = vertexIndices[i];
+	//	glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
+	//	vertices.push_back(vertex);
+	//}
+	//for( unsigned int i=0; i < uvIndices.size(); i++ ){
+	//	unsigned int uvIndex = uvIndices[i];
+	//	glm::vec2 uv = temp_uvs[ uvIndex-1 ];
+	//	uvs.push_back(uv);
+	//}
+	//for( unsigned int i=0; i < uvIndices.size(); i++ ){
+	//	unsigned int normalIndex = normalIndices[i];
+	//	glm::vec3 normal = temp_normals[ normalIndex-1 ];
+	//	normals.push_back(normal);
+	//}
+	////Generate New Indices
+	//GenerateIndices();
+	//
+	//GenerateBuffers();
+	//
 	return true;
 }
 
@@ -164,21 +164,21 @@ bool Mesh::LoadMesh(FbxScene* scene)
 				FbxVector4 fbxVert = verts[polyVertIndex];
 
 				glm::vec3 vert;
-				vert.x = fbxVert[0];
-				vert.y = fbxVert[1];
-				vert.z = fbxVert[2];
+				vert.x = (float)fbxVert[0];
+				vert.y = (float)fbxVert[1];
+				vert.z = (float)fbxVert[2];
 				vertices.push_back(vert);
 
 			}
 		}
 
-		for (unsigned int i = 0; i < fnormals.Size(); i++) {
+		for (int i = 0; i < fnormals.Size(); i++) {
 
 			glm::vec3 normal = glm::vec3(fnormals[i][0], fnormals[i][1], fnormals[i][2]);
 			normals.push_back(normal);
 		}
 
-		for (unsigned int i = 0; i < fuvs.Size(); i++) {
+		for (int i = 0; i < fuvs.Size(); i++) {
 
 			glm::vec2 uv = glm::vec2(fuvs[i][0], fuvs[i][1]);
 			uvs.push_back(uv);
