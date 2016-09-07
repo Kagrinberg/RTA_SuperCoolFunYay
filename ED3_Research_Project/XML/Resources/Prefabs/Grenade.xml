@@ -1,0 +1,48 @@
+<Prefab>
+	
+	<Name>Grenade</Name>
+
+	<Components>
+
+		<Transform>
+
+			<Position>
+				<X>0.0</X>
+				<Y>0.5</Y>
+				<Z>0.0</Z>
+			</Position>
+			
+			<Rotation>
+				<X>-90</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Rotation>
+
+			<Scale>
+				<X>0.1</X>
+				<Y>0.1</Y>
+				<Z>0.1</Z>
+			</Scale>
+
+		</Transform>
+
+		<Renderable>
+
+			<Mesh>
+				<Name>Grenade</Name>
+				<Location>FBXOBJ/WPN_MK2Grenade.FBX</Location>
+			</Mesh>
+
+			<Material>
+				<Name>Grenade</Name>
+				<Shininess>30.0f</Shininess>
+				<Diffuse>Textures/WPNT_MK2Grenade_diff.tga</Diffuse>
+				<Specular>Textures/WPNT_MK2Grenade_spec.tga</Specular>
+			</Material>
+
+		</Renderable>
+
+
+	</Components>
+
+</Prefab>

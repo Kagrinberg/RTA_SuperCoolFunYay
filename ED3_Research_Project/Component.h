@@ -14,7 +14,7 @@ private:
 
 public:
 
-	virtual Component * copy() = 0 {};
+	virtual Component * CopyComponent() = 0 {};
 	virtual void LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resourceManager) = 0 {};
 
 };

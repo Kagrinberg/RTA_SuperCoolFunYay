@@ -1,6 +1,14 @@
 #include "Camera.h"
+#include "Utilities.h"
 
 Camera::Camera() {
+	ViewMatrix = glm::mat4(1.0f);
+	camera_pos_ = glm::vec3(0, 0.5f, 2.0f);
+}
+
+void Camera::Initialize() {
+	viewPosLoc = glGetUniformLocation(3, "viewPos");
+	glUniform3f(viewPosLoc, camera_pos_.x, camera_pos_.y, camera_pos_.z);
 }
 
 glm::mat4 Camera::getMatrix()
@@ -8,15 +16,12 @@ glm::mat4 Camera::getMatrix()
 	return ViewMatrix;
 }
 
-void Camera::setMatrix(glm::mat4 newMatrix)
-{
-	ViewMatrix = newMatrix;
-}
 
 // move directions - (forward/backward/0, left/right/0, up/down/0). each direction could be 1, -1 or 0
 // rotations - (horizontal_amount, vertical_amount)
 void Camera::move(glm::vec3 directions, glm::vec2 rotations, float frametime)
 {
+
 	glm::quat pitch = glm::quat(glm::vec3(-rotations.y, 0, 0.f));
 	glm::quat yaw = glm::quat(glm::vec3(0, -rotations.x, 0.f));
 
@@ -34,6 +39,11 @@ void Camera::move(glm::vec3 directions, glm::vec2 rotations, float frametime)
 
 	ViewMatrix = glm::lookAt(camera_pos_, camera_pos_ + camera_roll_direction,
 		glm::cross(camera_roll_direction, camera_pitch_direction));
+
+	glUniform3f(viewPosLoc, camera_pos_.x, camera_pos_.y, camera_pos_.z);
+	glUniform3f(glGetUniformLocation(3, "spotLights[0].direction"), -ViewMatrix[0].z, -ViewMatrix[1].z, -ViewMatrix[2].z);
+	glUniform3f(glGetUniformLocation(3, "spotLights[0].position"), camera_pos_.x, camera_pos_.y, camera_pos_.z);
+
 }
 
 void Camera::reset()
@@ -51,7 +61,7 @@ void Camera::update(float frametime)
 
 	glm::vec2 rotation = { 0,0 };
 	glm::vec3 directions = { 0,0,0 };
-	if (GetAsyncKeyState(VK_LBUTTON))
+	if (GetAsyncKeyState(VK_RBUTTON))
 	{
 		rotation.x = (mouseCur.x - mousePrev.x) * 0.03f;
 		rotation.y = (mouseCur.y - mousePrev.y) * 0.03f;
@@ -73,7 +83,6 @@ void Camera::update(float frametime)
 	if (GetAsyncKeyState('S')) directions.x = -1;
 	if (GetAsyncKeyState('E')) directions.z = 1;
 	if (GetAsyncKeyState('Q')) directions.z = -1;
-
 
 
 	if (GetKeyState('R') & 0x80)

@@ -17,13 +17,13 @@ ResourceManager * resourceManager;
 RenderingManager * renderingManager;
 EntityManager * entityManager;
 ShaderManager * shaderManager;
+LightingManager * lightingManager;
+
 unsigned int program;
 
 #pragma region GLOBAL_VARIABLES
 unsigned int screenWidth = 1024;
 unsigned int screenHeight = 720;
-
-glm::vec4 light = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
 unsigned int perspectiveMatrixID, viewMatrixID, modelMatrixID, rotMatrixID, lightID;
 
@@ -77,10 +77,12 @@ int main(int argc, char** argv){
 	entityManager = new EntityManager();
 	shaderManager = new ShaderManager();
 	renderingManager = new RenderingManager();
+	lightingManager = new LightingManager();
 
 	//Add delegates between managers
 	resourceManager->setEntityManager(entityManager);
 	entityManager->setRenderingManager(renderingManager);
+	entityManager->setLightingManager(lightingManager);
 	renderingManager->setResourceManager(resourceManager);
 
 	//Load Level
@@ -90,10 +92,21 @@ int main(int argc, char** argv){
 	shaderManager->CreateProgram("Main", "Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 	program = shaderManager->GetShader("Main");
 
-	perspectiveMatrixID = glGetUniformLocation(program, "mP");
-	viewMatrixID = glGetUniformLocation(program, "mV");
-	modelMatrixID = glGetUniformLocation(program, "mM");
-	lightID = glGetUniformLocation(program, "vLight");
+	perspectiveMatrixID = glGetUniformLocation(program, "projection");
+	viewMatrixID = glGetUniformLocation(program, "view");
+	modelMatrixID = glGetUniformLocation(program, "model");
+
+	//Use Program
+	glUseProgram(program);
+
+	//Intialize Camera
+	myCamera.Initialize();
+
+	//Activate Lights
+	lightingManager->ActivateLights();
+
+	//Sort Renderables
+	renderingManager->sortByMaterial();
 
 	glutMainLoop();
 
@@ -138,25 +151,12 @@ GLenum Initialize(int argc, char** argv){
 void InitializeRegistry(){
 	register_type(Renderable);
 	register_type(Transform);
+	register_type(Light);
 }
 
 void InitializeMatrices(){
 
-	theta = 0.0f;
-	scaleAmount = 1.0f;
 
-	rotXMatrix = glm::mat4(1.0f);
-	rotYMatrix = glm::mat4(1.0f);
-	rotZMatrix = glm::mat4(1.0f);
-
-	transMatrix = glm::mat4(1.0f);
-	scaleMatrix = glm::mat4(1.0f);
-	tempMatrix1 = glm::mat4(1.0f);
-
-	transMatrix = glm::translate(transMatrix, glm::vec3(0.0f, -0.0f, -1.2f));
-
-	M = glm::mat4(1.0f);
-	myCamera.setMatrix(glm::mat4(1.0f));
 	P = glm::mat4(1.0f);
 
 }
@@ -181,21 +181,10 @@ void Render(){
 
 	glUseProgram(program);
 
-	theta=1.0000f;
-	scaleAmount= abs(sin(theta));
-
-	//scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scaleAmount, scaleAmount,scaleAmount));
-	//rotYMatrix = glm::rotate(glm::mat4x4(1.0f), theta, glm::vec3(0.5f, 0.1f, 0.0f));
-	
-	tempMatrix1 = rotYMatrix * scaleMatrix;
-	M = transMatrix * tempMatrix1;
-
 	myCamera.update(timer.Delta());
 
-	glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, glm::value_ptr(M));
 	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
 	glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(P));
-	glUniform4fv(lightID, 1, glm::value_ptr(light));
 
 	renderingManager->RenderAll();
 
@@ -211,5 +200,6 @@ void CleanUp() {
 	delete entityManager;
 	delete shaderManager;
 	delete renderingManager;
+	delete lightingManager;
 	delete Registry::getInstance();
 }

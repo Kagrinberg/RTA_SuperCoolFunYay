@@ -1,28 +1,33 @@
 #version 430
 
-layout(location = 0) in vec4 s_vPosition;
-layout(location = 1) in vec2 s_vTexCoord;
-layout(location = 2) in vec4 s_vNormal;
+layout (location = 0) in vec4 position;
+layout (location = 1) in vec2 texCoords;
+layout (location = 2) in vec4 normal;
+//layout (location = 3) in vec3 tangent;
+//layout (location = 4) in vec3 bitangent;
 
-uniform mat4 mM;
-uniform mat4 mV;
-uniform mat4 mP;
-uniform vec4 vLight;
+out vec3 Normal;
+out vec3 FragPos;
+out vec2 TexCoords;
+out mat3 TBN;
 
-out vec3 fN;
-out vec3 fL;
-out vec3 fE;	
-
-out vec2 texCoord;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main () {
 
+	gl_Position = projection *view * model * position;
 
-    fN = mat3(transpose(inverse(mM))) * s_vNormal.xyz;
-    fL = vLight.xyz;
-    fE = (mV*mM*s_vPosition).xyz;
-    texCoord = s_vTexCoord;
+    FragPos = vec3(model * vec4(position.xyz, 1.0f));
+    Normal = mat3(transpose(inverse(model))) * normal.xyz;  
+    TexCoords = texCoords;
 
-	gl_Position = mP*mV*mM*s_vPosition;
+	//mat3 normalMatrix = transpose(inverse(mat3(model)));
+    //vec3 T = normalize(normalMatrix * tangent);
+    //vec3 B = normalize(normalMatrix * bitangent);
+    //vec3 N = normalize(normalMatrix * normal);    
+
+	//TBN = transpose(mat3(T, B, N)); 
 
 }
