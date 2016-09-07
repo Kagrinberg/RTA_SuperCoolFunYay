@@ -30,7 +30,7 @@
 
 			<Mesh>
 				<Name>Box</Name>
-				<Location>FBXOBJ/BOX.fbx</Location>
+				<Location>FBXOBJ/Box_Idle.fbx</Location>
 			</Mesh>
 
 			<Material>

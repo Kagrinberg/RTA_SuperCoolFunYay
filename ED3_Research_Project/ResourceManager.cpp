@@ -119,6 +119,12 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 		Mesh * temp = new Mesh();
 		temp->LoadMesh(scene);
 		m_meshes[id].resource = temp;
+
+		//get Skeleton and joints
+		Animation * myAnimation = new Animation();
+		myAnimation->setScene(scene);
+		myAnimation->CreateSkeleton();
+
 	}
 	//Other wise increase the refrence count and return the id.
 	m_meshes[id].refCount++;
