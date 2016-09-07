@@ -2,8 +2,11 @@
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
-bool Mesh::LoadEntry(const char * path){
 
+
+bool Mesh::LoadEntry(const char * path){
+	//old obj leader
+/*
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
 	std::vector<glm::vec3> temp_vertices;
 	std::vector<glm::vec2> temp_uvs;
@@ -71,7 +74,7 @@ bool Mesh::LoadEntry(const char * path){
 	GenerateIndices();
 
 	GenerateBuffers();
-
+*/
 	return true;
 }
 
@@ -164,21 +167,21 @@ bool Mesh::LoadMesh(FbxScene* scene)
 				FbxVector4 fbxVert = verts[polyVertIndex];
 
 				glm::vec3 vert;
-				vert.x = fbxVert[0];
-				vert.y = fbxVert[1];
-				vert.z = fbxVert[2];
+				vert.x = static_cast<float>(fbxVert[0]);
+				vert.y = static_cast<float>(fbxVert[1]);
+				vert.z = static_cast<float>(fbxVert[2]);
 				vertices.push_back(vert);
 
 			}
 		}
 
-		for (unsigned int i = 0; i < fnormals.Size(); i++) {
+		for (int i = 0; i < fnormals.Size(); i++) {
 
 			glm::vec3 normal = glm::vec3(fnormals[i][0], fnormals[i][1], fnormals[i][2]);
 			normals.push_back(normal);
 		}
 
-		for (unsigned int i = 0; i < fuvs.Size(); i++) {
+		for (int i = 0; i < fuvs.Size(); i++) {
 
 			glm::vec2 uv = glm::vec2(fuvs[i][0], fuvs[i][1]);
 			uvs.push_back(uv);
