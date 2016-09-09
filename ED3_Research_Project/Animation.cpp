@@ -74,10 +74,10 @@ void Animation::SkeleRecursive(FbxNode * currentNode, int curIndex, int parentIn
 	}
 }
 
-void Animation::setMesh(Mesh * theMesh)
-{
-	myMesh = theMesh;
-}
+//void Animation::setMesh(Mesh * theMesh)
+//{
+//	myMesh = theMesh;
+//}
 
 void Animation::makeCpts()
 {
@@ -169,4 +169,9 @@ void Animation::createWeights()
 Skeleton Animation::getSkele()
 {
 	return mSkeleton;
+}
+
+std::unordered_map<unsigned int, CtrlPoint*>& Animation::getMap()
+{
+	return mControlPoints;
 }

@@ -18,7 +18,7 @@ private:
 	static Registry * s_instance;
 
 public:
-
+	unsigned int currentProgram;
 	typedef Component * (*FuncPointer)(); 
 	std::unordered_map<unsigned int, FuncPointer> registry;
 

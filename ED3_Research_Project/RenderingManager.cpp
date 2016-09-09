@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>   
 #include "GLError.h"
+#include "Registry.h"
 
 
 RenderingManager::RenderingManager(){
@@ -32,6 +33,20 @@ void RenderingManager::RenderAll(){
 		check_gl_error();
 
 		unsigned int meshID = m_renderables[i]->getMeshID();
+
+
+		Mesh * mesh = m_resourceManager->getMesh(meshID);
+		mesh->setActive();
+
+		if (mesh->isAnimated())
+		{
+			Registry::getInstance()->currentProgram = 6;
+		}
+		else
+		{
+			Registry::getInstance()->currentProgram = 3;
+		}
+
 		unsigned int materialID = m_renderables[i]->getMaterialID();
 		if (m_currentMaterialID != materialID) {
 			m_currentMaterialID = materialID;
@@ -41,13 +56,13 @@ void RenderingManager::RenderAll(){
 			unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTexID();
 			unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTexID();
 
-			unsigned int matDiffuseLoc = glGetUniformLocation(3, "material.diffuse");
+			unsigned int matDiffuseLoc = glGetUniformLocation(Registry::getInstance()->currentProgram, "material.diffuse");
 			check_gl_error();
 
-			unsigned int matSpecularLoc = glGetUniformLocation(3, "material.specular");
+			unsigned int matSpecularLoc = glGetUniformLocation(Registry::getInstance()->currentProgram, "material.specular");
 			check_gl_error();
 
-			unsigned int matShininessLoc = glGetUniformLocation(3, "material.shininess");
+			unsigned int matShininessLoc = glGetUniformLocation(Registry::getInstance()->currentProgram, "material.shininess");
 			check_gl_error();
 
 			glUniform1i(matDiffuseLoc, 0);
@@ -72,8 +87,8 @@ void RenderingManager::RenderAll(){
 			check_gl_error();
 
 		}
-		Mesh * mesh = m_resourceManager->getMesh(meshID);
-		mesh->setActive();
+		
+
 
 		glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, NULL);
 		check_gl_error();

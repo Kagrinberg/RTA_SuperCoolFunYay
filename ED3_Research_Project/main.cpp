@@ -20,7 +20,7 @@ EntityManager * entityManager;
 ShaderManager * shaderManager;
 LightingManager * lightingManager;
 
-unsigned int program;
+unsigned int program[2];
 
 unsigned int screenWidth = 1024;
 unsigned int screenHeight = 720;
@@ -76,15 +76,23 @@ int main(int argc, char** argv){
 
 	//Create Shader Program and set main program.
 	shaderManager->CreateProgram("Main", "Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
-	program = shaderManager->GetShader("Main");
+	shaderManager->CreateProgram("animatedMain", "Shaders/AnimationVS.glsl", "Shaders/AnimationFS.glsl");
+	program[0] = shaderManager->GetShader("Main");
+	program[1] = shaderManager->GetShader("animatedMain");
+
+	Registry::getInstance()->currentProgram = 3;
 
 	//Get the matrix uniform locations from shaders.
-	modelMatrixID = glGetUniformLocation(program, "model");
-	perspectiveMatrixID = glGetUniformLocation(program, "projection");
-	viewMatrixID = glGetUniformLocation(program, "view");
+	modelMatrixID = glGetUniformLocation(program[0], "model");
+	perspectiveMatrixID = glGetUniformLocation(program[0], "projection");
+	viewMatrixID = glGetUniformLocation(program[0], "view");
+
+	modelMatrixID = glGetUniformLocation(program[1], "model");
+	perspectiveMatrixID = glGetUniformLocation(program[1], "projection");
+	viewMatrixID = glGetUniformLocation(program[1], "view");
 
 	//Use Program
-	glUseProgram(program);
+	glUseProgram(program[0]);
 
 	//Intialize Camera
 	myCamera.Initialize();
@@ -135,7 +143,7 @@ void MainLoop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-		glUseProgram(program);
+		glUseProgram(program[0]);
 
 		myCamera.update(deltaTime);
 

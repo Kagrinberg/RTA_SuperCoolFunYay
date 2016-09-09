@@ -122,7 +122,8 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 
 		//get Skeleton and joints
 		Animation * myAnimation = new Animation();
-		myAnimation->setMesh(temp);
+		//myAnimation->setMesh(temp);
+		temp->setAnimator(myAnimation);
 		myAnimation->setScene(scene);
 		myAnimation->CreateSkeleton();
 		if (myAnimation->isAnimated())
@@ -141,9 +142,9 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 				m_entityManager->addEntity(uniqueName.c_str(), "FBXSphere");
 
 				glm::vec3 jointPos;
-				jointPos.x = myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][0];
-				jointPos.y = myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][1];
-				jointPos.z = myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][2];
+				jointPos.x = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][0]);
+				jointPos.y = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][1]);
+				jointPos.z = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][2]);
 
 
 				m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
@@ -154,7 +155,7 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 
 		}
 		
-
+		temp->GenerateBuffers();
 	}
 	//Other wise increase the refrence count and return the id.
 	m_meshes[id].refCount++;

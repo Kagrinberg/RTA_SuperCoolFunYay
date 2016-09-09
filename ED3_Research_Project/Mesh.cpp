@@ -1,5 +1,7 @@
 #include "Mesh.h"
 #include "GLError.h"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/glm.hpp"
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
@@ -103,7 +105,7 @@ void Mesh::GenerateIndices(){
 
 	}
 
-	GenerateBuffers();
+	
 
 }
 
@@ -127,7 +129,7 @@ void Mesh::GenerateBuffers(){
 	unsigned int num_vertices = indexed_vertices.size();
 	unsigned int vertices_size = num_vertices * sizeof(float);
 
-	glBufferData(GL_ARRAY_BUFFER, 8*vertices_size, NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 16*vertices_size, NULL, GL_STATIC_DRAW);
 	check_gl_error();
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 3*vertices_size, &indexed_vertices[0]);
@@ -138,6 +140,51 @@ void Mesh::GenerateBuffers(){
 
 	glBufferSubData(GL_ARRAY_BUFFER, 6*vertices_size, 2*vertices_size, &indexed_uvs[0]);
 	check_gl_error();
+
+	//create joint buffers
+	if (myAnimation->isAnimated())
+	{
+		std::unordered_map<unsigned int, CtrlPoint*> controlMap = myAnimation->getMap();
+
+		std::vector<int> boneIndicies;
+		std::vector<float> boneWeights;
+
+
+		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
+		{
+			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
+
+			for (unsigned int j = 0; j < temp->jointIndex.size(); j++)
+			{
+				boneIndicies.push_back(temp->jointIndex[j]);
+				boneWeights.push_back(temp->jointWeights[j]);
+			}
+
+		}
+
+		Skeleton mySkele = myAnimation->getSkele();
+
+		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
+		{
+			glm::mat4 tempBone;
+			tempBone[0] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][3]);
+			tempBone[1] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][3]);
+			tempBone[2] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][3]);
+			tempBone[3] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][3]);
+
+
+			boneOffsets.push_back(tempBone);
+		}
+
+		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
+		check_gl_error();
+
+		glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
+		check_gl_error();
+
+
+	}
+
 
 	//Create Index Buffer
 	glGenBuffers(1, &indexBufferID);
@@ -239,4 +286,21 @@ void Mesh::setActive(){
 	glBindVertexArray(vertexArrayObject);
 	check_gl_error();
 
+	if (myAnimation->isAnimated())
+	{
+		unsigned int location = glGetUniformLocation(3, "BoneOffset");
+		glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
+		check_gl_error();
+	}
+
+}
+
+void Mesh::setAnimator(Animation * theAnimator)
+{
+	myAnimation = theAnimator;
+}
+
+bool Mesh::isAnimated()
+{
+	return myAnimation->isAnimated();
 }
