@@ -29,6 +29,9 @@
     <Filter Include="Project\FBX">
       <UniqueIdentifier>{c48625b6-80a8-4c2e-b978-f32337a9b47c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\ErrorChecking">
+      <UniqueIdentifier>{632df2b9-2441-4c1e-a88a-dc7cbf800a63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderable.cpp">
@@ -41,9 +44,6 @@
       <Filter>Project\Entity</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
-      <Filter>Project\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
       <Filter>Project\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Prefab.cpp">
@@ -93,6 +93,12 @@
     </ClCompile>
     <ClCompile Include="LightingManager.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="GameWindow.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="GLError.cpp">
+      <Filter>Project\ErrorChecking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +165,12 @@
     </ClInclude>
     <ClInclude Include="LightingManager.h">
       <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="GameWindow.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="GLError.h">
+      <Filter>Project\ErrorChecking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
