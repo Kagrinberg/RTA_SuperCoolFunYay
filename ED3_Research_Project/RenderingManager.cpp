@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>   
+#include "GLError.h"
 
 
 RenderingManager::RenderingManager(){
@@ -26,7 +27,10 @@ void RenderingManager::RenderAll(){
 	for(unsigned int i = 0; i < m_numRenderables; i++){
 		Transform * transform = m_renderables[i]->getParent()->getTransform();
 		glm::mat4 * matrix = transform->getMatrix();
+
 		glUniformMatrix4fv(5, 1, GL_FALSE, glm::value_ptr(*matrix));
+		check_gl_error();
+
 		unsigned int meshID = m_renderables[i]->getMeshID();
 		unsigned int materialID = m_renderables[i]->getMaterialID();
 		if (m_currentMaterialID != materialID) {
@@ -36,20 +40,44 @@ void RenderingManager::RenderAll(){
 			unsigned int specularID = material->getSpecularID();
 			unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTexID();
 			unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTexID();
+
 			unsigned int matDiffuseLoc = glGetUniformLocation(3, "material.diffuse");
+			check_gl_error();
+
 			unsigned int matSpecularLoc = glGetUniformLocation(3, "material.specular");
+			check_gl_error();
+
 			unsigned int matShininessLoc = glGetUniformLocation(3, "material.shininess");
+			check_gl_error();
+
 			glUniform1i(matDiffuseLoc, 0);
+			check_gl_error();
+
 			glUniform1i(matSpecularLoc, 1);
+			check_gl_error();
+
 			glUniform1f(matShininessLoc, material->getShininess());
+			check_gl_error();
+
 			glActiveTexture(GL_TEXTURE0);
+			check_gl_error();
+
 			glBindTexture(GL_TEXTURE_2D, texture0ID);
+			check_gl_error();
+
 			glActiveTexture(GL_TEXTURE1);
+			check_gl_error();
+
 			glBindTexture(GL_TEXTURE_2D, texture1ID);
+			check_gl_error();
+
 		}
 		Mesh * mesh = m_resourceManager->getMesh(meshID);
 		mesh->setActive();
+
 		glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, NULL);
+		check_gl_error();
+
 	}
 
 };
