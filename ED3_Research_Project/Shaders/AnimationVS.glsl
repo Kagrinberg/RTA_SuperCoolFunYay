@@ -20,10 +20,22 @@ uniform mat4 projection;
 
 void main () {
 
-	gl_Position = projection *view * model * position;
+
+	gl_position = (vec3(position.xyz, 1) * BoneOffset[boneIndex[0]]) * boneWeight[0];
+	gl_position += (vec3(position.xyz, 1) * BoneOffset[boneIndex[1]]) * boneWeight[1];
+	gl_position += (vec3(position.xyz, 1) * BoneOffset[boneIndex[2]]) * boneWeight[2];
+	gl_position += (vec3(position.xyz, 1) * BoneOffset[boneIndex[3]]) * boneWeight[3];
+
+	gl_Position = projection *view * model * gl_Position;
 
     FragPos = vec3(model * vec4(position.xyz, 1.0f));
-    Normal = mat3(transpose(inverse(model))) * normal.xyz;  
+
+	Normal = (vec3(normal.xyz, 0) * BoneOffset[boneIndex[0]]) * boneWeight[0];
+	Normal += (vec3(normal.xyz, 0) * BoneOffset[boneIndex[1]]) * boneWeight[1];
+	Normal += (vec3(normal.xyz, 0) * BoneOffset[boneIndex[2]]) * boneWeight[2];
+	Normal += (vec3(normal.xyz, 0) * BoneOffset[boneIndex[3]]) * boneWeight[3];
+    Normal = mat3(transpose(inverse(model))) * Normal;  
+
     TexCoords = texCoords;
 
 
