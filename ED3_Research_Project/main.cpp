@@ -79,9 +79,9 @@ int main(int argc, char** argv){
 	program = shaderManager->GetShader("Main");
 
 	//Get the matrix uniform locations from shaders.
+	modelMatrixID = glGetUniformLocation(program, "model");
 	perspectiveMatrixID = glGetUniformLocation(program, "projection");
 	viewMatrixID = glGetUniformLocation(program, "view");
-	modelMatrixID = glGetUniformLocation(program, "model");
 
 	//Use Program
 	glUseProgram(program);
