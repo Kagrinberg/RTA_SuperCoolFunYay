@@ -126,7 +126,7 @@ void CleanUp() {
 
 void MainLoop() {
 
-		float currentFrame = glfwGetTime();
+		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 

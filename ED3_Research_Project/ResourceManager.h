@@ -6,6 +6,7 @@
 #include "TGA\Texture.h"
 #include "Material.h"
 #include "FBXManager.h"
+#include "Animation.h"
 
 class EntityManager;
 

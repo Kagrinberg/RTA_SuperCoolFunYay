@@ -95,6 +95,7 @@ void Mesh::GenerateIndices(){
 			indexed_vertices.push_back(vertices[i]);
 			indexed_uvs.push_back(uvs[i]);
 			indexed_normals.push_back(normals[i]);
+			indexed_controlPoints.push_back(controlPoints[i]);
 			unsigned int newindex = (unsigned int)indexed_vertices.size() -1;
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
@@ -177,9 +178,17 @@ bool Mesh::LoadMesh(FbxScene* scene)
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
-	
+
 		FbxVector4 *verts = mesh->GetControlPoints();
-	
+
+		FbxArray<FbxVector4> fnormals;
+		mesh->GetPolygonVertexNormals(fnormals);
+
+		FbxArray<FbxVector2> fuvs;
+		FbxStringList nameList;
+		mesh->GetUVSetNames(nameList);
+		mesh->GetPolygonVertexUVs(nameList.GetStringAt(0), fuvs);
+
 		for (int polyCount = 0; polyCount < mesh->GetPolygonCount(); ++polyCount)
 		{
 			if (mesh->GetPolygonSize(polyCount) > 3) return false;
@@ -187,34 +196,29 @@ bool Mesh::LoadMesh(FbxScene* scene)
 			{
 				int polyVertIndex = mesh->GetPolygonVertex(polyCount, polyVertCounter);
 				FbxVector4 fbxVert = verts[polyVertIndex];
-	
+
 				glm::vec3 vert;
 				vert.x = static_cast<float>(fbxVert[0]);
 				vert.y = static_cast<float>(fbxVert[1]);
 				vert.z = static_cast<float>(fbxVert[2]);
 				vertices.push_back(vert);
+				controlPoints.push_back(polyVertIndex);
 			}
 		}
-	
-		FbxArray<FbxVector4> fnormals;
-		mesh->GetPolygonVertexNormals(fnormals);
-	
-		FbxArray<FbxVector2> fuvs;
-		FbxStringList nameList;
-		mesh->GetUVSetNames(nameList);
-		mesh->GetPolygonVertexUVs(nameList.GetStringAt(0), fuvs);
-	
+
 		for (int i = 0; i < fnormals.Size(); i++) {
-	
+
 			glm::vec3 normal = glm::vec3(fnormals[i][0], fnormals[i][1], fnormals[i][2]);
 			normals.push_back(normal);
 		}
-	
+
 		for (int i = 0; i < fuvs.Size(); i++) {
-	
+
 			glm::vec2 uv = glm::vec2(fuvs[i][0], fuvs[i][1]);
 			uvs.push_back(uv);
+
 		}
+
 	}
 
 	GenerateIndices();
