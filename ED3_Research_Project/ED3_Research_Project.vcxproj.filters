@@ -100,6 +100,9 @@
     <ClCompile Include="GLError.cpp">
       <Filter>Project\ErrorChecking</Filter>
     </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -172,6 +175,9 @@
     <ClInclude Include="GLError.h">
       <Filter>Project\ErrorChecking</Filter>
     </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\fragmentShader.glsl">
@@ -181,6 +187,12 @@
       <Filter>Project\Shader\Shaders</Filter>
     </None>
     <None Include="Shaders\vertexShader.glsl">
+      <Filter>Project\Shader\Shaders</Filter>
+    </None>
+    <None Include="Shaders\AnimationFS.glsl">
+      <Filter>Project\Shader\Shaders</Filter>
+    </None>
+    <None Include="Shaders\AnimationVS.glsl">
       <Filter>Project\Shader\Shaders</Filter>
     </None>
   </ItemGroup>
