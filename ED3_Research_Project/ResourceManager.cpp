@@ -131,6 +131,19 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 			myAnimation->createWeights();
 			myAnimation->checkControls();
 
+
+			//push back joint spheres into m_meshes
+			for (unsigned int i = 0; i < myAnimation->getSkele().mJoints.size(); i++)
+			{
+				std::string uniqueName = "jointSphere";
+				uniqueName += i;
+
+				m_entityManager->addEntity(uniqueName.c_str(), "FBXSphere");
+			}
+
+			
+
+
 		}
 		
 

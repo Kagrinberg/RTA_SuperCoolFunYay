@@ -162,3 +162,8 @@ void Animation::createWeights()
 		}
 	}
 }
+
+Skeleton Animation::getSkele()
+{
+	return mSkeleton;
+}

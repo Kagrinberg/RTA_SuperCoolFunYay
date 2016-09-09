@@ -90,5 +90,6 @@ public:
 	void createWeights();
 	void makeCpts();
 	void checkControls();
+	Skeleton getSkele();
 
 };
