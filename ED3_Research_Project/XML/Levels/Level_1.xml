@@ -26,6 +26,11 @@
 			<Name>Box</Name>
 			<Prefab>FBXTest</Prefab>
 		</Entity>
+		
+		<Entity>
+			<Name>Sphere</Name>
+			<Prefab>FBXSphere</Prefab>
+		</Entity>
 
 		
 	</Entities>
