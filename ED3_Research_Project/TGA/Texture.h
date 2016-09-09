@@ -43,7 +43,6 @@ private:
 	TGAHeader tgaheader;									// TGA header
 	TGA tga;												// TGA image data
 
-
 public:
 
 	Texture();
