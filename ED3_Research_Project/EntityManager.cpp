@@ -61,3 +61,7 @@ void EntityManager::addEntity(const char * entityName, const char * prefabName){
 	printf("Prefab: %s | Name: %s | Components: %d\n", prefabName, entityName, entity->m_components.size());
 
 }
+
+Entity * EntityManager::findEntity(const char * p_entityName) {
+	return m_entities[Util::fnvHash(p_entityName)].resource;
+}

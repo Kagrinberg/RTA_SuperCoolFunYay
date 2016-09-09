@@ -21,6 +21,8 @@ public:
 	static Component * CreateInstance();
 	glm::mat4 * getMatrix();
 
+	void setPosition(glm::vec3 p_position) { m_vPosition = p_position; };
+
 };
 
 #endif
