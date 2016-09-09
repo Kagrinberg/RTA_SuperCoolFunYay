@@ -18,13 +18,13 @@
 		</Entity>
 
 		<Entity>
-			<Name>Grenade</Name>
-			<Prefab>Grenade</Prefab>
-		</Entity>
-
-		<Entity>
 			<Name>GroundPlane</Name>
 			<Prefab>GroundPlane</Prefab>
+		</Entity>
+		
+		<Entity>
+			<Name>Box</Name>
+			<Prefab>FBXTest</Prefab>
 		</Entity>
 
 		

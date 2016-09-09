@@ -1,6 +1,6 @@
 <Prefab>
 	
-	<Name>FBXTest</Name>
+	<Name>FBXSphere</Name>
 
 	<Components>
 
@@ -29,15 +29,15 @@
 		<Renderable>
 
 			<Mesh>
-				<Name>Box</Name>
-				<Location>FBXOBJ/Box_Idle.fbx</Location>
+				<Name>Sphere</Name>
+				<Location>FBXOBJ/betterSphere.fbx</Location>
 			</Mesh>
 
 			<Material>
 				<Name>Crate</Name>
 				<Shininess>120.0f</Shininess>
-				<Diffuse>Textures/crate.tga</Diffuse>
-				<Specular>Textures/crate_specular.tga</Specular>
+				<Diffuse>Textures/RedTGA.tga</Diffuse>
+				<Specular>Textures/WhiteTGA.tga</Specular>
 			</Material>
 
 		</Renderable>
