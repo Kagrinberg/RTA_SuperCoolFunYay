@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "GLError.h"
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
@@ -110,37 +111,66 @@ void Mesh::GenerateBuffers(){
 
 	//Create Array Object
 	glGenVertexArrays(1, &vertexArrayObject);
+	check_gl_error();
+
 	glBindVertexArray(vertexArrayObject);
+	check_gl_error();
+
 
 	//Create Vertex Buffer
 	glGenBuffers(1, &vertexBufferObject);
+	check_gl_error();
+
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+	check_gl_error();
 
 	unsigned int num_vertices = indexed_vertices.size();
 	unsigned int vertices_size = num_vertices * sizeof(float);
 
 	glBufferData(GL_ARRAY_BUFFER, 8*vertices_size, NULL, GL_STATIC_DRAW);
+	check_gl_error();
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 3*vertices_size, &indexed_vertices[0]);
+	check_gl_error();
 
 	glBufferSubData(GL_ARRAY_BUFFER, 3*vertices_size, 3*vertices_size, &indexed_normals[0]);
+	check_gl_error();
 
 	glBufferSubData(GL_ARRAY_BUFFER, 6*vertices_size, 2*vertices_size, &indexed_uvs[0]);
+	check_gl_error();
 
 	//Create Index Buffer
 	glGenBuffers(1, &indexBufferID);
+	check_gl_error();
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	check_gl_error();
+
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0] , GL_STATIC_DRAW);
+	check_gl_error();
+
 
 	unsigned int textureCoordOffset = 6*vertices_size;
 	unsigned int normalOffset = 3*vertices_size;
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	check_gl_error();
+
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(textureCoordOffset));
+	check_gl_error();
+
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(normalOffset));
+	check_gl_error();
+
 	glEnableVertexAttribArray(0);
+	check_gl_error();
+
 	glEnableVertexAttribArray(1);
+	check_gl_error();
+
 	glEnableVertexAttribArray(2);
+	check_gl_error();
+
 }
 
 bool Mesh::LoadMesh(FbxScene* scene)
@@ -207,4 +237,6 @@ bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsi
 
 void Mesh::setActive(){
 	glBindVertexArray(vertexArrayObject);
+	check_gl_error();
+
 }

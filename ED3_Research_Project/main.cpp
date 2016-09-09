@@ -7,11 +7,12 @@
 #include "Registry.h"
 #include "Transform.h"
 #include "ShaderManager.h"
-#include "Camera.h"
 #include "XTime.h"
-//FBX
-//Import fbx
-//Animate it.
+#include "GameWindow.h"
+#include "Camera.h"
+#include "GLError.h"
+
+GameWindow window;
 
 ResourceManager * resourceManager;
 RenderingManager * renderingManager;
@@ -21,19 +22,13 @@ LightingManager * lightingManager;
 
 unsigned int program;
 
-#pragma region GLOBAL_VARIABLES
 unsigned int screenWidth = 1024;
 unsigned int screenHeight = 720;
 
-unsigned int perspectiveMatrixID, viewMatrixID, modelMatrixID, rotMatrixID, lightID;
+unsigned int perspectiveMatrixID, viewMatrixID, modelMatrixID;
 
-glm::mat4 rotXMatrix;
-glm::mat4 rotYMatrix;
-glm::mat4 rotZMatrix;
-
-glm::mat4 transMatrix;
-glm::mat4 scaleMatrix;
-glm::mat4 tempMatrix1;
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 glm::mat4 M;
 glm::mat4 P;
@@ -41,36 +36,27 @@ glm::mat4 P;
 Camera myCamera;
 XTime timer;
 
-float theta;
-float scaleAmount;
-#pragma endregion GLOBAL_VARIABLES
-
-#pragma region FUNCTION_PROTOTYPES
-GLenum Initialize(int argc, char** argv);
-void Reshape(int width, int height);
-void Render();
-void InitializeMatrices();
-void InitializeRegistry();
 void CleanUp();
-#pragma endregion FUNCTION_PROTOTYPES
+void MainLoop();
+void InitializeRegistry();
 
 int main(int argc, char** argv){
 
+	//Leak Detection
 	_CrtDumpMemoryLeaks();
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 	_CrtSetBreakAlloc(-1);
 
-	//Initialize Glut and setup window
-	if(Initialize(argc, argv) != GLEW_OK){
-		fprintf(stderr, "Could Not Initialize Glew.");
-		return 1;
-	}
+	//Setup the registry.
+	InitializeRegistry();
 
-	timer.Restart();
+	//Create the window
+	window.Initalize(argc, argv);
 
-	//Print version of openGL
-	printf("%s\n", glGetString(GL_VERSION));
+	//Set the projection Matrix
+	P = glm::mat4(1.0f);
+	P = glm::perspectiveFov(1.0f / tan(60.0f*3.1415926f / 360.0f), (float)screenWidth, (float)screenHeight, 0.001f, 1000.0f);
 
 	//Allocate all of the managers
 	resourceManager = new ResourceManager();
@@ -92,6 +78,7 @@ int main(int argc, char** argv){
 	shaderManager->CreateProgram("Main", "Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 	program = shaderManager->GetShader("Main");
 
+	//Get the matrix uniform locations from shaders.
 	perspectiveMatrixID = glGetUniformLocation(program, "projection");
 	viewMatrixID = glGetUniformLocation(program, "view");
 	modelMatrixID = glGetUniformLocation(program, "model");
@@ -105,94 +92,27 @@ int main(int argc, char** argv){
 	//Activate Lights
 	lightingManager->ActivateLights();
 
-	//Sort Renderables
+	//Sort Renderables before drawing.
 	renderingManager->sortByMaterial();
 
-	glutMainLoop();
+	//Main Loop
+	while (window.isRunning()) {
+		MainLoop();
+	}
 
+	//Cleanup the window(GLFW)
+	glfwTerminate();
+
+	//Cleanup everything else.
 	CleanUp();
 
 	return 0;
-}
-
-
-//Initialization
-GLenum Initialize(int argc, char** argv){
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(screenWidth, screenHeight);
-	glutCreateWindow("ED3_RESEARCH_PROJECT");
-	glutReshapeFunc(Reshape);
-	glutDisplayFunc(Render);
-		
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glEnable(GL_DEPTH_TEST);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable (GL_TEXTURE_2D);
-	glEnable(GL_MULTISAMPLE); 
-
-	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
-
-
-	//Intialize Matricies.
-	InitializeMatrices();
-
-	//Initalize Registry
-	InitializeRegistry();
-
-	//Initalize Glew
-	return glewInit();
 }
 
 void InitializeRegistry(){
 	register_type(Renderable);
 	register_type(Transform);
 	register_type(Light);
-}
-
-void InitializeMatrices(){
-
-
-	P = glm::mat4(1.0f);
-
-}
-
-
-//OpenGL
-void Reshape(int width, int height){
-
-	glViewport(0, 0, width, height);
-	screenWidth = width;
-	screenHeight = height;
-	P = glm::perspectiveFov(1.0f/tan(60.0f*3.1415926f/360.0f), (float)screenWidth, (float)screenHeight, 0.001f, 1000.0f);
-
-}
-
-void Render(){
-
-	timer.Signal();
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-
-	glUseProgram(program);
-
-	myCamera.update(static_cast<float>(timer.Delta()));
-
-	glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
-	glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(P));
-
-	renderingManager->RenderAll();
-
-	glUseProgram(0);
-
-	glutSwapBuffers();
-	glutPostRedisplay();
-
 }
 
 void CleanUp() {
@@ -202,4 +122,30 @@ void CleanUp() {
 	delete renderingManager;
 	delete lightingManager;
 	delete Registry::getInstance();
+}
+
+void MainLoop() {
+
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		glfwPollEvents();
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
+		glUseProgram(program);
+
+		myCamera.update(deltaTime);
+
+		glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
+		glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(P));
+
+		renderingManager->RenderAll();
+
+		glUseProgram(0);
+
+		glfwSwapBuffers(window.getWindow());
+
 }
