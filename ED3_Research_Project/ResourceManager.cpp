@@ -136,9 +136,17 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 			for (unsigned int i = 0; i < myAnimation->getSkele().mJoints.size(); i++)
 			{
 				std::string uniqueName = "jointSphere";
-				uniqueName += i;
+				uniqueName.append(std::to_string(i));
 			
 				m_entityManager->addEntity(uniqueName.c_str(), "FBXSphere");
+
+				glm::vec3 jointPos;
+				jointPos.x = myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][0];
+				jointPos.y = myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][1];
+				jointPos.z = myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][2];
+
+
+				m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
 			}
 
 			
