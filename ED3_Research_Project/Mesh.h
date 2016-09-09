@@ -21,11 +21,13 @@ private:
 		};
 	};
 
+	std::vector<int> controlPoints;
 	std::vector< glm::vec3 > vertices;
 	std::vector< glm::vec2 > uvs;
 	std::vector< glm::vec3 > normals;
 
 	std::vector<unsigned int> indices;
+	std::vector<int> indexed_controlPoints;
 	std::vector< glm::vec3 > indexed_vertices;
 	std::vector< glm::vec2 > indexed_uvs;
 	std::vector< glm::vec3 > indexed_normals;

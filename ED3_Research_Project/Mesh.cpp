@@ -94,6 +94,7 @@ void Mesh::GenerateIndices(){
 			indexed_vertices.push_back(vertices[i]);
 			indexed_uvs.push_back(uvs[i]);
 			indexed_normals.push_back(normals[i]);
+			indexed_controlPoints.push_back(controlPoints[i]);
 			unsigned int newindex = (unsigned int)indexed_vertices.size() -1;
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
@@ -171,7 +172,7 @@ bool Mesh::LoadMesh(FbxScene* scene)
 				vert.y = static_cast<float>(fbxVert[1]);
 				vert.z = static_cast<float>(fbxVert[2]);
 				vertices.push_back(vert);
-
+				controlPoints.push_back(polyVertIndex);
 			}
 		}
 

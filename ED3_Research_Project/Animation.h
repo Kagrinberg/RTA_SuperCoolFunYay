@@ -1,9 +1,13 @@
 #pragma once
+
+#include <GL/glew.h>
+#include "glm/glm.hpp"
 #include <fbxsdk.h>
+#include <vector>
 #include <iostream>
 #include <string>
-#include <vector>
-
+#include <unordered_map>
+#include "Mesh.h"
 
 // This stores the information of each key frame of each joint
 // This is a linked list and each node is a snapshot of the
@@ -17,6 +21,18 @@ struct Keyframe
 	Keyframe() : mNext(nullptr)
 	{
 
+	}
+};
+
+struct CtrlPoint
+{
+	int controlIndex;
+	std::vector<int> jointIndex;
+	std::vector<float> jointWeights;
+
+	CtrlPoint()
+	{
+		
 	}
 };
 
@@ -58,6 +74,9 @@ class Animation
 	Skeleton mSkeleton;
 	FbxLongLong mAnimationLength;
 	std::string mAnimationName;
+	std::unordered_map<unsigned int, CtrlPoint*> mControlPoints;
+	Mesh * myMesh;
+	FbxNode * meshNode;
 
 public:
 	Animation();
@@ -65,6 +84,11 @@ public:
 	void CreateSkeleton();
 	void SkeleRecursive(FbxNode * currentNode, int curIndex, int parentIndex);
 	void setScene(FbxScene* inFBXScene);
-	unsigned int getJoint(std::string jName);
+	int getJoint(std::string jName);
+	bool isAnimated();
+	void setMesh(Mesh * theMesh);
+	void createWeights();
+	void makeCpts();
+	void checkControls();
 
 };
