@@ -218,7 +218,6 @@ bool Mesh::LoadMesh(FbxScene* scene)
 			uvs.push_back(uv);
 
 		}
-
 	}
 
 	GenerateIndices();
