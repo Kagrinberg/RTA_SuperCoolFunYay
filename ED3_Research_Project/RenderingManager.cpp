@@ -29,7 +29,7 @@ void RenderingManager::RenderAll(){
 		Transform * transform = m_renderables[i]->getParent()->getTransform();
 		glm::mat4 * matrix = transform->getMatrix();
 
-		unsigned int program = 3;
+		unsigned int program = 6;
 
 		//if (mesh->isAnimated())
 		//{
@@ -40,8 +40,8 @@ void RenderingManager::RenderAll(){
 		//	program = 3;
 		//}
 
-		//glUseProgram(program);
-		//check_gl_error();
+		glUseProgram(program);
+		check_gl_error();
 
 		glUniformMatrix4fv(5, 1, GL_FALSE, glm::value_ptr(*matrix));
 		check_gl_error();
