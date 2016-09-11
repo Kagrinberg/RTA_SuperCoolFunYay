@@ -23,7 +23,7 @@ LightingManager * lightingManager;
 unsigned int Main, AnimatedMain;
 unsigned int uboMatrices;
 
-unsigned int perspectiveMatrixID, viewMatrixID, modelMatrixID;
+unsigned int perspectiveMatrixID, viewMatrixID, viewPosID, modelMatrixID;
 
 
 unsigned int screenWidth = 1024;
@@ -73,13 +73,20 @@ int main(int argc, char** argv){
 
 	//Create Shader Program and set main program.
 	shaderManager->CreateProgram("Main", "Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
-	//shaderManager->CreateProgram("AnimatedMain", "Shaders/AnimationVS.glsl", "Shaders/AnimationFS.glsl");
+	shaderManager->CreateProgram("AnimatedMain", "Shaders/AnimationVS.glsl", "Shaders/AnimationFS.glsl");
 	Main = shaderManager->GetShader("Main");
-	//AnimatedMain = shaderManager->GetShader("AnimatedMain");
+	AnimatedMain = shaderManager->GetShader("AnimatedMain");
 
-	perspectiveMatrixID = glGetUniformLocation(Main, "projection");
-	viewMatrixID = glGetUniformLocation(Main, "view");
-	modelMatrixID = glGetUniformLocation(Main, "model");
+	//perspectiveMatrixID = glGetUniformLocation(Main, "projection");
+	//viewMatrixID = glGetUniformLocation(Main, "view");
+	//viewPosID = glGetUniformLocation(Main, "viewPos");
+	//modelMatrixID = glGetUniformLocation(Main, "model");
+
+
+	////perspectiveMatrixID = glGetUniformLocation(AnimatedMain, "projection");
+	////viewMatrixID = glGetUniformLocation(AnimatedMain, "view");
+	//viewPosID = glGetUniformLocation(AnimatedMain, "viewPos");
+	////modelMatrixID = glGetUniformLocation(AnimatedMain, "model");
 
 
 	////Get block inidcies
@@ -100,7 +107,7 @@ int main(int argc, char** argv){
 	//glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
 
 	////Set the projection Matrix in the Uniform buffer Object
-	//projectionMatrix = glm::perspectiveFov(1.0f / tan(60.0f*3.1415926f / 360.0f), (float)screenWidth, (float)screenHeight, 0.001f, 1000.0f);
+	projectionMatrix = glm::perspectiveFov(1.0f / tan(60.0f*3.1415926f / 360.0f), (float)screenWidth, (float)screenHeight, 0.001f, 1000.0f);
 	//glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
 	//glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix));
 	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -108,13 +115,13 @@ int main(int argc, char** argv){
 	////Intialize Camera
 	//myCamera.Initialize();
 
-	glUseProgram(Main);
 
-	//Activate Lights for Main and Animated Main
-	lightingManager->ActivateLights(Main);
 
-	//glUseProgram(AnimatedMain);
+	////glUseProgram(AnimatedMain);
 	//lightingManager->ActivateLights(AnimatedMain);
+
+	////Activate Lights for Main and Animated Main
+	//lightingManager->ActivateLights(Main);
 
 
 	//Sort Renderables before drawing.
@@ -160,22 +167,19 @@ void MainLoop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-		glUseProgram(Main);
 
 		myCamera.update(deltaTime);
 
-		glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
-		glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
+		//glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
+		//glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		//glUniform3f(viewPosID, myCamera.getPosition().x, myCamera.getPosition().y, myCamera.getPosition().z);
 		/*glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(myCamera.getMatrix()));
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
 
-		lightingManager->ActivateLights(Main);
 
-		renderingManager->RenderAll();
+		renderingManager->RenderAll(myCamera, lightingManager);
 
-		glUseProgram(0);
 
 		glfwSwapBuffers(window.getWindow());
 

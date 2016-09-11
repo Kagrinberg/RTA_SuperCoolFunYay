@@ -51,8 +51,7 @@ in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
 
-vec3 viewPos;
-
+uniform vec3 viewPos;
 uniform DirLight dirLights[NR_DIRECTIONAL_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
@@ -66,7 +65,6 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 void main()
 {    
     // Properties
-	viewPos = vec3(0,0.5,2);
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
 
