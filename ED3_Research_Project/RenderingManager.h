@@ -23,6 +23,7 @@ private:
 
 	glm::mat4 projectionMatrix;
 
+
 public:
 
 	RenderingManager();

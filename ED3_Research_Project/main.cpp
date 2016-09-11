@@ -117,11 +117,11 @@ int main(int argc, char** argv){
 
 
 
-	////glUseProgram(AnimatedMain);
-	//lightingManager->ActivateLights(AnimatedMain);
+	//glUseProgram(AnimatedMain);
+	lightingManager->ActivateLights(AnimatedMain);
 
-	////Activate Lights for Main and Animated Main
-	//lightingManager->ActivateLights(Main);
+	//Activate Lights for Main and Animated Main
+	lightingManager->ActivateLights(Main);
 
 
 	//Sort Renderables before drawing.

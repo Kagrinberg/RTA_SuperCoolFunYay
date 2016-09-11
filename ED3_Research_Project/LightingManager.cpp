@@ -20,6 +20,8 @@ void LightingManager::addLight(Light * light) {
 };
 
 void LightingManager::ActivateLights(unsigned int program) {
+	m_numDirectionalLights = m_numPointLights = m_numSpotLights = 0;
+	glUseProgram(program);
 	for (unsigned int i = 0; i < m_numLights; i++) {
 		Type type = m_lights[i]->getType();
 		switch (type){
@@ -44,6 +46,7 @@ void LightingManager::ActivateLights(unsigned int program) {
 
 		}
 	}
+	glUseProgram(0);
 
 };
 
