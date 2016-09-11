@@ -6,6 +6,7 @@
 #include <fbxsdk.h>
 #include <vector>
 #include <map>
+#include "Animation.h"
 
 
 class Mesh{
@@ -35,8 +36,12 @@ private:
 	unsigned int vertexArrayObject;
 	unsigned int vertexBufferObject;
 	unsigned int indexBufferID;
+	Animation * myAnimation;
+	std::vector<glm::mat4> boneOffsets;
 
 public:
+
+	~Mesh();
 
 	bool LoadEntry(const char * path);
 	bool LoadMesh(FbxScene* scene);
@@ -50,6 +55,8 @@ public:
 	std::vector<glm::vec3> getNormals() { return indexed_normals; };
 	std::vector<unsigned int> getIndices() { return indices; };
 	void setActive();
+	void setAnimator(Animation * theAnimator);
+	bool isAnimated();
 
 };
 

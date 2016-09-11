@@ -28,6 +28,8 @@ public:
 	void addPrefab(Prefab * p_prefab);
 	void addEntity(const char * p_entityName, const char * p_prefabName);
 
+	Entity * findEntity(const char * p_entityName);
+
 };
 
 #endif

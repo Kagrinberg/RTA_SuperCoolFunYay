@@ -3,6 +3,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "GLError.h"
 #include <Windows.h>
+#include "Registry.h"
 
 
 LightingManager::LightingManager() {
@@ -18,37 +19,38 @@ void LightingManager::addLight(Light * light) {
 
 };
 
-void LightingManager::ActivateLights() {
-
+void LightingManager::ActivateLights(unsigned int program) {
+	glUseProgram(program);
 	for (unsigned int i = 0; i < m_numLights; i++) {
 		Type type = m_lights[i]->getType();
 		switch (type){
 
 		case Type::DIRECTIONAL_LIGHT:
 		{
-			ActivateDirectionalLight(i);
+			ActivateDirectionalLight(program, i);
 		}
 		break;
 
 		case Type::POINT_LIGHT:
 		{
-			ActivatePointLight(i);
+			ActivatePointLight(program, i);
 		}
 		break;
 
 		case Type::SPOT_LIGHT:
 		{
-			ActivateSpotLight(i);
+			ActivateSpotLight(program, i);
 		}
 		break;
 
 		}
 	}
+	glUseProgram(0);
 
 };
 
 
-void LightingManager::ActivateDirectionalLight(unsigned int index) {
+void LightingManager::ActivateDirectionalLight(unsigned int program, unsigned int index) {
 	std::string uniformName = "dirLights[";
 	uniformName.append(std::to_string(m_numDirectionalLights));
 	uniformName.append("].");
@@ -69,16 +71,16 @@ void LightingManager::ActivateDirectionalLight(unsigned int index) {
 	glm::vec3 v_diffuse = m_lights[index]->getDiffuse();
 	glm::vec3 v_specular = m_lights[index]->getSpecular();
 
-	unsigned int directionLocation = glGetUniformLocation(3, direction.c_str());
+	unsigned int directionLocation = glGetUniformLocation(program, direction.c_str());
 	check_gl_error();
 
-	unsigned int ambientLocation = glGetUniformLocation(3, ambient.c_str());
+	unsigned int ambientLocation = glGetUniformLocation(program, ambient.c_str());
 	check_gl_error();
 
-	unsigned int diffuseLocation = glGetUniformLocation(3, diffuse.c_str());
+	unsigned int diffuseLocation = glGetUniformLocation(program, diffuse.c_str());
 	check_gl_error();
 
-	unsigned int specularLocation = glGetUniformLocation(3, specular.c_str());
+	unsigned int specularLocation = glGetUniformLocation(program, specular.c_str());
 	check_gl_error();
 
 
@@ -98,7 +100,7 @@ void LightingManager::ActivateDirectionalLight(unsigned int index) {
 	m_numDirectionalLights++;
 }
 
-void LightingManager::ActivatePointLight(unsigned int index) {
+void LightingManager::ActivatePointLight(unsigned int program, unsigned int index) {
 	std::string uniformName = "pointLights[";
 	uniformName.append(std::to_string(m_numPointLights));
 	uniformName.append("].");
@@ -130,25 +132,25 @@ void LightingManager::ActivatePointLight(unsigned int index) {
 	glm::vec3 v_diffuse = m_lights[index]->getDiffuse();
 	glm::vec3 v_specular = m_lights[index]->getSpecular();
 
-	glUniform3f(glGetUniformLocation(3, position.c_str()), v_position.x, v_position.y, v_position.z);
+	glUniform3f(glGetUniformLocation(program, position.c_str()), v_position.x, v_position.y, v_position.z);
 	check_gl_error();
 
-	glUniform1f(glGetUniformLocation(3, constant.c_str()), v_constant);
+	glUniform1f(glGetUniformLocation(program, constant.c_str()), v_constant);
 	check_gl_error();
 
-	glUniform1f(glGetUniformLocation(3, linear.c_str()), v_linear);
+	glUniform1f(glGetUniformLocation(program, linear.c_str()), v_linear);
 	check_gl_error();
 
-	glUniform1f(glGetUniformLocation(3, quadratic.c_str()), v_quadratic);
+	glUniform1f(glGetUniformLocation(program, quadratic.c_str()), v_quadratic);
 	check_gl_error();
 
-	glUniform3f(glGetUniformLocation(3, ambient.c_str()), v_ambient.x, v_ambient.y, v_ambient.z);
+	glUniform3f(glGetUniformLocation(program, ambient.c_str()), v_ambient.x, v_ambient.y, v_ambient.z);
 	check_gl_error();
 
-	glUniform3f(glGetUniformLocation(3, diffuse.c_str()), v_diffuse.x, v_diffuse.y, v_diffuse.z);
+	glUniform3f(glGetUniformLocation(program, diffuse.c_str()), v_diffuse.x, v_diffuse.y, v_diffuse.z);
 	check_gl_error();
 
-	glUniform3f(glGetUniformLocation(3, specular.c_str()), v_specular.x, v_specular.y, v_specular.z);
+	glUniform3f(glGetUniformLocation(program, specular.c_str()), v_specular.x, v_specular.y, v_specular.z);
 	check_gl_error();
 
 
@@ -156,7 +158,7 @@ void LightingManager::ActivatePointLight(unsigned int index) {
 
 }
 
-void LightingManager::ActivateSpotLight(unsigned int index) {
+void LightingManager::ActivateSpotLight(unsigned int program, unsigned int index) {
 	std::string uniformName = "spotLights[";
 	uniformName.append(std::to_string(m_numSpotLights));
 	uniformName.append("].");
@@ -197,32 +199,35 @@ void LightingManager::ActivateSpotLight(unsigned int index) {
 	glm::vec3 v_diffuse = m_lights[index]->getDiffuse();
 	glm::vec3 v_specular = m_lights[index]->getSpecular();
 
-	//glUniform3f(glGetUniformLocation(3, position.c_str()), v_position.x, v_position.y, v_position.z);
-	//glUniform3f(glGetUniformLocation(3, direction.c_str()), v_direction.x, v_direction.y, v_direction.z);
-	glUniform1f(glGetUniformLocation(3, cutOff.c_str()), v_cutOff);
+	glUniform3f(glGetUniformLocation(program, position.c_str()), v_position.x, v_position.y, v_position.z);
 	check_gl_error();
 
-	glUniform1f(glGetUniformLocation(3, outerCutOff.c_str()), v_outerCutOff);
+	glUniform3f(glGetUniformLocation(program, direction.c_str()), v_direction.x, v_direction.y, v_direction.z);
 	check_gl_error();
 
-	glUniform1f(glGetUniformLocation(3, constant.c_str()), v_constant);
+	glUniform1f(glGetUniformLocation(program, cutOff.c_str()), v_cutOff);
 	check_gl_error();
 
-	glUniform1f(glGetUniformLocation(3, linear.c_str()), v_linear);
+	glUniform1f(glGetUniformLocation(program, outerCutOff.c_str()), v_outerCutOff);
 	check_gl_error();
 
-	glUniform1f(glGetUniformLocation(3, quadratic.c_str()), v_quadratic);
+	glUniform1f(glGetUniformLocation(program, constant.c_str()), v_constant);
 	check_gl_error();
 
-	glUniform3f(glGetUniformLocation(3, ambient.c_str()), v_ambient.x, v_ambient.y, v_ambient.z);
+	glUniform1f(glGetUniformLocation(program, linear.c_str()), v_linear);
 	check_gl_error();
 
-	glUniform3f(glGetUniformLocation(3, diffuse.c_str()), v_diffuse.x, v_diffuse.y, v_diffuse.z);
+	glUniform1f(glGetUniformLocation(program, quadratic.c_str()), v_quadratic);
 	check_gl_error();
 
-	glUniform3f(glGetUniformLocation(3, specular.c_str()), v_specular.x, v_specular.y, v_specular.z);
+	glUniform3f(glGetUniformLocation(program, ambient.c_str()), v_ambient.x, v_ambient.y, v_ambient.z);
 	check_gl_error();
 
+	glUniform3f(glGetUniformLocation(program, diffuse.c_str()), v_diffuse.x, v_diffuse.y, v_diffuse.z);
+	check_gl_error();
+
+	glUniform3f(glGetUniformLocation(program, specular.c_str()), v_specular.x, v_specular.y, v_specular.z);
+	check_gl_error();
 
 	m_numSpotLights++;
 

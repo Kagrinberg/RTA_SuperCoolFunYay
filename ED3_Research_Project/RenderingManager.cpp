@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>   
 #include "GLError.h"
+#include "Registry.h"
 
 
 RenderingManager::RenderingManager(){
@@ -28,10 +29,23 @@ void RenderingManager::RenderAll(){
 		Transform * transform = m_renderables[i]->getParent()->getTransform();
 		glm::mat4 * matrix = transform->getMatrix();
 
+		unsigned int program = 3;
+
+		//if (mesh->isAnimated())
+		//{
+		//	program = 6;
+		//}
+		//else
+		//{
+		//	program = 3;
+		//}
+
+		//glUseProgram(program);
+		//check_gl_error();
+
 		glUniformMatrix4fv(5, 1, GL_FALSE, glm::value_ptr(*matrix));
 		check_gl_error();
 
-		unsigned int meshID = m_renderables[i]->getMeshID();
 		unsigned int materialID = m_renderables[i]->getMaterialID();
 		if (m_currentMaterialID != materialID) {
 			m_currentMaterialID = materialID;
@@ -72,11 +86,15 @@ void RenderingManager::RenderAll(){
 			check_gl_error();
 
 		}
+		unsigned int meshID = m_renderables[i]->getMeshID();
+
 		Mesh * mesh = m_resourceManager->getMesh(meshID);
+
 		mesh->setActive();
 
 		glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, NULL);
 		check_gl_error();
+
 
 	}
 

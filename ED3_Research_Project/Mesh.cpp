@@ -1,11 +1,17 @@
 #include "Mesh.h"
 #include "GLError.h"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/glm.hpp"
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
+Mesh::~Mesh() {
 
+	delete myAnimation;
 
-bool Mesh::LoadEntry(const char * path){
+}
+
+bool Mesh::LoadEntry(const char * path) {
 	//old obj leader
 /*
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
@@ -79,24 +85,23 @@ bool Mesh::LoadEntry(const char * path){
 	return true;
 }
 
-void Mesh::GenerateIndices(){
+void Mesh::GenerateIndices() {
 	std::map<PackedVertex, unsigned int> VertexToOutIndex;
 
-	for(unsigned int i = 0; i < vertices.size(); i++){
-		PackedVertex packed = {vertices[i], uvs[i], normals[i]};
+	for (unsigned int i = 0; i < vertices.size(); i++) {
+		PackedVertex packed = { vertices[i], uvs[i], normals[i] };
 
 		unsigned int index;
 		bool found = getSameVertexIndex(packed, VertexToOutIndex, index);
 
-		if(found){
+		if (found) {
 			indices.push_back(index);
 		}
-		else{
+		else {
 			indexed_vertices.push_back(vertices[i]);
 			indexed_uvs.push_back(uvs[i]);
 			indexed_normals.push_back(normals[i]);
-			indexed_controlPoints.push_back(controlPoints[i]);
-			unsigned int newindex = (unsigned int)indexed_vertices.size() -1;
+			unsigned int newindex = (unsigned int)indexed_vertices.size() - 1;
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
 		}
@@ -107,7 +112,7 @@ void Mesh::GenerateIndices(){
 
 }
 
-void Mesh::GenerateBuffers(){
+void Mesh::GenerateBuffers() {
 
 	//Create Array Object
 	glGenVertexArrays(1, &vertexArrayObject);
@@ -124,20 +129,22 @@ void Mesh::GenerateBuffers(){
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 	check_gl_error();
 
-	unsigned int num_vertices = indexed_vertices.size();
-	unsigned int vertices_size = num_vertices * sizeof(float);
+	unsigned int vertices_size = indexed_vertices.size() * sizeof(float);
 
-	glBufferData(GL_ARRAY_BUFFER, 8*vertices_size, NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 8 * vertices_size, NULL, GL_STATIC_DRAW);
 	check_gl_error();
 
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 3*vertices_size, &indexed_vertices[0]);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * vertices_size, &indexed_vertices[0]);
 	check_gl_error();
 
-	glBufferSubData(GL_ARRAY_BUFFER, 3*vertices_size, 3*vertices_size, &indexed_normals[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 3 * vertices_size, 3 * vertices_size, &indexed_normals[0]);
 	check_gl_error();
 
-	glBufferSubData(GL_ARRAY_BUFFER, 6*vertices_size, 2*vertices_size, &indexed_uvs[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 6 * vertices_size, 2 * vertices_size, &indexed_uvs[0]);
 	check_gl_error();
+
+
 
 	//Create Index Buffer
 	glGenBuffers(1, &indexBufferID);
@@ -146,12 +153,14 @@ void Mesh::GenerateBuffers(){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	check_gl_error();
 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0] , GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 	check_gl_error();
 
+	unsigned int normalOffset = 3 * vertices_size;
+	unsigned int textureCoordOffset = 6 * vertices_size;
 
-	unsigned int textureCoordOffset = 6*vertices_size;
-	unsigned int normalOffset = 3*vertices_size;
+	unsigned int boneWeight = 8 * vertices_size;
+	unsigned int boneIndex = 12 * vertices_size;
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	check_gl_error();
@@ -161,6 +170,7 @@ void Mesh::GenerateBuffers(){
 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(normalOffset));
 	check_gl_error();
+
 
 	glEnableVertexAttribArray(0);
 	check_gl_error();
@@ -202,7 +212,6 @@ bool Mesh::LoadMesh(FbxScene* scene)
 				vert.y = static_cast<float>(fbxVert[1]);
 				vert.z = static_cast<float>(fbxVert[2]);
 				vertices.push_back(vert);
-				controlPoints.push_back(polyVertIndex);
 			}
 		}
 
@@ -224,18 +233,30 @@ bool Mesh::LoadMesh(FbxScene* scene)
 	return true;
 }
 
-bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result){
+bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result) {
 	std::map<PackedVertex, unsigned int>::iterator it = VertexToOutIndex.find(packed);
-	if(it == VertexToOutIndex.end()){
+	if (it == VertexToOutIndex.end()) {
 		return false;
-	}else{
+	}
+	else {
 		result = it->second;
 		return true;
 	}
 }
 
-void Mesh::setActive(){
+void Mesh::setActive() {
 	glBindVertexArray(vertexArrayObject);
 	check_gl_error();
 
+
+}
+
+void Mesh::setAnimator(Animation * theAnimator)
+{
+	myAnimation = theAnimator;
+}
+
+bool Mesh::isAnimated()
+{
+	return myAnimation->isAnimated();
 }
