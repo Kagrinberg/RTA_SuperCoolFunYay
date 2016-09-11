@@ -9,23 +9,23 @@
 #include "Registry.h"
 
 
-RenderingManager::RenderingManager(){
+RenderingManager::RenderingManager() {
 
 	m_numRenderables = 0;
 	m_currentMaterialID = 0;
 
 }
 
-void RenderingManager::addRenderable(Renderable * renderable){
+void RenderingManager::addRenderable(Renderable * renderable) {
 
 	m_renderables[m_numRenderables] = renderable;
 	m_numRenderables++;
 
 };
 
-void RenderingManager::RenderAll(Camera & c, LightingManager * lm){
+void RenderingManager::RenderAll(Camera & c, LightingManager * lm) {
 
-	for(unsigned int i = 0; i < m_numRenderables; i++){
+	for (unsigned int i = 0; i < m_numRenderables; i++) {
 		Transform * transform = m_renderables[i]->getParent()->getTransform();
 		glm::mat4 * matrix = transform->getMatrix();
 
@@ -42,8 +42,6 @@ void RenderingManager::RenderAll(Camera & c, LightingManager * lm){
 		}
 
 		glUseProgram(program);
-
-		lm->ActivateLights(program);
 
 		perspectiveMatrixID = glGetUniformLocation(program, "projection");
 		check_gl_error();
@@ -110,7 +108,6 @@ void RenderingManager::RenderAll(Camera & c, LightingManager * lm){
 			check_gl_error();
 
 		}
-
 
 		mesh->setActive();
 

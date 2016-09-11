@@ -19,9 +19,9 @@
 			</Rotation>
 
 			<Scale>
-				<X>1</X>
-				<Y>1</Y>
-				<Z>1</Z>
+				<X>0.25</X>
+				<Y>0.25</Y>
+				<Z>0.25</Z>
 			</Scale>
 
 		</Transform>
@@ -36,7 +36,7 @@
 			<Material>
 				<Name>Sphere</Name>
 				<Shininess>120.0f</Shininess>
-				<Diffuse>Textures/RedTGA.tga</Diffuse>
+				<Diffuse>Textures/WhiteTGA.tga</Diffuse>
 				<Specular>Textures/WhiteTGA.tga</Specular>
 			</Material>
 
