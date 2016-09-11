@@ -124,6 +124,8 @@
     <ClInclude Include="XTime.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\AnimationFS.glsl" />
+    <None Include="Shaders\AnimationVS.glsl" />
     <None Include="Shaders\fragmentShader.glsl" />
     <None Include="Shaders\geometryShader.glsl" />
     <None Include="Shaders\vertexShader.glsl" />

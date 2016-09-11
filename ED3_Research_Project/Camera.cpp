@@ -1,20 +1,13 @@
 #include "Camera.h"
 #include "Utilities.h"
 #include "GLError.h"
+#include "Registry.h"
 
 Camera::Camera() {
 	ViewMatrix = glm::mat4(1.0f);
 	camera_pos_ = glm::vec3(0, 0.5f, 2.0f);
 }
 
-void Camera::Initialize() {
-	viewPosLoc = glGetUniformLocation(3, "viewPos");
-	check_gl_error();
-
-	glUniform3f(viewPosLoc, camera_pos_.x, camera_pos_.y, camera_pos_.z);
-	check_gl_error();
-
-}
 
 glm::mat4 Camera::getMatrix()
 {
@@ -44,15 +37,6 @@ void Camera::move(glm::vec3 directions, glm::vec2 rotations, float frametime)
 
 	ViewMatrix = glm::lookAt(camera_pos_, camera_pos_ + camera_roll_direction,
 		glm::cross(camera_roll_direction, camera_pitch_direction));
-
-	glUniform3f(viewPosLoc, camera_pos_.x, camera_pos_.y, camera_pos_.z);
-	check_gl_error();
-
-	glUniform3f(glGetUniformLocation(3, "spotLights[0].direction"), -ViewMatrix[0].z, -ViewMatrix[1].z, -ViewMatrix[2].z);
-	check_gl_error();
-
-	glUniform3f(glGetUniformLocation(3, "spotLights[0].position"), camera_pos_.x, camera_pos_.y, camera_pos_.z);
-	check_gl_error();
 
 
 }

@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "Mesh.h"
+//#include "Mesh.h"
 
 // This stores the information of each key frame of each joint
 // This is a linked list and each node is a snapshot of the
@@ -75,7 +75,7 @@ class Animation
 	FbxLongLong mAnimationLength;
 	std::string mAnimationName;
 	std::unordered_map<unsigned int, CtrlPoint*> mControlPoints;
-	Mesh * myMesh;
+	//Mesh * myMesh;
 	FbxNode * meshNode;
 
 public:
@@ -86,10 +86,11 @@ public:
 	void setScene(FbxScene* inFBXScene);
 	int getJoint(std::string jName);
 	bool isAnimated();
-	void setMesh(Mesh * theMesh);
+	//void setMesh(Mesh * theMesh);
 	void createWeights();
 	void makeCpts();
 	void checkControls();
 	Skeleton getSkele();
+	std::unordered_map<unsigned int, CtrlPoint*>& getMap();
 
 };

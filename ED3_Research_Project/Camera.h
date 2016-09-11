@@ -18,13 +18,13 @@ class Camera
 public:
 	Camera();
 
-	void Initialize();
 
 	void move(glm::vec3 directions, glm::vec2 rotations, float frametime);
 	void update(float frametime);
 	void reset();
 
 	glm::mat4 getMatrix();
+	glm::vec3 getPosition() { return camera_pos_; };
 
 
 
