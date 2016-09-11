@@ -41,6 +41,8 @@ private:
 
 public:
 
+	~Mesh();
+
 	bool LoadEntry(const char * path);
 	bool LoadMesh(FbxScene* scene);
 

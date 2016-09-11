@@ -34,7 +34,7 @@
 			</Mesh>
 
 			<Material>
-				<Name>Crate</Name>
+				<Name>Sphere</Name>
 				<Shininess>120.0f</Shininess>
 				<Diffuse>Textures/RedTGA.tga</Diffuse>
 				<Specular>Textures/WhiteTGA.tga</Specular>

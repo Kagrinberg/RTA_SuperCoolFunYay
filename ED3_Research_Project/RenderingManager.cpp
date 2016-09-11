@@ -29,23 +29,22 @@ void RenderingManager::RenderAll(){
 		Transform * transform = m_renderables[i]->getParent()->getTransform();
 		glm::mat4 * matrix = transform->getMatrix();
 
+		unsigned int program = 3;
+
+		//if (mesh->isAnimated())
+		//{
+		//	program = 6;
+		//}
+		//else
+		//{
+		//	program = 3;
+		//}
+
+		//glUseProgram(program);
+		//check_gl_error();
+
 		glUniformMatrix4fv(5, 1, GL_FALSE, glm::value_ptr(*matrix));
 		check_gl_error();
-
-		unsigned int meshID = m_renderables[i]->getMeshID();
-
-
-		Mesh * mesh = m_resourceManager->getMesh(meshID);
-		mesh->setActive();
-
-		if (mesh->isAnimated())
-		{
-			Registry::getInstance()->currentProgram = 6;
-		}
-		else
-		{
-			Registry::getInstance()->currentProgram = 3;
-		}
 
 		unsigned int materialID = m_renderables[i]->getMaterialID();
 		if (m_currentMaterialID != materialID) {
@@ -56,13 +55,13 @@ void RenderingManager::RenderAll(){
 			unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTexID();
 			unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTexID();
 
-			unsigned int matDiffuseLoc = glGetUniformLocation(Registry::getInstance()->currentProgram, "material.diffuse");
+			unsigned int matDiffuseLoc = glGetUniformLocation(3, "material.diffuse");
 			check_gl_error();
 
-			unsigned int matSpecularLoc = glGetUniformLocation(Registry::getInstance()->currentProgram, "material.specular");
+			unsigned int matSpecularLoc = glGetUniformLocation(3, "material.specular");
 			check_gl_error();
 
-			unsigned int matShininessLoc = glGetUniformLocation(Registry::getInstance()->currentProgram, "material.shininess");
+			unsigned int matShininessLoc = glGetUniformLocation(3, "material.shininess");
 			check_gl_error();
 
 			glUniform1i(matDiffuseLoc, 0);
@@ -87,11 +86,15 @@ void RenderingManager::RenderAll(){
 			check_gl_error();
 
 		}
-		
+		unsigned int meshID = m_renderables[i]->getMeshID();
 
+		Mesh * mesh = m_resourceManager->getMesh(meshID);
+
+		mesh->setActive();
 
 		glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, NULL);
 		check_gl_error();
+
 
 	}
 

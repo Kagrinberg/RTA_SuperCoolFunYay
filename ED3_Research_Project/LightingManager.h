@@ -21,11 +21,11 @@ public:
 
 	void addLight(Light * light);
 
-	void ActivateLights();
+	void ActivateLights(unsigned int program);
 
-	void ActivateDirectionalLight(unsigned int index);
-	void ActivatePointLight(unsigned int index);
-	void ActivateSpotLight(unsigned int index);
+	void ActivateDirectionalLight(unsigned int program, unsigned int index);
+	void ActivatePointLight(unsigned int program, unsigned int index);
+	void ActivateSpotLight(unsigned int program, unsigned int index);
 
 
 };

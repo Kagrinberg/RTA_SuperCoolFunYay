@@ -8,15 +8,18 @@ layout (location = 2) in vec4 normal;
 layout (location = 3) in vec4 boneWeight;
 layout (location = 4) in ivec4 boneIndex;
 
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;
+};
+
+uniform mat4 model;
+uniform mat4 BoneOffset[MAX_BONES];
+
 out vec3 Normal;
 out vec3 FragPos;
 out vec2 TexCoords;
-
-uniform mat4 BoneOffset[MAX_BONES];
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
 
 void main () {
 
@@ -31,7 +34,6 @@ void main () {
     FragPos = vec3(model * vec4(position.xyz, 1.0f));
 	vec4 tempNorm;
 
-
 	tempNorm = (vec4(normal.xyz, 0) * BoneOffset[boneIndex[0]]) * boneWeight[0];
 	tempNorm += (vec4(normal.xyz, 0) * BoneOffset[boneIndex[1]]) * boneWeight[1];
 	tempNorm += (vec4(normal.xyz, 0) * BoneOffset[boneIndex[2]]) * boneWeight[2];
@@ -39,6 +41,7 @@ void main () {
     tempNorm = mat4(transpose(inverse(model))) * tempNorm;  
 
 	Normal = tempNorm.xyz;
+
 
     TexCoords = texCoords;
 

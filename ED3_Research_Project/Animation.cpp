@@ -9,6 +9,9 @@ Animation::Animation() : mAnimationName("NoName")
 
 Animation::~Animation()
 {
+	for (auto it = mControlPoints.begin(); it != mControlPoints.end(); it++) {
+		delete it->second;
+	}
 }
 
 void Animation::setScene(FbxScene* inFBXScene)
