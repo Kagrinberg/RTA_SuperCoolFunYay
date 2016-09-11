@@ -11,7 +11,7 @@ Mesh::~Mesh() {
 
 }
 
-bool Mesh::LoadEntry(const char * path) {
+bool Mesh::LoadEntry(const char * path){
 	//old obj leader
 /*
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
@@ -85,34 +85,35 @@ bool Mesh::LoadEntry(const char * path) {
 	return true;
 }
 
-void Mesh::GenerateIndices() {
+void Mesh::GenerateIndices(){
 	std::map<PackedVertex, unsigned int> VertexToOutIndex;
 
-	for (unsigned int i = 0; i < vertices.size(); i++) {
-		PackedVertex packed = { vertices[i], uvs[i], normals[i] };
+	for(unsigned int i = 0; i < vertices.size(); i++){
+		PackedVertex packed = {vertices[i], uvs[i], normals[i]};
 
 		unsigned int index;
 		bool found = getSameVertexIndex(packed, VertexToOutIndex, index);
 
-		if (found) {
+		if(found){
 			indices.push_back(index);
 		}
-		else {
+		else{
 			indexed_vertices.push_back(vertices[i]);
 			indexed_uvs.push_back(uvs[i]);
 			indexed_normals.push_back(normals[i]);
-			unsigned int newindex = (unsigned int)indexed_vertices.size() - 1;
+			indexed_controlPoints.push_back(controlPoints[i]);
+			unsigned int newindex = (unsigned int)indexed_vertices.size() -1;
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
 		}
 
 	}
 
-	GenerateBuffers();
+	
 
 }
 
-void Mesh::GenerateBuffers() {
+void Mesh::GenerateBuffers(){
 
 	//Create Array Object
 	glGenVertexArrays(1, &vertexArrayObject);
@@ -131,20 +132,69 @@ void Mesh::GenerateBuffers() {
 
 	unsigned int vertices_size = indexed_vertices.size() * sizeof(float);
 
-	glBufferData(GL_ARRAY_BUFFER, 8 * vertices_size, NULL, GL_STATIC_DRAW);
+	if (myAnimation->isAnimated())
+	{
+		glBufferData(GL_ARRAY_BUFFER, 16 * vertices_size, NULL, GL_STATIC_DRAW);
+		check_gl_error();
+	}
+	else {
+		glBufferData(GL_ARRAY_BUFFER, 8 * vertices_size, NULL, GL_STATIC_DRAW);
+		check_gl_error();
+	}
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 3*vertices_size, &indexed_vertices[0]);
 	check_gl_error();
 
-
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * vertices_size, &indexed_vertices[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 3*vertices_size, 3*vertices_size, &indexed_normals[0]);
 	check_gl_error();
 
-	glBufferSubData(GL_ARRAY_BUFFER, 3 * vertices_size, 3 * vertices_size, &indexed_normals[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 6*vertices_size, 2*vertices_size, &indexed_uvs[0]);
 	check_gl_error();
 
-	glBufferSubData(GL_ARRAY_BUFFER, 6 * vertices_size, 2 * vertices_size, &indexed_uvs[0]);
-	check_gl_error();
+	//create joint buffers
+	if (myAnimation->isAnimated())
+	{
+		std::unordered_map<unsigned int, CtrlPoint*> controlMap = myAnimation->getMap();
+
+		std::vector<int> boneIndicies;
+		std::vector<float> boneWeights;
 
 
+		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
+		{
+			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
+
+			for (unsigned int j = 0; j < temp->jointIndex.size(); j++)
+			{
+				boneIndicies.push_back(temp->jointIndex[j]);
+				boneWeights.push_back(temp->jointWeights[j]);
+			}
+
+		}
+
+		Skeleton mySkele = myAnimation->getSkele();
+
+		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
+		{
+			glm::mat4 tempBone;
+			tempBone[0] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][3]);
+			tempBone[1] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][3]);
+			tempBone[2] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][3]);
+			tempBone[3] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][3]);
+
+			tempBone = glm::mat4(1.0f);
+
+			boneOffsets.push_back(tempBone);
+		}
+
+		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
+		check_gl_error();
+
+		glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
+		check_gl_error();
+
+
+	}
 
 	//Create Index Buffer
 	glGenBuffers(1, &indexBufferID);
@@ -153,7 +203,7 @@ void Mesh::GenerateBuffers() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	check_gl_error();
 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0] , GL_STATIC_DRAW);
 	check_gl_error();
 
 	unsigned int normalOffset = 3 * vertices_size;
@@ -170,6 +220,21 @@ void Mesh::GenerateBuffers() {
 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(normalOffset));
 	check_gl_error();
+
+	if (myAnimation->isAnimated()) {
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(boneWeight));
+		check_gl_error();
+
+		glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, 0, BUFFER_OFFSET(boneIndex));
+		check_gl_error();
+
+		glEnableVertexAttribArray(3);
+		check_gl_error();
+
+		glEnableVertexAttribArray(4);
+		check_gl_error();
+
+	}
 
 
 	glEnableVertexAttribArray(0);
@@ -212,6 +277,7 @@ bool Mesh::LoadMesh(FbxScene* scene)
 				vert.y = static_cast<float>(fbxVert[1]);
 				vert.z = static_cast<float>(fbxVert[2]);
 				vertices.push_back(vert);
+				controlPoints.push_back(polyVertIndex);
 			}
 		}
 
@@ -234,21 +300,27 @@ bool Mesh::LoadMesh(FbxScene* scene)
 	return true;
 }
 
-bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result) {
+bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result){
 	std::map<PackedVertex, unsigned int>::iterator it = VertexToOutIndex.find(packed);
-	if (it == VertexToOutIndex.end()) {
+	if(it == VertexToOutIndex.end()){
 		return false;
-	}
-	else {
+	}else{
 		result = it->second;
 		return true;
 	}
 }
 
-void Mesh::setActive() {
+void Mesh::setActive(){
 	glBindVertexArray(vertexArrayObject);
 	check_gl_error();
 
+	if (myAnimation->isAnimated())
+	{
+		unsigned int location = glGetUniformLocation(6, "BoneOffset");
+		
+		glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
+		check_gl_error();
+	}
 
 }
 

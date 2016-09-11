@@ -23,7 +23,7 @@ void RenderingManager::addRenderable(Renderable * renderable){
 
 };
 
-void RenderingManager::RenderAll(){
+void RenderingManager::RenderAll(Camera & c, LightingManager * lm){
 
 	for(unsigned int i = 0; i < m_numRenderables; i++){
 		Transform * transform = m_renderables[i]->getParent()->getTransform();
@@ -31,19 +31,43 @@ void RenderingManager::RenderAll(){
 
 		unsigned int program = 3;
 
-		//if (mesh->isAnimated())
-		//{
-		//	program = 6;
-		//}
-		//else
-		//{
-		//	program = 3;
-		//}
+		unsigned int meshID = m_renderables[i]->getMeshID();
+		Mesh * mesh = m_resourceManager->getMesh(meshID);
 
-		//glUseProgram(program);
-		//check_gl_error();
+		if (mesh->isAnimated()) {
+			program = 6;
+		}
+		else {
+			program = 3;
+		}
 
-		glUniformMatrix4fv(5, 1, GL_FALSE, glm::value_ptr(*matrix));
+		glUseProgram(program);
+
+		lm->ActivateLights(program);
+
+		perspectiveMatrixID = glGetUniformLocation(program, "projection");
+		check_gl_error();
+
+		viewMatrixID = glGetUniformLocation(program, "view");
+		check_gl_error();
+
+		viewPosID = glGetUniformLocation(program, "viewPos");
+		check_gl_error();
+
+		modelMatrixID = glGetUniformLocation(program, "model");
+		check_gl_error();
+
+
+		projectionMatrix = glm::perspectiveFov(1.0f / tan(60.0f*3.1415926f / 360.0f), (float)1024, (float)720, 0.001f, 1000.0f);
+
+		glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(c.getMatrix()));
+		check_gl_error();
+		glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+		check_gl_error();
+		glUniform3f(viewPosID, c.getPosition().x, c.getPosition().y, c.getPosition().z);
+		check_gl_error();
+
+		glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, glm::value_ptr(*matrix));
 		check_gl_error();
 
 		unsigned int materialID = m_renderables[i]->getMaterialID();
@@ -55,13 +79,13 @@ void RenderingManager::RenderAll(){
 			unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTexID();
 			unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTexID();
 
-			unsigned int matDiffuseLoc = glGetUniformLocation(3, "material.diffuse");
+			unsigned int matDiffuseLoc = glGetUniformLocation(program, "material.diffuse");
 			check_gl_error();
 
-			unsigned int matSpecularLoc = glGetUniformLocation(3, "material.specular");
+			unsigned int matSpecularLoc = glGetUniformLocation(program, "material.specular");
 			check_gl_error();
 
-			unsigned int matShininessLoc = glGetUniformLocation(3, "material.shininess");
+			unsigned int matShininessLoc = glGetUniformLocation(program, "material.shininess");
 			check_gl_error();
 
 			glUniform1i(matDiffuseLoc, 0);
@@ -86,14 +110,13 @@ void RenderingManager::RenderAll(){
 			check_gl_error();
 
 		}
-		unsigned int meshID = m_renderables[i]->getMeshID();
 
-		Mesh * mesh = m_resourceManager->getMesh(meshID);
 
 		mesh->setActive();
 
 		glDrawElements(GL_TRIANGLES, mesh->getIndices().size(), GL_UNSIGNED_INT, NULL);
 		check_gl_error();
+		glUseProgram(0);
 
 
 	}

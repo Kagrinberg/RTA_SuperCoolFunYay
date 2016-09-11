@@ -20,7 +20,6 @@ void LightingManager::addLight(Light * light) {
 };
 
 void LightingManager::ActivateLights(unsigned int program) {
-	glUseProgram(program);
 	for (unsigned int i = 0; i < m_numLights; i++) {
 		Type type = m_lights[i]->getType();
 		switch (type){
@@ -45,7 +44,6 @@ void LightingManager::ActivateLights(unsigned int program) {
 
 		}
 	}
-	glUseProgram(0);
 
 };
 
@@ -70,6 +68,7 @@ void LightingManager::ActivateDirectionalLight(unsigned int program, unsigned in
 	glm::vec3 v_ambient = m_lights[index]->getAmbient();
 	glm::vec3 v_diffuse = m_lights[index]->getDiffuse();
 	glm::vec3 v_specular = m_lights[index]->getSpecular();
+
 
 	unsigned int directionLocation = glGetUniformLocation(program, direction.c_str());
 	check_gl_error();

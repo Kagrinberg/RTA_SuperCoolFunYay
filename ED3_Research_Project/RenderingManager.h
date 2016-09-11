@@ -3,6 +3,8 @@
 
 #include "Renderable.h"
 #include "ResourceManager.h"
+#include "LightingManager.h"
+#include "Camera.h"
 
 #define MAX_RENDERABLES 1024
 
@@ -17,11 +19,15 @@ private:
 
 	unsigned int m_currentMaterialID;
 
+	unsigned int perspectiveMatrixID, viewMatrixID, viewPosID, modelMatrixID;
+
+	glm::mat4 projectionMatrix;
+
 public:
 
 	RenderingManager();
 
-	void RenderAll();
+	void RenderAll(Camera & c, LightingManager * lm);
 	void addRenderable(Renderable * p_renderable);
 	void setResourceManager(ResourceManager * p_resourceManager) { m_resourceManager = p_resourceManager; };
 
