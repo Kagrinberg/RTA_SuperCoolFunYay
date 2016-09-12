@@ -2,6 +2,7 @@
 #include "GLError.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/glm.hpp"
+#include "EntityManager.h"
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
@@ -95,12 +96,13 @@ void Mesh::GenerateBuffers(){
 		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
 		{
 			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
-		
-			for (unsigned int j = 0; j < temp->jointIndex.size(); j++)
+
+			for (unsigned int j = 0; j < 4; j++)
 			{
-				boneIndicies.push_back(temp->jointIndex[j]);
+				boneIndicies.push_back(0);
 				boneWeights.push_back(temp->jointWeights[j]);
 			}
+
 		}
 
 		
@@ -170,6 +172,7 @@ void Mesh::GenerateBuffers(){
 bool Mesh::LoadMesh(FbxScene* scene)
 {
 	curFrame = 0;
+	keyPress = false;
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -213,6 +216,7 @@ bool Mesh::LoadMesh(FbxScene* scene)
 			uvs.push_back(uv);
 
 		}
+
 	}
 
 	GenerateIndices();
@@ -235,17 +239,37 @@ void Mesh::setActive(){
 
 	if (myAnimation->isAnimated())
 	{
-		if (GetAsyncKeyState(VK_RIGHT)) curFrame++;
-		if (curFrame > 30)
+		if (GetAsyncKeyState(VK_RIGHT))
 		{
-			curFrame = 0;
+			if (!keyPress)
+			{
+				curFrame++;
+				keyPress = true;
+			}
+			
+		}
+		else if (GetAsyncKeyState(VK_LEFT))
+		{
+			if (!keyPress)
+			{
+				curFrame--;
+				keyPress = true;
+			}
+		}
+		else
+		{
+			keyPress = false;
 		}
 
 
-		if (GetAsyncKeyState(VK_LEFT)) curFrame--;
-		if (curFrame < 0)
+
+		if (curFrame > myAnimation->getAniLength()-1)
 		{
-			curFrame = 30;
+			curFrame = 0;
+		}
+		else if (curFrame < 0)
+		{
+			curFrame = myAnimation->getAniLength() - 1;
 		}
 
 		boneOffsets.clear();
@@ -274,7 +298,33 @@ void Mesh::setActive(){
 			glm::mat4 finalOffset = tempBone * tempKey;
 
 			boneOffsets.push_back(finalOffset);
+
+
+			std::string uniqueName = "jointSphere";
+			uniqueName.append(std::to_string(k));
+
+			m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(glm::vec3(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2]));
 		}
+
+
+		glm::mat4 finalMats[4];
+
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			finalMats[i] = boneOffsets[i];
+		}
+
+		
+
+		for (unsigned int j = 0; j < 4; j++)
+		{
+			std::string strBO = "BoneOffset[";
+			strBO.append(std::to_string(j));
+			strBO.append("]");
+			unsigned int location = glGetUniformLocation(6, strBO.c_str());
+			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(finalMats[j]));
+		}
+
 
 
 		/*for (unsigned int i = 0; i < boneOffsets.size(); i++) {
@@ -288,10 +338,10 @@ void Mesh::setActive(){
 
 		}*/
 
-		unsigned int location = glGetUniformLocation(6, "BoneOffset");
+		/*unsigned int location = glGetUniformLocation(6, "BoneOffset");
 		
 		glUniformMatrix4fv(location, boneOffsets.size(), GL_TRUE, glm::value_ptr(boneOffsets[0]));
-		check_gl_error();
+		check_gl_error();*/
 	}
 
 }

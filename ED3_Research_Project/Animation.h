@@ -26,12 +26,14 @@ struct Keyframe
 struct CtrlPoint
 {
 	int controlIndex;
-	std::vector<int> jointIndex;
-	std::vector<float> jointWeights;
+	float jointWeights[4];
 
 	CtrlPoint()
 	{
-		
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			jointWeights[i] = 0.0f;
+		}
 	}
 };
 
@@ -52,13 +54,24 @@ struct Joint
 
 	~Joint()
 	{
-
+		
 	}
 };
 
 struct Skeleton
 {
 	std::vector<Joint> mJoints;
+
+	Skeleton()
+	{
+
+	}
+
+	~Skeleton()
+	{
+		
+	}
+
 };
 
 class Animation
@@ -69,7 +82,6 @@ class Animation
 	FbxLongLong mAnimationLength;
 	std::string mAnimationName;
 	std::unordered_map<unsigned int, CtrlPoint*> mControlPoints;
-	//Mesh * myMesh;
 	FbxNode * meshNode;
 
 public:
@@ -80,10 +92,9 @@ public:
 	void setScene(FbxScene* inFBXScene);
 	int getJoint(std::string jName);
 	bool isAnimated();
-	//void setMesh(Mesh * theMesh);
 	void createWeights();
 	void makeCpts();
-	void checkControls();
+	//void checkControls();
 	Skeleton getSkele();
 	std::unordered_map<unsigned int, CtrlPoint*>& getMap();
 	int getAniLength();

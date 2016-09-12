@@ -130,7 +130,7 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 		{
 			myAnimation->makeCpts();
 			myAnimation->createWeights();
-			myAnimation->checkControls();
+			//myAnimation->checkControls();
 
 
 			//push back joint spheres into m_meshes
@@ -150,7 +150,7 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 				m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
 			}
 
-		
+			temp->m_entityManager = m_entityManager;
 		}
 		
 		temp->GenerateBuffers();
