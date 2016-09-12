@@ -163,13 +163,12 @@ void Mesh::GenerateBuffers(){
 		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
 		{
 			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
-
+		
 			for (unsigned int j = 0; j < temp->jointIndex.size(); j++)
 			{
 				boneIndicies.push_back(temp->jointIndex[j]);
 				boneWeights.push_back(temp->jointWeights[j]);
 			}
-
 		}
 
 		Skeleton mySkele = myAnimation->getSkele();
