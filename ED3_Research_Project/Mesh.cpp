@@ -5,84 +5,16 @@
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
+bool Mesh::LoadEntry(const char * path) {
+
+	return true;
+}
+
+
 Mesh::~Mesh() {
 
 	delete myAnimation;
 
-}
-
-bool Mesh::LoadEntry(const char * path){
-	//old obj leader
-/*
-	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<glm::vec3> temp_vertices;
-	std::vector<glm::vec2> temp_uvs;
-	std::vector<glm::vec3> temp_normals;
-
-	FILE * file;
-	fopen_s(&file, path, "r");
-	if( file == NULL ){
-		printf("Impossible to open the file !\n");
-		return false;
-	}
-
-	while( true ){
-
-		char lineHeader[128];
-		// read the first word of the line
-		int res = fscanf_s(file, "%s", lineHeader, 128);
-		if (res == EOF)
-			break; // EOF = End Of File. Quit the loop.
-
-		// else : parse lineHeader
-		if ( strcmp( lineHeader, "v" ) == 0 ){
-			glm::vec3 vertex;
-			fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z, 128);
-			temp_vertices.push_back(vertex);
-		}else if ( strcmp( lineHeader, "vt" ) == 0 ){
-			glm::vec2 uv;
-			fscanf_s(file, "%f %f\n", &uv.x, &uv.y, 128);
-			temp_uvs.push_back(uv);
-		}else if ( strcmp( lineHeader, "vn" ) == 0 ){
-			glm::vec3 normal;
-			fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z, 128);
-			temp_normals.push_back(normal);
-		}else if ( strcmp( lineHeader, "f" ) == 0 ){
-			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2], 128);
-			if (matches != 9){
-				printf("File can't be read by our simple parser : ( Try exporting with other options\n");
-				return false;
-			}
-			for (unsigned int i = 0; i < 3; i++){
-				vertexIndices.push_back(vertexIndex[i]);
-				uvIndices.push_back(uvIndex[i]);
-				normalIndices.push_back(normalIndex[i]);
-			}
-		}
-	}
-	// For each vertex of each triangle
-	for( unsigned int i=0; i < vertexIndices.size(); i++ ){
-		unsigned int vertexIndex = vertexIndices[i];
-		glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
-		vertices.push_back(vertex);
-	}
-	for( unsigned int i=0; i < uvIndices.size(); i++ ){
-		unsigned int uvIndex = uvIndices[i];
-		glm::vec2 uv = temp_uvs[ uvIndex-1 ];
-		uvs.push_back(uv);
-	}
-	for( unsigned int i=0; i < uvIndices.size(); i++ ){
-		unsigned int normalIndex = normalIndices[i];
-		glm::vec3 normal = temp_normals[ normalIndex-1 ];
-		normals.push_back(normal);
-	}
-	//Generate New Indices
-	GenerateIndices();
-
-	GenerateBuffers();
-*/
-	return true;
 }
 
 void Mesh::GenerateIndices(){
@@ -171,20 +103,8 @@ void Mesh::GenerateBuffers(){
 			}
 		}
 
-		Skeleton mySkele = myAnimation->getSkele();
-
-		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
-		{
-			glm::mat4 tempBone;
-			tempBone[0] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[0][3]);
-			tempBone[1] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[1][3]);
-			tempBone[2] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[2][3]);
-			tempBone[3] = glm::vec4(mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][0], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][1], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][2], mySkele.mJoints[k].mGlobalBindposeInverse.mData[3][3]);
-
-			tempBone = glm::mat4(1.0f);
-
-			boneOffsets.push_back(tempBone);
-		}
+		
+		
 
 		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
 		check_gl_error();
@@ -249,6 +169,7 @@ void Mesh::GenerateBuffers(){
 
 bool Mesh::LoadMesh(FbxScene* scene)
 {
+	curFrame = 0;
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -314,9 +235,62 @@ void Mesh::setActive(){
 
 	if (myAnimation->isAnimated())
 	{
+		if (GetAsyncKeyState(VK_RIGHT)) curFrame++;
+		if (curFrame > 30)
+		{
+			curFrame = 0;
+		}
+
+
+		if (GetAsyncKeyState(VK_LEFT)) curFrame--;
+		if (curFrame < 0)
+		{
+			curFrame = 30;
+		}
+
+		boneOffsets.clear();
+
+		Skeleton mySkele = myAnimation->getSkele();
+		
+		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
+		{
+
+			FbxAMatrix BindposeInverse = mySkele.mJoints[k].mGlobalBindposeInverse;
+
+			glm::mat4 tempBone;
+			tempBone[0] = glm::vec4(BindposeInverse.mData[0][0], BindposeInverse.mData[0][1], BindposeInverse.mData[0][2], BindposeInverse.mData[0][3]);
+			tempBone[1] = glm::vec4(BindposeInverse.mData[1][0], BindposeInverse.mData[1][1], BindposeInverse.mData[1][2], BindposeInverse.mData[1][3]);
+			tempBone[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
+			tempBone[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
+
+			FbxAMatrix keyMat = mySkele.mJoints[k].mAnimation[curFrame]->mGlobalTransform;
+
+			glm::mat4 tempKey;
+			tempKey[0] = glm::vec4(keyMat.mData[0][0], keyMat.mData[0][1], keyMat.mData[0][2], keyMat.mData[0][3]);
+			tempKey[1] = glm::vec4(keyMat.mData[1][0], keyMat.mData[1][1], keyMat.mData[1][2], keyMat.mData[1][3]);
+			tempKey[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
+			tempKey[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
+
+			glm::mat4 finalOffset = tempBone * tempKey;
+
+			boneOffsets.push_back(finalOffset);
+		}
+
+
+		/*for (unsigned int i = 0; i < boneOffsets.size(); i++) {
+			std::string strBO = "BoneOffset[";
+			strBO.append(std::to_string(i));
+			strBO.append("]");
+			unsigned int location = glGetUniformLocation(6, strBO.c_str());
+			glm::mat4 matrix = boneOffsets[i];
+			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+			check_gl_error();
+
+		}*/
+
 		unsigned int location = glGetUniformLocation(6, "BoneOffset");
 		
-		glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
+		glUniformMatrix4fv(location, boneOffsets.size(), GL_TRUE, glm::value_ptr(boneOffsets[0]));
 		check_gl_error();
 	}
 

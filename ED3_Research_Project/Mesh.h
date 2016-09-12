@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include <windows.h>
 #include <GL/glew.h>
 #include "glm/glm.hpp"
 #include <fbxsdk.h>
@@ -38,6 +39,7 @@ private:
 	unsigned int indexBufferID;
 	Animation * myAnimation;
 	std::vector<glm::mat4> boneOffsets;
+	int curFrame;
 
 public:
 

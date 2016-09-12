@@ -58,6 +58,45 @@ bool Texture::LoadEntry(const char * filename)				// Load a TGA file
 	return true;															// All went well, continue on
 }
 
+bool Texture::LoadEntryKeep(const char * filename) {
+	FILE * fTGA;												// File pointer to texture file
+	fTGA = fopen(filename, "rb");								// Open file for reading
+
+	if (fTGA == NULL)											// If it didn't open....
+	{
+		MessageBox(NULL, "Could not open texture file", "ERROR", MB_OK);	// Display an error message
+		return false;														// Exit function
+	}
+
+	if (fread(&tgaheader, sizeof(TGAHeader), 1, fTGA) == 0)					// Attempt to read 12 byte header from file
+	{
+		MessageBox(NULL, "Could not read file header", "ERROR", MB_OK);		// If it fails, display an error message 
+		if (fTGA != NULL)													// Check to seeiffile is still open
+		{
+			fclose(fTGA);													// If it is, close it
+		}
+		return false;														// Exit function
+	}
+
+	if (memcmp(uTGAcompare, &tgaheader, sizeof(tgaheader)) == 0)				// See if header matches the predefined header of 
+	{																		// an Uncompressed TGA image
+		LoadUncompressedTGA(filename, fTGA);						// If so, jump to Uncompressed TGA loading code
+	}
+	else if (memcmp(cTGAcompare, &tgaheader, sizeof(tgaheader)) == 0)		// See if header matches the predefined header of
+	{																		// an RLE compressed TGA image
+		LoadCompressedTGA(filename, fTGA);							// If so, jump to Compressed TGA loading code
+	}
+	else																	// If header matches neither type
+	{
+		MessageBox(NULL, "TGA file be type 2 or type 10 ", "Invalid Image", MB_OK);	// Display an error
+		fclose(fTGA);
+		return false;																// Exit function
+	}
+
+	return true;
+}
+
+
 bool Texture::ProcessTextures(FbxMesh* fbx_mesh)
 {
 	FbxProperty property;

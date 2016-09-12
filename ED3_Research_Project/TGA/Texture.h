@@ -50,6 +50,7 @@ public:
 	bool LoadUncompressedTGA(const char *, FILE *);	// Load an Uncompressed file
 	bool LoadCompressedTGA(const char *, FILE *);		// Load a Compressed file
 	bool LoadEntry(const char * filename);
+	bool LoadEntryKeep(const char * filename);
 
 	unsigned int getTexID() { return texID; };
 
