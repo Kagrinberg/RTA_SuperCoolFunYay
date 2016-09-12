@@ -103,6 +103,9 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Project</Filter>
     </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -176,6 +179,9 @@
       <Filter>Project\ErrorChecking</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
       <Filter>Project</Filter>
     </ClInclude>
   </ItemGroup>
