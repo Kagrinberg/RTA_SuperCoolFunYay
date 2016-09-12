@@ -237,14 +237,20 @@ void Mesh::setActive(){
 
 	if (myAnimation->isAnimated())
 	{
-		if (GetAsyncKeyState(VK_RIGHT)) curFrame++;
+		if (GetAsyncKeyState(VK_RIGHT))
+		{
+			curFrame++;
+		}
 		if (curFrame > 30)
 		{
 			curFrame = 0;
 		}
 
 
-		if (GetAsyncKeyState(VK_LEFT)) curFrame--;
+		if (GetAsyncKeyState(VK_LEFT))
+		{
+			curFrame--;
+		}
 		if (curFrame < 0)
 		{
 			curFrame = 30;
@@ -279,6 +285,26 @@ void Mesh::setActive(){
 		}
 
 
+		glm::mat4 finalMats[4];
+
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			finalMats[i] = boneOffsets[i];
+		}
+
+		
+
+		for (unsigned int j = 0; j < 4; j++)
+		{
+			std::string strBO = "BoneOffset[";
+			strBO.append(std::to_string(j));
+			strBO.append("]");
+			unsigned int location = glGetUniformLocation(6, strBO.c_str());
+			glUniformMatrix4fv(location, 1, 0, glm::value_ptr(finalMats[j]));
+		}
+
+
+
 		/*for (unsigned int i = 0; i < boneOffsets.size(); i++) {
 			std::string strBO = "BoneOffset[";
 			strBO.append(std::to_string(i));
@@ -290,10 +316,10 @@ void Mesh::setActive(){
 
 		}*/
 
-		unsigned int location = glGetUniformLocation(6, "BoneOffset");
+		/*unsigned int location = glGetUniformLocation(6, "BoneOffset");
 		
 		glUniformMatrix4fv(location, boneOffsets.size(), GL_TRUE, glm::value_ptr(boneOffsets[0]));
-		check_gl_error();
+		check_gl_error();*/
 	}
 
 }

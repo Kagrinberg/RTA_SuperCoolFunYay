@@ -41,6 +41,7 @@ void main () {
 	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[1]]) * boneWeight[1];
 	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[2]]) * boneWeight[2];
 	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[3]]) * boneWeight[3];
+
     tempNorm = mat4(transpose(inverse(model))) * tempNorm;  
 
 	Normal = tempNorm.xyz;
