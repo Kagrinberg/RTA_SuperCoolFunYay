@@ -162,6 +162,34 @@ void Animation::createWeights()
 				mControlPoints[currCluster->GetControlPointIndices()[i]]->jointWeights.push_back(static_cast<float>(currCluster->GetControlPointWeights()[i]));
 			}
 
+
+			//getanimation information
+			FbxAnimStack* theAniStack = mFBXScene->GetSrcObject<FbxAnimStack>(0);
+
+			FbxString animStackName = theAniStack->GetName();
+			mAnimationName = animStackName.Buffer();
+
+			FbxTakeInfo* takeInfo = mFBXScene->GetTakeInfo(animStackName);
+
+			FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
+			FbxTime end = takeInfo->mLocalTimeSpan.GetStop();
+
+			mAnimationLength = end.GetFrameCount(FbxTime::eFrames24) - start.GetFrameCount(FbxTime::eFrames24) + 1;
+
+			for (FbxLongLong i = start.GetFrameCount(FbxTime::eFrames24); i <= end.GetFrameCount(FbxTime::eFrames24); ++i)
+			{
+				FbxTime currTime;
+				currTime.SetFrame(i, FbxTime::eFrames24);
+				Keyframe * currAnim = new Keyframe();
+				currAnim->mFrameNum = i;
+
+				FbxAMatrix currentTransformOffset = meshNode->EvaluateGlobalTransform(currTime) * geometeryTransform;
+
+				currAnim->mGlobalTransform = currentTransformOffset.Inverse() * currCluster->GetLink()->EvaluateGlobalTransform(currTime);
+
+				mSkeleton.mJoints[currJointIndex].mAnimation.push_back(currAnim);
+			}
+			
 		}
 
 
