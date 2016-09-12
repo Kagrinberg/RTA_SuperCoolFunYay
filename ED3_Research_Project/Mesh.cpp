@@ -96,9 +96,9 @@ void Mesh::GenerateBuffers(){
 		{
 			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
 
-			for (unsigned int j = 0; j < temp->jointIndex.size(); j++)
+			for (unsigned int j = 0; j < 4; j++)
 			{
-				boneIndicies.push_back(temp->jointIndex[j]);
+				boneIndicies.push_back(0);
 				boneWeights.push_back(temp->jointWeights[j]);
 			}
 
@@ -171,6 +171,7 @@ void Mesh::GenerateBuffers(){
 bool Mesh::LoadMesh(FbxScene* scene)
 {
 	curFrame = 0;
+	keyPress = false;
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -239,21 +240,35 @@ void Mesh::setActive(){
 	{
 		if (GetAsyncKeyState(VK_RIGHT))
 		{
-			curFrame++;
+			if (!keyPress)
+			{
+				curFrame++;
+				keyPress = true;
+			}
+			
 		}
-		if (curFrame > 30)
+		else if (GetAsyncKeyState(VK_LEFT))
+		{
+			if (!keyPress)
+			{
+				curFrame--;
+				keyPress = true;
+			}
+		}
+		else
+		{
+			keyPress = false;
+		}
+
+
+
+		if (curFrame > myAnimation->getAniLength()-1)
 		{
 			curFrame = 0;
 		}
-
-
-		if (GetAsyncKeyState(VK_LEFT))
+		else if (curFrame < 0)
 		{
-			curFrame--;
-		}
-		if (curFrame < 0)
-		{
-			curFrame = 30;
+			curFrame = myAnimation->getAniLength() - 1;
 		}
 
 		boneOffsets.clear();

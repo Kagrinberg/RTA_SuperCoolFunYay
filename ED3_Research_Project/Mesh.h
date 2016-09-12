@@ -40,6 +40,7 @@ private:
 	Animation * myAnimation;
 	std::vector<glm::mat4> boneOffsets;
 	int curFrame;
+	bool keyPress;
 
 public:
 
