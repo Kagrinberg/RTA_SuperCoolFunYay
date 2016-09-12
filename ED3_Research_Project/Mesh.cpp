@@ -2,6 +2,7 @@
 #include "GLError.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/glm.hpp"
+#include "EntityManager.h"
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
@@ -297,6 +298,12 @@ void Mesh::setActive(){
 			glm::mat4 finalOffset = tempBone * tempKey;
 
 			boneOffsets.push_back(finalOffset);
+
+
+			std::string uniqueName = "jointSphere";
+			uniqueName.append(std::to_string(k));
+
+			m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(glm::vec3(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2]));
 		}
 
 
@@ -315,7 +322,7 @@ void Mesh::setActive(){
 			strBO.append(std::to_string(j));
 			strBO.append("]");
 			unsigned int location = glGetUniformLocation(6, strBO.c_str());
-			glUniformMatrix4fv(location, 1, 0, glm::value_ptr(finalMats[j]));
+			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(finalMats[j]));
 		}
 
 

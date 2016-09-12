@@ -150,7 +150,7 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 				m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
 			}
 
-		
+			temp->m_entityManager = m_entityManager;
 		}
 		
 		temp->GenerateBuffers();

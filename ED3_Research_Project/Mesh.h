@@ -9,6 +9,7 @@
 #include <map>
 #include "Animation.h"
 
+class EntityManager;
 
 class Mesh{
 
@@ -43,6 +44,8 @@ private:
 	bool keyPress;
 
 public:
+
+	EntityManager * m_entityManager;
 
 	~Mesh();
 
