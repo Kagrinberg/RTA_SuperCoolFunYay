@@ -104,20 +104,7 @@ void Mesh::GenerateBuffers(){
 
 		}
 
-		Skeleton mySkele = myAnimation->getSkele();
-
-		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
-		{
-			FbxAMatrix BindposeInverse = mySkele.mJoints[k].mGlobalBindposeInverse;
-
-			glm::mat4 tempBone;
-			tempBone[0] = glm::vec4(BindposeInverse.mData[0][0], BindposeInverse.mData[0][1], BindposeInverse.mData[0][2], BindposeInverse.mData[0][3]);
-			tempBone[1] = glm::vec4(BindposeInverse.mData[1][0], BindposeInverse.mData[1][1], BindposeInverse.mData[1][2], BindposeInverse.mData[1][3]);
-			tempBone[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
-			tempBone[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
-
-			boneOffsets.push_back(tempBone);
-		}
+		
 		
 
 		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
@@ -250,10 +237,34 @@ void Mesh::setActive(){
 
 	if (myAnimation->isAnimated())
 	{
+		if (GetAsyncKeyState(VK_RIGHT)) curFrame++;
+		if (curFrame > 30)
+		{
+			curFrame = 0;
+		}
+
+
+		if (GetAsyncKeyState(VK_LEFT)) curFrame--;
+		if (curFrame < 0)
+		{
+			curFrame = 30;
+		}
+
+		boneOffsets.clear();
+
 		Skeleton mySkele = myAnimation->getSkele();
 		
 		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
 		{
+
+			FbxAMatrix BindposeInverse = mySkele.mJoints[k].mGlobalBindposeInverse;
+
+			glm::mat4 tempBone;
+			tempBone[0] = glm::vec4(BindposeInverse.mData[0][0], BindposeInverse.mData[0][1], BindposeInverse.mData[0][2], BindposeInverse.mData[0][3]);
+			tempBone[1] = glm::vec4(BindposeInverse.mData[1][0], BindposeInverse.mData[1][1], BindposeInverse.mData[1][2], BindposeInverse.mData[1][3]);
+			tempBone[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
+			tempBone[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
+
 			FbxAMatrix keyMat = mySkele.mJoints[k].mAnimation[curFrame]->mGlobalTransform;
 
 			glm::mat4 tempKey;
@@ -262,15 +273,26 @@ void Mesh::setActive(){
 			tempKey[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
 			tempKey[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
 
-			boneOffsets[k] = boneOffsets[k] * tempKey;
+			glm::mat4 finalOffset = tempBone * tempKey;
+
+			boneOffsets.push_back(finalOffset);
 		}
 
 
+		/*for (unsigned int i = 0; i < boneOffsets.size(); i++) {
+			std::string strBO = "BoneOffset[";
+			strBO.append(std::to_string(i));
+			strBO.append("]");
+			unsigned int location = glGetUniformLocation(6, strBO.c_str());
+			glm::mat4 matrix = boneOffsets[i];
+			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+			check_gl_error();
 
+		}*/
 
 		unsigned int location = glGetUniformLocation(6, "BoneOffset");
 		
-		glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
+		glUniformMatrix4fv(location, boneOffsets.size(), GL_TRUE, glm::value_ptr(boneOffsets[0]));
 		check_gl_error();
 	}
 

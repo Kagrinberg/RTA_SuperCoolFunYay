@@ -206,3 +206,8 @@ std::unordered_map<unsigned int, CtrlPoint*>& Animation::getMap()
 {
 	return mControlPoints;
 }
+
+int Animation::getAniLength()
+{
+	return static_cast<int>(mAnimationLength);
+}
