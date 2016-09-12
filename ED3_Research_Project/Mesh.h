@@ -38,12 +38,12 @@ private:
 	unsigned int indexBufferID;
 	Animation * myAnimation;
 	std::vector<glm::mat4> boneOffsets;
+	int curFrame;
 
 public:
 
 	~Mesh();
 
-	bool LoadEntry(const char * path);
 	bool LoadMesh(FbxScene* scene);
 
 	void GenerateIndices();
