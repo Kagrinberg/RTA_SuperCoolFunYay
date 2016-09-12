@@ -5,6 +5,12 @@
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
+bool Mesh::LoadEntry(const char * path) {
+
+	return true;
+}
+
+
 Mesh::~Mesh() {
 
 	delete myAnimation;
