@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include <windows.h>
 #include <GL/glew.h>
 #include "glm/glm.hpp"
 #include <fbxsdk.h>

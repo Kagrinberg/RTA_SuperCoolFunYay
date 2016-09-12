@@ -86,5 +86,6 @@ public:
 	void checkControls();
 	Skeleton getSkele();
 	std::unordered_map<unsigned int, CtrlPoint*>& getMap();
+	int getAniLength();
 
 };
