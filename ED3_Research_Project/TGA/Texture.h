@@ -55,6 +55,9 @@ public:
 	unsigned int getTexID() { return texID; };
 
 	bool ProcessTextures(FbxMesh* fbx_mesh);
+	unsigned char* getImage() { return imageData; }
+	unsigned int GetWidth() { return width; }
+	unsigned int GetHeight() { return height; }
 };
 
 

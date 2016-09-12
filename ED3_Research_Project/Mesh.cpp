@@ -169,7 +169,7 @@ void Mesh::GenerateBuffers(){
 
 bool Mesh::LoadMesh(FbxScene* scene)
 {
-	curFrame = 0;
+	curFrame = 20;
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -276,24 +276,19 @@ void Mesh::setActive(){
 			boneOffsets.push_back(finalOffset);
 		}
 
-
-		/*for (unsigned int i = 0; i < boneOffsets.size(); i++) {
-			std::string strBO = "BoneOffset[";
-			strBO.append(std::to_string(i));
-			strBO.append("]");
-			unsigned int location = glGetUniformLocation(6, strBO.c_str());
-			glm::mat4 matrix = boneOffsets[i];
-			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
-			check_gl_error();
-
-		}*/
+		//for (unsigned int i = 0; i < boneOffsets.size(); i++) {
+		//	std::string strBO = "BoneOffset[";
+		//	strBO.append(std::to_string(i));
+		//	strBO.append("]");
+		//	unsigned int location = glGetUniformLocation(6, strBO.c_str());
+		//	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(boneOffsets[i]));
+		//	check_gl_error();
+		//}
 
 		unsigned int location = glGetUniformLocation(6, "BoneOffset");
-		
 		glUniformMatrix4fv(location, boneOffsets.size(), GL_TRUE, glm::value_ptr(boneOffsets[0]));
 		check_gl_error();
 	}
-
 }
 
 void Mesh::setAnimator(Animation * theAnimator)
