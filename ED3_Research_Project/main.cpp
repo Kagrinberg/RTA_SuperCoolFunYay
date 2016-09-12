@@ -77,45 +77,8 @@ int main(int argc, char** argv){
 	Main = shaderManager->GetShader("Main");
 	AnimatedMain = shaderManager->GetShader("AnimatedMain");
 
-	//perspectiveMatrixID = glGetUniformLocation(Main, "projection");
-	//viewMatrixID = glGetUniformLocation(Main, "view");
-	//viewPosID = glGetUniformLocation(Main, "viewPos");
-	//modelMatrixID = glGetUniformLocation(Main, "model");
-
-
-	////perspectiveMatrixID = glGetUniformLocation(AnimatedMain, "projection");
-	////viewMatrixID = glGetUniformLocation(AnimatedMain, "view");
-	//viewPosID = glGetUniformLocation(AnimatedMain, "viewPos");
-	////modelMatrixID = glGetUniformLocation(AnimatedMain, "model");
-
-
-	////Get block inidcies
-	//unsigned int uniformBlockIndexMain = glGetUniformBlockIndex(Main, "Matrices");
-	////unsigned int uniformBlockIndexAnimatedMain = glGetUniformBlockIndex(AnimatedMain, "Matrices");
-
-	////Link them
-	//glUniformBlockBinding(Main, uniformBlockIndexMain, 0);
-	////glUniformBlockBinding(AnimatedMain, uniformBlockIndexAnimatedMain, 0);
-
-	////Create the uniform buffer object
-	//glGenBuffers(1, &uboMatrices);
-	//glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-	//glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	////Set the buffer range
-	//glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
-
 	////Set the projection Matrix in the Uniform buffer Object
 	projectionMatrix = glm::perspectiveFov(1.0f / tan(60.0f*3.1415926f / 360.0f), (float)screenWidth, (float)screenHeight, 0.001f, 1000.0f);
-	//glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-	//glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projectionMatrix));
-	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	////Intialize Camera
-	//myCamera.Initialize();
-
-
 
 	//glUseProgram(AnimatedMain);
 	lightingManager->ActivateLights(AnimatedMain);
@@ -167,19 +130,9 @@ void MainLoop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-
 		myCamera.update(deltaTime);
 
-		//glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, glm::value_ptr(myCamera.getMatrix()));
-		//glUniformMatrix4fv(perspectiveMatrixID, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-		//glUniform3f(viewPosID, myCamera.getPosition().x, myCamera.getPosition().y, myCamera.getPosition().z);
-		/*glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(myCamera.getMatrix()));
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
-
-
 		renderingManager->RenderAll(myCamera, lightingManager);
-
 
 		glfwSwapBuffers(window.getWindow());
 
