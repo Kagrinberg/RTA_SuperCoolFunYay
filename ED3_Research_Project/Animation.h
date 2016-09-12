@@ -16,9 +16,8 @@ struct Keyframe
 {
 	FbxLongLong mFrameNum;
 	FbxAMatrix mGlobalTransform;
-	Keyframe* mNext;
 
-	Keyframe() : mNext(nullptr)
+	Keyframe()
 	{
 
 	}
@@ -42,10 +41,10 @@ struct Joint
 	std::string mName;
 	int mParentIndex;
 	FbxAMatrix mGlobalBindposeInverse;
-	Keyframe* mAnimation;
+	std::vector<Keyframe*> mAnimation;
 	FbxNode* mNode;
 
-	Joint() : mNode(nullptr), mAnimation(nullptr)
+	Joint() : mNode(nullptr)
 	{
 		mGlobalBindposeInverse.SetIdentity();
 		mParentIndex = -1;
@@ -53,12 +52,7 @@ struct Joint
 
 	~Joint()
 	{
-		while (mAnimation)
-		{
-			Keyframe* temp = mAnimation->mNext;
-			delete mAnimation;
-			mAnimation = temp;
-		}
+
 	}
 };
 

@@ -26,20 +26,20 @@ out vec2 TexCoords;
 void main () {
 
 
-	gl_Position = (vec4(position, 1) * BoneOffset[boneIndex[0]]) * boneWeight[0];
-	gl_Position += (vec4(position, 1) * BoneOffset[boneIndex[1]]) * boneWeight[1];
-	gl_Position += (vec4(position, 1) * BoneOffset[boneIndex[2]]) * boneWeight[2];
-	gl_Position += (vec4(position, 1) * BoneOffset[boneIndex[3]]) * boneWeight[3];
+	gl_Position = (vec4(position, 1) * BoneOffset[boneIndex[0]]) * boneWeight[boneIndex[0]];
+	gl_Position += (vec4(position, 1) * BoneOffset[boneIndex[1]]) * boneWeight[boneIndex[1]];
+	gl_Position += (vec4(position, 1) * BoneOffset[boneIndex[2]]) * boneWeight[boneIndex[2]];
+	gl_Position += (vec4(position, 1) * BoneOffset[boneIndex[3]]) * boneWeight[boneIndex[3]];
 
 	gl_Position = projection *view * model * gl_Position;
 
     FragPos = vec3(model * vec4(position.xyz, 1.0f));
 	vec4 tempNorm;
 
-	tempNorm = (vec4(normal, 0) * BoneOffset[boneIndex[0]]) * boneWeight[0];
-	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[1]]) * boneWeight[1];
-	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[2]]) * boneWeight[2];
-	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[3]]) * boneWeight[3];
+	tempNorm = (vec4(normal, 0) * BoneOffset[boneIndex[0]]) * boneWeight[boneIndex[0]];
+	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[1]]) * boneWeight[boneIndex[1]];
+	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[2]]) * boneWeight[boneIndex[2]];
+	tempNorm += (vec4(normal, 0) * BoneOffset[boneIndex[3]]) * boneWeight[boneIndex[3]];
     tempNorm = mat4(transpose(inverse(model))) * tempNorm;  
 
 	Normal = mat3(transpose(inverse(model))) * normal;

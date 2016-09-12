@@ -36,8 +36,8 @@
 			<Material>
 				<Name>Crate</Name>
 				<Shininess>120.0f</Shininess>
-				<Diffuse>Textures/crate.tga</Diffuse>
-				<Specular>Textures/crate_specular.tga</Specular>
+				<Diffuse>Textures/TestCube.tga</Diffuse>
+				<Specular>Textures/TestCube.tga</Specular>
 			</Material>
 
 		</Renderable>
