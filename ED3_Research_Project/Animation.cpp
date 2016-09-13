@@ -198,9 +198,6 @@ void Animation::createWeights()
 			}
 			
 		}
-
-
-
 	}
 }
 

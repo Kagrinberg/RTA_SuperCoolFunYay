@@ -2,6 +2,7 @@
 #include "GLError.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/glm.hpp"
+#include "EntityManager.h"
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
@@ -95,22 +96,19 @@ void Mesh::GenerateBuffers(){
 		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
 		{
 			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
-		
+
 			for (unsigned int j = 0; j < 4; j++)
 			{
-				//boneIndicies.push_back(temp->jointIndex[j]);
+				boneIndicies.push_back(0);
 				boneWeights.push_back(temp->jointWeights[j]);
 			}
 		}
 
-		
-		
-
 		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
 		check_gl_error();
 
-		//glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
-		//check_gl_error();
+		glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
+		check_gl_error();
 
 
 	}
@@ -169,7 +167,8 @@ void Mesh::GenerateBuffers(){
 
 bool Mesh::LoadMesh(FbxScene* scene)
 {
-	curFrame = 20;
+	curFrame = 0;
+	keyPress = false;
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -211,8 +210,8 @@ bool Mesh::LoadMesh(FbxScene* scene)
 
 			glm::vec2 uv = glm::vec2(fuvs[i][0], fuvs[i][1]);
 			uvs.push_back(uv);
-
 		}
+
 	}
 
 	GenerateIndices();
@@ -235,17 +234,35 @@ void Mesh::setActive(){
 
 	if (myAnimation->isAnimated())
 	{
-		if (GetAsyncKeyState(VK_RIGHT)) curFrame++;
-		if (curFrame > 30)
+		if (GetAsyncKeyState(VK_RIGHT))
+		{
+			if (!keyPress)
+			{
+				curFrame++;
+				keyPress = true;
+			}
+			
+		}
+		else if (GetAsyncKeyState(VK_LEFT))
+		{
+			if (!keyPress)
+			{
+				curFrame--;
+				keyPress = true;
+			}
+		}
+		else
+		{
+			keyPress = false;
+		}
+
+		if (curFrame > myAnimation->getAniLength()-1)
 		{
 			curFrame = 0;
 		}
-
-
-		if (GetAsyncKeyState(VK_LEFT)) curFrame--;
-		if (curFrame < 0)
+		else if (curFrame < 0)
 		{
-			curFrame = 30;
+			curFrame = myAnimation->getAniLength() - 1;
 		}
 
 		boneOffsets.clear();
@@ -271,24 +288,53 @@ void Mesh::setActive(){
 			tempKey[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
 			tempKey[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
 
-			glm::mat4 finalOffset = tempBone * tempKey;
+			glm::mat4 finalOffset = tempKey * tempBone;
 
 			boneOffsets.push_back(finalOffset);
+
+
+			std::string uniqueName = "jointSphere";
+			uniqueName.append(std::to_string(k));
+
+			m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(glm::vec3(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2]));
 		}
 
-		//for (unsigned int i = 0; i < boneOffsets.size(); i++) {
-		//	std::string strBO = "BoneOffset[";
-		//	strBO.append(std::to_string(i));
-		//	strBO.append("]");
-		//	unsigned int location = glGetUniformLocation(6, strBO.c_str());
-		//	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(boneOffsets[i]));
-		//	check_gl_error();
-		//}
 
-		unsigned int location = glGetUniformLocation(6, "BoneOffset");
+		glm::mat4 finalMats[4];
+
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			finalMats[i] = boneOffsets[i];
+		}
+
+		for (unsigned int j = 0; j < 4; j++)
+		{
+			std::string strBO = "BoneOffset[";
+			strBO.append(std::to_string(j));
+			strBO.append("]");
+			unsigned int location = glGetUniformLocation(6, strBO.c_str());
+			glUniformMatrix4fv(location, 1, GL_TRUE, glm::value_ptr(finalMats[j]));
+		}
+
+
+
+		/*for (unsigned int i = 0; i < boneOffsets.size(); i++) {
+			std::string strBO = "BoneOffset[";
+			strBO.append(std::to_string(i));
+			strBO.append("]");
+			unsigned int location = glGetUniformLocation(6, strBO.c_str());
+			glm::mat4 matrix = boneOffsets[i];
+			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+			check_gl_error();
+
+		}*/
+
+		/*unsigned int location = glGetUniformLocation(6, "BoneOffset");
+		
 		glUniformMatrix4fv(location, boneOffsets.size(), GL_TRUE, glm::value_ptr(boneOffsets[0]));
-		check_gl_error();
+		check_gl_error();*/
 	}
+
 }
 
 void Mesh::setAnimator(Animation * theAnimator)
