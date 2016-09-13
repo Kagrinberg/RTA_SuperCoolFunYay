@@ -1,6 +1,6 @@
 #version 450
 
-#define MAX_BONES 128
+#define MAX_BONES 4
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
@@ -26,10 +26,10 @@ out vec2 TexCoords;
 void main () {
 
 
-	gl_Position = (vec4(position, 1) * BoneOffset[0]) * boneWeight[0];
-	gl_Position += (vec4(position, 1) * BoneOffset[1]) * boneWeight[1];
-	gl_Position += (vec4(position, 1) * BoneOffset[2]) * boneWeight[2];
-	gl_Position += (vec4(position, 1) * BoneOffset[3]) * boneWeight[3];
+	gl_Position = vec4(position, 1) * BoneOffset[0] * boneWeight[0];
+	gl_Position += vec4(position, 1) * BoneOffset[1] * boneWeight[1];
+	gl_Position += vec4(position, 1) * BoneOffset[2] * boneWeight[2];
+	gl_Position += vec4(position, 1) * BoneOffset[3] * boneWeight[3];
 
 	//gl_Position =vec4(position,1);
 	gl_Position = vec4(gl_Position.xyz,1);

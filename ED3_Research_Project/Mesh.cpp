@@ -102,11 +102,7 @@ void Mesh::GenerateBuffers(){
 				boneIndicies.push_back(0);
 				boneWeights.push_back(temp->jointWeights[j]);
 			}
-
 		}
-
-		
-		
 
 		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
 		check_gl_error();
@@ -214,7 +210,6 @@ bool Mesh::LoadMesh(FbxScene* scene)
 
 			glm::vec2 uv = glm::vec2(fuvs[i][0], fuvs[i][1]);
 			uvs.push_back(uv);
-
 		}
 
 	}
@@ -261,8 +256,6 @@ void Mesh::setActive(){
 			keyPress = false;
 		}
 
-
-
 		if (curFrame > myAnimation->getAniLength()-1)
 		{
 			curFrame = 0;
@@ -295,7 +288,7 @@ void Mesh::setActive(){
 			tempKey[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
 			tempKey[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
 
-			glm::mat4 finalOffset = tempBone * tempKey;
+			glm::mat4 finalOffset = tempKey * tempBone;
 
 			boneOffsets.push_back(finalOffset);
 
@@ -314,15 +307,13 @@ void Mesh::setActive(){
 			finalMats[i] = boneOffsets[i];
 		}
 
-		
-
 		for (unsigned int j = 0; j < 4; j++)
 		{
 			std::string strBO = "BoneOffset[";
 			strBO.append(std::to_string(j));
 			strBO.append("]");
 			unsigned int location = glGetUniformLocation(6, strBO.c_str());
-			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(finalMats[j]));
+			glUniformMatrix4fv(location, 1, GL_TRUE, glm::value_ptr(finalMats[j]));
 		}
 
 
