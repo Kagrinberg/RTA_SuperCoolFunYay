@@ -96,9 +96,9 @@ void Mesh::GenerateBuffers(){
 		{
 			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
 		
-			for (unsigned int j = 0; j < temp->jointIndex.size(); j++)
+			for (unsigned int j = 0; j < 4; j++)
 			{
-				boneIndicies.push_back(temp->jointIndex[j]);
+				//boneIndicies.push_back(temp->jointIndex[j]);
 				boneWeights.push_back(temp->jointWeights[j]);
 			}
 		}
@@ -109,8 +109,8 @@ void Mesh::GenerateBuffers(){
 		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
 		check_gl_error();
 
-		glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
-		check_gl_error();
+		//glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
+		//check_gl_error();
 
 
 	}
