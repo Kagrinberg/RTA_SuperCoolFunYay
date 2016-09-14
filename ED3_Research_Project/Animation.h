@@ -26,14 +26,12 @@ struct Keyframe
 struct CtrlPoint
 {
 	int controlIndex;
-	float jointWeights[4];
+	std::vector<int> jointIndex;
+	std::vector<float> jointWeights;
 
 	CtrlPoint()
 	{
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			jointWeights[i] = 0.0f;
-		}
+
 	}
 };
 
@@ -94,7 +92,7 @@ public:
 	bool isAnimated();
 	void createWeights();
 	void makeCpts();
-	//void checkControls();
+	void checkControls();
 	Skeleton getSkele();
 	std::unordered_map<unsigned int, CtrlPoint*>& getMap();
 	int getAniLength();

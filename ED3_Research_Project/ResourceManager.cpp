@@ -130,7 +130,7 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 		{
 			myAnimation->makeCpts();
 			myAnimation->createWeights();
-			//myAnimation->checkControls();
+			myAnimation->checkControls();
 
 
 			//push back joint spheres into m_meshes

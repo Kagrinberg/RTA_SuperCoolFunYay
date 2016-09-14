@@ -99,7 +99,7 @@ void Mesh::GenerateBuffers(){
 
 			for (unsigned int j = 0; j < 4; j++)
 			{
-				boneIndicies.push_back(0);
+				boneIndicies.push_back(temp->jointIndex[j]);
 				boneWeights.push_back(temp->jointWeights[j]);
 			}
 		}

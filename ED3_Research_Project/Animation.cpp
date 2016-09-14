@@ -100,22 +100,22 @@ void Animation::makeCpts()
 	}
 }
 
-//void Animation::checkControls()
-//{
-//	unsigned int cptsTotal = meshNode->GetMesh()->GetControlPointsCount();
-//	for (unsigned int i = 0; i < cptsTotal; ++i)
-//	{
-//		if (mControlPoints[i]->jointIndex.size() < 4)
-//		{
-//			int toDo = 4 - (mControlPoints[i]->jointIndex.size());
-//			for (toDo; toDo > 0; toDo--)
-//			{
-//				mControlPoints[i]->jointIndex.push_back(0);
-//				mControlPoints[i]->jointWeights.push_back(0.0f);
-//			}
-//		}
-//	}
-//}
+void Animation::checkControls()
+{
+	unsigned int cptsTotal = meshNode->GetMesh()->GetControlPointsCount();
+	for (unsigned int i = 0; i < cptsTotal; ++i)
+	{
+		if (mControlPoints[i]->jointIndex.size() < 4)
+		{
+			int toDo = 4 - (mControlPoints[i]->jointIndex.size());
+			for (toDo; toDo > 0; toDo--)
+			{
+				mControlPoints[i]->jointIndex.push_back(0);
+				mControlPoints[i]->jointWeights.push_back(0.0f);
+			}
+		}
+	}
+}
 
 void Animation::createWeights()
 {
@@ -165,8 +165,9 @@ void Animation::createWeights()
 			unsigned int numOfIndices = currCluster->GetControlPointIndicesCount();
 			for (unsigned int i = 0; i < numOfIndices; ++i)
 			{
-				//mControlPoints[currCluster->GetControlPointIndices()[i]]->jointIndex.push_back(currJointIndex);
-				mControlPoints[currCluster->GetControlPointIndices()[i]]->jointWeights[currJointIndex] = (static_cast<float>(currCluster->GetControlPointWeights()[i]));
+				mControlPoints[currCluster->GetControlPointIndices()[i]]->jointIndex.push_back(currJointIndex);
+				mControlPoints[currCluster->GetControlPointIndices()[i]]->jointWeights.push_back(static_cast<float>(currCluster->GetControlPointWeights()[i]));
+
 			}
 
 
