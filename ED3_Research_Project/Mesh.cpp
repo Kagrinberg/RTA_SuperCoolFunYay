@@ -39,11 +39,7 @@ void Mesh::GenerateIndices(){
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
 		}
-
 	}
-
-	
-
 }
 
 void Mesh::GenerateBuffers(){
