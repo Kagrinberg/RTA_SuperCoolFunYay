@@ -1,6 +1,4 @@
-#include "GameWindow.h"
-
-#include <cstdio>
+﻿#include "GameWindow.h"
 
 #include "rlutil.h"
 
@@ -34,7 +32,7 @@ void GameWindow::Initalize(int argc, char** argv) {
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
@@ -47,13 +45,16 @@ void GameWindow::Initalize(int argc, char** argv) {
 	glewInit();
 	check_gl_error();
 
+	glEnable(GL_DEPTH_TEST);
+	check_gl_error();
+
+	glDepthFunc(GL_LESS);
+	check_gl_error();
+
 	glEnable(GL_CULL_FACE);
 	check_gl_error();
 
 	glCullFace(GL_BACK);
-	check_gl_error();
-
-	glEnable(GL_DEPTH_TEST);
 	check_gl_error();
 
 	glEnable(GL_BLEND);
@@ -68,10 +69,37 @@ void GameWindow::Initalize(int argc, char** argv) {
 	glViewport(0, 0, m_screenWidth, m_screenHeight);
 	check_gl_error();
 
+	int ExtensionCount;
+	glGetIntegerv(GL_NUM_EXTENSIONS, &ExtensionCount);
+
+	for (int i = 0; i < ExtensionCount; i++) {
+		rlutil::setColor(rlutil::CYAN);
+		std::cout << "[Extension] ";
+		rlutil::setColor(rlutil::WHITE);
+		printf("%s\n", glGetStringi(GL_EXTENSIONS, i));
+	}
+
+
 	rlutil::setColor(rlutil::LIGHTRED);
 	std::cout << "[OpenGL Version] ";
 	rlutil::setColor(rlutil::WHITE);
 	printf("%s\n", glGetString(GL_VERSION));
+
+	rlutil::setColor(rlutil::LIGHTRED);
+	std::cout << "[OpenGL Shading Language Version] ";
+	rlutil::setColor(rlutil::WHITE);
+	printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+	rlutil::setColor(rlutil::LIGHTRED);
+	std::cout << "[OpenGL Vendor] ";
+	rlutil::setColor(rlutil::WHITE);
+	printf("%s\n", glGetString(GL_VENDOR));
+
+	rlutil::setColor(rlutil::LIGHTRED);
+	std::cout << "[OpenGL Renderer] ";
+	rlutil::setColor(rlutil::WHITE);
+	printf("%s\n", glGetString(GL_RENDERER));
+
 
 }
 

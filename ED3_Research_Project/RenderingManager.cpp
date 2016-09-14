@@ -74,8 +74,8 @@ void RenderingManager::RenderAll(Camera & c, LightingManager * lm) {
 			Material * material = m_resourceManager->getMaterial(materialID);
 			unsigned int diffuseID = material->getDiffuseID();
 			unsigned int specularID = material->getSpecularID();
-			unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTexID();
-			unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTexID();
+			unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTextureID();
+			unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTextureID();
 
 			unsigned int matDiffuseLoc = glGetUniformLocation(program, "material.diffuse");
 			check_gl_error();

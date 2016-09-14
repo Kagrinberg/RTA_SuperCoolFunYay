@@ -2,7 +2,6 @@
 #define UTILITIES_H
 
 #include <GL/glew.h>
-#include <GL/freeglut.h>
 #include <map>
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))

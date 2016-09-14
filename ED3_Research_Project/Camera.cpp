@@ -5,7 +5,8 @@
 
 Camera::Camera() {
 	ViewMatrix = glm::mat4(1.0f);
-	camera_pos_ = glm::vec3(0, 0.5f, 2.0f);
+	camera_pos_ = glm::vec3(-5,2,0);
+
 }
 
 

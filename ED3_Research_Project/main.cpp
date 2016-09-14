@@ -1,16 +1,19 @@
-#include "Utilities.h"
-#include "glm/gtc/type_ptr.hpp"
+#include <Windows.h>
+
+#include "GLError.h"
+
 #include "ResourceManager.h"
 #include "RenderingManager.h"
 #include "EntityManager.h"
+#include "ShaderManager.h"
+
 #include "Renderable.h"
 #include "Registry.h"
 #include "Transform.h"
-#include "ShaderManager.h"
-#include "XTime.h"
+
 #include "GameWindow.h"
 #include "Camera.h"
-#include "GLError.h"
+#include "Skybox.h"
 
 GameWindow window;
 
@@ -20,11 +23,10 @@ EntityManager * entityManager;
 ShaderManager * shaderManager;
 LightingManager * lightingManager;
 
-unsigned int Main, AnimatedMain;
+unsigned int Main, AnimatedMain, SkyBox;
 unsigned int uboMatrices;
 
 unsigned int perspectiveMatrixID, viewMatrixID, viewPosID, modelMatrixID;
-
 
 unsigned int screenWidth = 1024;
 unsigned int screenHeight = 720;
@@ -35,7 +37,7 @@ float lastFrame = 0.0f;
 glm::mat4 projectionMatrix;
 
 Camera myCamera;
-XTime timer;
+Skybox skybox;
 
 void CleanUp();
 void MainLoop();
@@ -47,7 +49,7 @@ int main(int argc, char** argv){
 	_CrtDumpMemoryLeaks();
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
-	_CrtSetBreakAlloc(165);
+	_CrtSetBreakAlloc(-1);
 
 	//Setup the registry.
 	InitializeRegistry();
@@ -71,11 +73,17 @@ int main(int argc, char** argv){
 	//Load Level
 	resourceManager->LoadLevel("Level_1");
 
+
 	//Create Shader Program and set main program.
 	shaderManager->CreateProgram("Main", "Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
 	shaderManager->CreateProgram("AnimatedMain", "Shaders/AnimationVS.glsl", "Shaders/AnimationFS.glsl");
+	shaderManager->CreateProgram("SkyBox", "Shaders/SkyBoxVS.glsl", "Shaders/SkyBoxFS.glsl");
 	Main = shaderManager->GetShader("Main");
 	AnimatedMain = shaderManager->GetShader("AnimatedMain");
+	SkyBox = shaderManager->GetShader("SkyBox");
+
+	skybox.LoadSkybox();
+
 
 	////Set the projection Matrix in the Uniform buffer Object
 	projectionMatrix = glm::perspectiveFov(1.0f / tan(60.0f*3.1415926f / 360.0f), (float)screenWidth, (float)screenHeight, 0.001f, 1000.0f);
@@ -133,6 +141,10 @@ void MainLoop() {
 		myCamera.update(deltaTime);
 
 		renderingManager->RenderAll(myCamera, lightingManager);
+
+		skybox.Render(SkyBox, glm::mat4(glm::mat3(myCamera.getMatrix())), projectionMatrix);
+
+		check_gl_error();
 
 		glfwSwapBuffers(window.getWindow());
 

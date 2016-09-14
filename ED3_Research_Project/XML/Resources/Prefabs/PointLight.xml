@@ -8,7 +8,7 @@
 
 			<Position>
 				<X>-1.0</X>
-				<Y>3.0</Y>
+				<Y>5.0</Y>
 				<Z>0.0</Z>
 			</Position>
 			
@@ -36,8 +36,8 @@
 			<Material>
 				<Name>Light</Name>
 				<Shininess>0.0f</Shininess>
-				<Diffuse>Textures/WhiteTGA.tga</Diffuse>
-				<Specular>Textures/WhiteTGA.tga</Specular>
+				<Diffuse>Textures/JPG/WhiteTGA.jpg</Diffuse>
+				<Specular>Textures/JPG/WhiteTGA.jpg</Specular>
 			</Material>
 
 		</Renderable>
@@ -48,7 +48,7 @@
 
 			<Position>
 				<X>-1.0</X>
-				<Y>3.0</Y>
+				<Y>5.0</Y>
 				<Z>0.0</Z>
 			</Position>
 

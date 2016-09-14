@@ -8,8 +8,8 @@
 
 			<Position>
 				<X>0</X>
-				<Y>0.5</Y>
-				<Z>0</Z>
+				<Y>0</Y>
+				<Z>30</Z>
 			</Position>
 			
 			<Rotation>
@@ -36,8 +36,8 @@
 			<Material>
 				<Name>Sphere</Name>
 				<Shininess>120.0f</Shininess>
-				<Diffuse>Textures/WhiteTGA.tga</Diffuse>
-				<Specular>Textures/WhiteTGA.tga</Specular>
+				<Diffuse>Textures/JPG/RedTGA.jpg</Diffuse>
+				<Specular>Textures/JPG/WhiteTGA.jpg</Specular>
 			</Material>
 
 		</Renderable>

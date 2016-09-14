@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Utilities.h"
-#include "TGA\Texture.h"
+#include "Texture.h"
 #include "Material.h"
 #include "FBXManager.h"
 #include "Animation.h"
