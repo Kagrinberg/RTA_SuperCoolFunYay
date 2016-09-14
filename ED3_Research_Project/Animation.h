@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef APIENTRY
+
+#undef APIENTRY
+#endif 
+
 #include <GL/glew.h>
 #include "glm/glm.hpp"
 #include <fbxsdk.h>
