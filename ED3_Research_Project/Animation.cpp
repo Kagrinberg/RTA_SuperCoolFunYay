@@ -77,6 +77,7 @@ void Animation::SkeleRecursive(FbxNode * currentNode, int curIndex, int parentIn
 		Joint myJoint;
 		myJoint.mParentIndex = parentIndex;
 		myJoint.mName = currentNode->GetName();
+		myJoint.mNode = currentNode;
 		mSkeleton.mJoints.push_back(myJoint);
 	}
 	if (currentNode->GetNodeAttribute() && currentNode->GetNodeAttribute()->GetAttributeType() && currentNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh)
@@ -165,8 +166,10 @@ void Animation::createWeights()
 			unsigned int numOfIndices = currCluster->GetControlPointIndicesCount();
 			for (unsigned int i = 0; i < numOfIndices; ++i)
 			{
-				//mControlPoints[currCluster->GetControlPointIndices()[i]]->jointIndex.push_back(currJointIndex);
-				mControlPoints[currCluster->GetControlPointIndices()[i]]->jointWeights[currJointIndex] = (static_cast<float>(currCluster->GetControlPointWeights()[i]));
+				int curPos = mControlPoints[currCluster->GetControlPointIndices()[i]]->numjoints;
+				mControlPoints[currCluster->GetControlPointIndices()[i]]->jointIndex[curPos] = (currJointIndex);
+				mControlPoints[currCluster->GetControlPointIndices()[i]]->jointWeights[curPos] = (static_cast<float>(currCluster->GetControlPointWeights()[i]));
+				mControlPoints[currCluster->GetControlPointIndices()[i]]->numjoints++;
 			}
 
 
@@ -198,6 +201,59 @@ void Animation::createWeights()
 			}
 			
 		}
+
+
+		//loop thru joints
+
+
+		for (unsigned int curJoint = 0; curJoint < mSkeleton.mJoints.size(); curJoint++)
+		{
+			if (0 == mSkeleton.mJoints[curJoint].mAnimation.size())
+			{
+				mSkeleton.mJoints[curJoint].mGlobalBindposeInverse.SetIdentity();
+
+
+
+				//getanimation information
+				FbxAnimStack* theAniStack = mFBXScene->GetSrcObject<FbxAnimStack>(0);
+
+				FbxString animStackName = theAniStack->GetName();
+				mAnimationName = animStackName.Buffer();
+
+				FbxTakeInfo* takeInfo = mFBXScene->GetTakeInfo(animStackName);
+
+				FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
+				FbxTime end = takeInfo->mLocalTimeSpan.GetStop();
+
+
+				for (FbxLongLong i = start.GetFrameCount(FbxTime::eFrames24); i <= end.GetFrameCount(FbxTime::eFrames24); ++i)
+				{
+					FbxTime currTime;
+					currTime.SetFrame(i, FbxTime::eFrames24);
+					Keyframe * currAnim = new Keyframe();
+					currAnim->mFrameNum = i;
+
+					FbxAMatrix currentTransformOffset = meshNode->EvaluateGlobalTransform(currTime) * geometeryTransform;
+
+					currAnim->mGlobalTransform = currentTransformOffset.Inverse() * mSkeleton.mJoints[curJoint].mNode->EvaluateGlobalTransform(currTime);
+
+					mSkeleton.mJoints[curJoint].mAnimation.push_back(currAnim);
+				}
+
+
+
+
+
+
+
+
+			}
+		}
+
+
+
+
+
 	}
 }
 

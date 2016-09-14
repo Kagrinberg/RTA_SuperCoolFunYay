@@ -135,7 +135,7 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 				std::string uniqueName = "jointSphere";
 				uniqueName.append(std::to_string(i));
 			
-				m_entityManager->addEntity(uniqueName.c_str(), "FBXSphere");
+				//m_entityManager->addEntity(uniqueName.c_str(), "FBXSphere");
 
 				glm::vec3 jointPos;
 				jointPos.x = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][0]);

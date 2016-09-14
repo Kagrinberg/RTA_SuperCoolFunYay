@@ -31,14 +31,19 @@ struct Keyframe
 struct CtrlPoint
 {
 	int controlIndex;
+	int numjoints;
+	int jointIndex[4];
 	float jointWeights[4];
 
 	CtrlPoint()
 	{
+		numjoints = 0;
 		for (unsigned int i = 0; i < 4; i++)
 		{
+			jointIndex[i] = 0;
 			jointWeights[i] = 0.0f;
 		}
+
 	}
 };
 
