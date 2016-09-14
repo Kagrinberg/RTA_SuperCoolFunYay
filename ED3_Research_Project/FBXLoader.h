@@ -4,7 +4,7 @@
 #include <fbxsdk.h>
 
 #include "Mesh.h"
-#include "TGA\Texture.h"
+#include "Texture.h"
 
 namespace FBXLoader
 {

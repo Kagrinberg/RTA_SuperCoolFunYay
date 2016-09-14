@@ -5,7 +5,7 @@
 
 #include "Component.h"
 #include "Mesh.h"
-#include "TGA/Texture.h"
+#include "Texture.h"
 #include "Material.h"
 #include "Entity.h"
 #include "FBXManager.h"

@@ -64,6 +64,8 @@ public:
 	void setAnimator(Animation * theAnimator);
 	bool isAnimated();
 
+	unsigned int getVAO() { return vertexArrayObject; };
+
 };
 
 #endif

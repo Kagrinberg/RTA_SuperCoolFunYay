@@ -32,6 +32,9 @@
     <Filter Include="Project\ErrorChecking">
       <UniqueIdentifier>{632df2b9-2441-4c1e-a88a-dc7cbf800a63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Managers">
+      <UniqueIdentifier>{dc1e09a3-15e7-4258-83c7-9a3ca8ba9353}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderable.cpp">
@@ -40,19 +43,10 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Project\Components</Filter>
     </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
-      <Filter>Project\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Project\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Prefab.cpp">
       <Filter>Project\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Project\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="TGA\Texture.cpp">
       <Filter>Project\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
@@ -73,26 +67,17 @@
     <ClCompile Include="main.cpp">
       <Filter>Project</Filter>
     </ClCompile>
-    <ClCompile Include="RenderingManager.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
       <Filter>Project\FBX</Filter>
     </ClCompile>
     <ClCompile Include="FBXManager.cpp">
       <Filter>Project\FBX</Filter>
     </ClCompile>
-    <ClCompile Include="XTime.cpp">
-      <Filter>Project\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Project\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Project\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="LightingManager.cpp">
-      <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="GameWindow.cpp">
       <Filter>Project</Filter>
@@ -101,9 +86,26 @@
       <Filter>Project\ErrorChecking</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
-      <Filter>Project</Filter>
+      <Filter>Project\FBX</Filter>
     </ClCompile>
-    <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="Texture.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Project\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="LightingManager.cpp">
+      <Filter>Project\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingManager.cpp">
+      <Filter>Project\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Project\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Project\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -116,9 +118,6 @@
       <Filter>Project\Components</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Project\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityManager.h">
       <Filter>Project\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Registry.h">
@@ -139,17 +138,8 @@
     <ClInclude Include="Prefab.h">
       <Filter>Project\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Project\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="TGA\Texture.h">
-      <Filter>Project\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="ShaderManager.h">
       <Filter>Project\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingManager.h">
-      <Filter>Project</Filter>
     </ClInclude>
     <ClInclude Include="FBXLoader.h">
       <Filter>Project\FBX</Filter>
@@ -158,17 +148,11 @@
     <ClInclude Include="FBXManager.h">
       <Filter>Project\FBX</Filter>
     </ClInclude>
-    <ClInclude Include="XTime.h">
-      <Filter>Project\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Project\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Project\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LightingManager.h">
-      <Filter>Project</Filter>
     </ClInclude>
     <ClInclude Include="GameWindow.h">
       <Filter>Project</Filter>
@@ -177,9 +161,26 @@
       <Filter>Project\ErrorChecking</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Project</Filter>
+      <Filter>Project\FBX</Filter>
     </ClInclude>
-    <ClInclude Include="Skybox.h" />
+    <ClInclude Include="Texture.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Project\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingManager.h">
+      <Filter>Project\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingManager.h">
+      <Filter>Project\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Project\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Project\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\fragmentShader.glsl">
@@ -195,6 +196,12 @@
       <Filter>Project\Shader\Shaders</Filter>
     </None>
     <None Include="Shaders\AnimationVS.glsl">
+      <Filter>Project\Shader\Shaders</Filter>
+    </None>
+    <None Include="Shaders\SkyBoxFS.glsl">
+      <Filter>Project\Shader\Shaders</Filter>
+    </None>
+    <None Include="Shaders\SkyBoxVS.glsl">
       <Filter>Project\Shader\Shaders</Filter>
     </None>
   </ItemGroup>

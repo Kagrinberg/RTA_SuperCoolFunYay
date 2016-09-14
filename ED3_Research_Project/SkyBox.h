@@ -2,18 +2,21 @@
 
 #include "Mesh.h"
 #include "FBXManager.h"
-#include "TGA\Texture.h"
+#include "Texture.h"
 
 class Skybox
 {
-	Mesh* m_mesh;
-	FBXManager* m_FBX;
-	GLuint texID;
+	unsigned int texID;
+	unsigned skyboxVAO, skyboxVBO;
+	Texture texture[6];
+
 public:
 	Skybox();
 	~Skybox();
 
 	void LoadSkybox();
-	GLuint GetTexID() { return texID; }
+	void Render(unsigned int program, glm::mat4 view, glm::mat4 projection);
+
+
 };
 

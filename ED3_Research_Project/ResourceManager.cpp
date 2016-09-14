@@ -105,10 +105,6 @@ void ResourceManager::LoadPrefab(const char * path){
 
 }
 
-unsigned int ResourceManager::LoadMesh(const char * mesh){
-	return LoadEntry(mesh, m_meshes);
-}
-
 unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 
 	unsigned int id = Util::fnvHash(mesh);
@@ -147,7 +143,7 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 				jointPos.z = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][2]);
 
 
-				m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
+				//m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
 			}
 
 			temp->m_entityManager = m_entityManager;
@@ -160,6 +156,10 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 	return id;
 }
 
+
+unsigned int ResourceManager::LoadMesh(const char * mesh) {
+	return LoadEntry(mesh, m_meshes);
+}
 
 unsigned int ResourceManager::LoadTexture(const char * texture){
 	return LoadEntry(texture, m_textures);

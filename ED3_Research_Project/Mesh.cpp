@@ -280,6 +280,8 @@ void Mesh::setActive(){
 			tempBone[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
 			tempBone[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
 
+			tempBone = glm::transpose(tempBone);
+
 			FbxAMatrix keyMat = mySkele.mJoints[k].mAnimation[curFrame]->mGlobalTransform;
 
 			glm::mat4 tempKey;
@@ -288,7 +290,10 @@ void Mesh::setActive(){
 			tempKey[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
 			tempKey[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
 
-			glm::mat4 finalOffset = tempKey * tempBone;
+			tempKey = glm::transpose(tempKey);
+
+
+			glm::mat4 finalOffset = tempBone * tempKey;
 
 			boneOffsets.push_back(finalOffset);
 
@@ -300,39 +305,12 @@ void Mesh::setActive(){
 		}
 
 
-		glm::mat4 finalMats[4];
-
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			finalMats[i] = boneOffsets[i];
-		}
-
-		for (unsigned int j = 0; j < 4; j++)
-		{
-			std::string strBO = "BoneOffset[";
-			strBO.append(std::to_string(j));
-			strBO.append("]");
-			unsigned int location = glGetUniformLocation(6, strBO.c_str());
-			glUniformMatrix4fv(location, 1, GL_TRUE, glm::value_ptr(finalMats[j]));
-		}
+		unsigned int location = glGetUniformLocation(6, "BoneOffset");
 
 
+		glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
 
-		/*for (unsigned int i = 0; i < boneOffsets.size(); i++) {
-			std::string strBO = "BoneOffset[";
-			strBO.append(std::to_string(i));
-			strBO.append("]");
-			unsigned int location = glGetUniformLocation(6, strBO.c_str());
-			glm::mat4 matrix = boneOffsets[i];
-			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
-			check_gl_error();
 
-		}*/
-
-		/*unsigned int location = glGetUniformLocation(6, "BoneOffset");
-		
-		glUniformMatrix4fv(location, boneOffsets.size(), GL_TRUE, glm::value_ptr(boneOffsets[0]));
-		check_gl_error();*/
 	}
 
 }

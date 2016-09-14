@@ -15,21 +15,21 @@
 			</Position>
 
 			<Direction>
-				<X>0</X>
-				<Y>1</Y>
-				<Z>1</Z>
+				<X>-0.5</X>
+				<Y>-1</Y>
+				<Z>-1</Z>
 			</Direction>
 
 			<Ambient>
-				<X>0.05f</X>
-				<Y>0.05f</Y>
-				<Z>0.1f</Z>
+				<X>0.5f</X>
+				<Y>0.5f</Y>
+				<Z>0.4f</Z>
 			</Ambient>
 
 			<Diffuse>
-				<X>0.2f</X>
-				<Y>0.2f</Y>
-				<Z>0.7f</Z>
+				<X>0.5f</X>
+				<Y>0.5f</Y>
+				<Z>0.4f</Z>
 			</Diffuse>
 
 			<Specular>

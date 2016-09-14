@@ -36,8 +36,8 @@
 			<Material>
 				<Name>GroundPlane</Name>
 				<Shininess>1.0f</Shininess>
-				<Diffuse>Textures/grid.tga</Diffuse>
-				<Specular>Textures/crate_specular.tga</Specular>
+				<Diffuse>Textures/PNG/grid.png</Diffuse>
+				<Specular>Textures/JPG/crate_specular.jpg</Specular>
 			</Material>
 
 		</Renderable>

@@ -32,7 +32,7 @@ void main () {
 	gl_Position += vec4(position, 1) * BoneOffset[boneIndex[3]] * boneWeight[3];
 
 	//gl_Position =vec4(position,1);
-	gl_Position = vec4(gl_Position.xyz,1);
+	//gl_Position = vec4(gl_Position.xyz,1);
 	gl_Position = projection *view * model * gl_Position;
 
     FragPos = vec3(model * vec4(position.xyz, 1.0f));
@@ -48,7 +48,7 @@ void main () {
 	Normal = tempNorm.xyz;
 
 
-    TexCoords = texCoords;
+    TexCoords = vec2(texCoords.x, 1.0f - texCoords.y);
 
 
 }
