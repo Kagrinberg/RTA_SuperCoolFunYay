@@ -1,5 +1,10 @@
 ﻿#include "GameWindow.h"
 
+#ifdef APIENTRY
+
+#undef APIENTRY
+#endif 
+
 #include "rlutil.h"
 
 #include "GLError.h"

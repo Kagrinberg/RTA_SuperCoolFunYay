@@ -1,6 +1,11 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#ifdef APIENTRY
+
+#undef APIENTRY
+#endif 
+
 #include <GL/glew.h>
 #include <map>
 

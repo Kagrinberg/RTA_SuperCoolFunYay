@@ -2,6 +2,12 @@
 #define SHADERMANAGER_H
 
 #include <unordered_map>
+
+#ifdef APIENTRY
+
+#undef APIENTRY
+#endif 
+
 #include "GL\glew.h"
 
 class ShaderManager{

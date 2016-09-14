@@ -1,7 +1,16 @@
 #ifndef MESH_H
 #define MESH_H
 
+
+
 #include <windows.h>
+
+#ifdef APIENTRY
+
+#undef APIENTRY
+#endif 
+
+
 #include <GL/glew.h>
 #include "glm/glm.hpp"
 #include <fbxsdk.h>
