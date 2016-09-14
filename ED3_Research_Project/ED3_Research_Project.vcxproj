@@ -53,7 +53,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Simple OpenGL Image Library\lib;..\GLEW\Lib\Debug;..\glfw-3.2.1.bin.WIN32\lib-vc2015</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32d.lib;opengl32.lib;glfw3.lib;..\FBX\2016.1.1\lib\vs2015\x86\debug\libfbxsdk-md.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3.lib;..\FBX\2016.1.1\lib\vs2015\x86\debug\libfbxsdk-md.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
