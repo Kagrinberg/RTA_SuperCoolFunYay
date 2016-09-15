@@ -17,7 +17,7 @@ layout (location = 4) in ivec4 boneIndex;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 BoneOffset[MAX_BONES];
+uniform mat4 BoneOffset[4];
 
 out vec3 Normal;
 out vec3 FragPos;
@@ -25,11 +25,14 @@ out vec2 TexCoords;
 
 void main () {
 
-
-	gl_Position = vec4(position, 1) * BoneOffset[0] * boneWeight[0];
-	gl_Position += vec4(position, 1) * BoneOffset[1] * boneWeight[1];
-	gl_Position += vec4(position, 1) * BoneOffset[2] * boneWeight[2];
-	gl_Position += vec4(position, 1) * BoneOffset[3] * boneWeight[3];
+int i = 0;
+int j = 1;
+int k = 2;
+int l = 3;
+	gl_Position = vec4(position, 1) * BoneOffset[i] * boneWeight[0];
+	gl_Position += vec4(position, 1) * BoneOffset[j] * boneWeight[1];
+	gl_Position += vec4(position, 1) * BoneOffset[k] * boneWeight[2];
+	gl_Position += vec4(position, 1) * BoneOffset[l] * boneWeight[3];
 
 	//gl_Position =vec4(position,1);
 	//gl_Position = vec4(gl_Position.xyz,1);

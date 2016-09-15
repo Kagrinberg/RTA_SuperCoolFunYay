@@ -105,8 +105,6 @@ void Mesh::GenerateBuffers(){
 
 		glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
 		check_gl_error();
-
-
 	}
 
 	//Create Index Buffer
