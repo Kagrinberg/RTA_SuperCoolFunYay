@@ -19,9 +19,9 @@
 			</Rotation>
 
 			<Scale>
-				<X>1</X>
-				<Y>1</Y>
-				<Z>1</Z>
+				<X>.01</X>
+				<Y>.01</Y>
+				<Z>.01</Z>
 			</Scale>
 
 		</Transform>
@@ -30,14 +30,14 @@
 
 			<Mesh>
 				<Name>Box</Name>
-				<Location>FBXOBJ/Box_Idle.fbx</Location>
+				<Location>FBXOBJ/Teddy_Better.fbx</Location>
 			</Mesh>
 
 			<Material>
 				<Name>Crate</Name>
 				<Shininess>120.0f</Shininess>
-				<Diffuse>Textures/JPG/TestCube.jpg</Diffuse>
-				<Specular>Textures/JPG/TestCube.jpg</Specular>
+				<Diffuse>Textures/PNG/Teddy_D.png</Diffuse>
+				<Specular>Textures/PNG/Teddy_D.png</Specular>
 			</Material>
 
 		</Renderable>

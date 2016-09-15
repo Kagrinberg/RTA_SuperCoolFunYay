@@ -3,6 +3,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/glm.hpp"
 #include "EntityManager.h"
+#include "glm/gtx/compatibility.hpp"
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
@@ -39,7 +40,11 @@ void Mesh::GenerateIndices(){
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
 		}
+
 	}
+
+	
+
 }
 
 void Mesh::GenerateBuffers(){
@@ -61,15 +66,15 @@ void Mesh::GenerateBuffers(){
 
 	unsigned int vertices_size = indexed_vertices.size() * sizeof(float);
 
-	if (myAnimation->isAnimated())
-	{
-		glBufferData(GL_ARRAY_BUFFER, 16 * vertices_size, NULL, GL_STATIC_DRAW);
-		check_gl_error();
-	}
-	else {
+	//if (myAnimation->isAnimated())
+	//{
+	//	glBufferData(GL_ARRAY_BUFFER, 16 * vertices_size, NULL, GL_STATIC_DRAW);
+	//	check_gl_error();
+	//}
+	//else {
 		glBufferData(GL_ARRAY_BUFFER, 8 * vertices_size, NULL, GL_STATIC_DRAW);
 		check_gl_error();
-	}
+	//}
 
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 3*vertices_size, &indexed_vertices[0]);
 	check_gl_error();
@@ -84,9 +89,8 @@ void Mesh::GenerateBuffers(){
 	if (myAnimation->isAnimated())
 	{
 		std::unordered_map<unsigned int, CtrlPoint*> controlMap = myAnimation->getMap();
-
-		std::vector<int> boneIndicies;
-		std::vector<float> boneWeights;
+	
+		
 
 
 		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
@@ -95,16 +99,18 @@ void Mesh::GenerateBuffers(){
 
 			for (unsigned int j = 0; j < 4; j++)
 			{
-				boneIndicies.push_back(0);
 				boneWeights.push_back(temp->jointWeights[j]);
+				boneIndicies.push_back(temp->jointIndex[j]);
 			}
 		}
 
-		glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
-		check_gl_error();
+		//glBufferSubData(GL_ARRAY_BUFFER,  8 * vertices_size, 4 * vertices_size, &boneWeights[0]);
+		//check_gl_error();
+		//
+		//glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
+		//check_gl_error();
 
-		glBufferSubData(GL_ARRAY_BUFFER, 12 * vertices_size, 4 * vertices_size, &boneIndicies[0]);
-		check_gl_error();
+
 	}
 
 	//Create Index Buffer
@@ -120,8 +126,8 @@ void Mesh::GenerateBuffers(){
 	unsigned int normalOffset = 3 * vertices_size;
 	unsigned int textureCoordOffset = 6 * vertices_size;
 
-	unsigned int boneWeight = 8 * vertices_size;
-	unsigned int boneIndex = 12 * vertices_size;
+	//unsigned int boneWeight = 8 * vertices_size;
+	//unsigned int boneIndex = 12 * vertices_size;
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	check_gl_error();
@@ -132,20 +138,20 @@ void Mesh::GenerateBuffers(){
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(normalOffset));
 	check_gl_error();
 
-	if (myAnimation->isAnimated()) {
-		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(boneWeight));
-		check_gl_error();
-
-		glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, 0, BUFFER_OFFSET(boneIndex));
-		check_gl_error();
-
-		glEnableVertexAttribArray(3);
-		check_gl_error();
-
-		glEnableVertexAttribArray(4);
-		check_gl_error();
-
-	}
+	//if (myAnimation->isAnimated()) {
+	//	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(boneWeight));
+	//	check_gl_error();
+	//
+	//	glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, 0, BUFFER_OFFSET(boneIndex));
+	//	check_gl_error();
+	//
+	//	glEnableVertexAttribArray(3);
+	//	check_gl_error();
+	//
+	//	glEnableVertexAttribArray(4);
+	//	check_gl_error();
+	//
+	//}
 
 
 	glEnableVertexAttribArray(0);
@@ -226,13 +232,16 @@ void Mesh::setActive(){
 	glBindVertexArray(vertexArrayObject);
 	check_gl_error();
 
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+	check_gl_error();
+
 	if (myAnimation->isAnimated())
 	{
 		if (GetAsyncKeyState(VK_RIGHT))
 		{
 			if (!keyPress)
 			{
-				curFrame++;
+				curFrame+=5;
 				keyPress = true;
 			}
 			
@@ -241,7 +250,7 @@ void Mesh::setActive(){
 		{
 			if (!keyPress)
 			{
-				curFrame--;
+				curFrame-=5;
 				keyPress = true;
 			}
 		}
@@ -287,7 +296,12 @@ void Mesh::setActive(){
 			tempKey = glm::transpose(tempKey);
 
 
-			glm::mat4 finalOffset = tempBone * tempKey;
+			
+
+
+
+
+			glm::mat4 finalOffset =  tempBone * tempKey;
 
 			boneOffsets.push_back(finalOffset);
 
@@ -295,15 +309,54 @@ void Mesh::setActive(){
 			std::string uniqueName = "jointSphere";
 			uniqueName.append(std::to_string(k));
 
-			m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(glm::vec3(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2]));
+			//m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(glm::vec3(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2]));
 		}
 
 
-		unsigned int location = glGetUniformLocation(6, "BoneOffset");
+		//unsigned int location = glGetUniformLocation(6, "BoneOffset");
+		//
+		//
+		//glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
+
+		std::vector< glm::vec3 > final_vertices;
+		std::vector< glm::vec3 > final_normals;
+
+		int indiciesIndex = 0;
+		for (unsigned int i = 0; i < indexed_vertices.size(); i++)
+		{
+
+			glm::vec4 curPosition = glm::vec4(indexed_vertices[i], 1) * boneOffsets[boneIndicies[indiciesIndex]] * boneWeights[indiciesIndex];
+			curPosition += glm::vec4(indexed_vertices[i], 1) * boneOffsets[boneIndicies[indiciesIndex + 1]] * boneWeights[indiciesIndex + 1];
+			curPosition += glm::vec4(indexed_vertices[i], 1) * boneOffsets[boneIndicies[indiciesIndex + 2]] * boneWeights[indiciesIndex + 2];
+			curPosition += glm::vec4(indexed_vertices[i], 1) * boneOffsets[boneIndicies[indiciesIndex + 3]] * boneWeights[indiciesIndex + 3];
+
+			final_vertices.push_back(glm::vec3(curPosition));
+
+			glm::vec4 curNorm = (glm::vec4(indexed_normals[i], 0) * boneOffsets[boneIndicies[indiciesIndex]]) * boneWeights[indiciesIndex];
+			curNorm += (glm::vec4(indexed_normals[i], 0) * boneOffsets[boneIndicies[indiciesIndex + 1]]) * boneWeights[indiciesIndex + 1];
+			curNorm += (glm::vec4(indexed_normals[i], 0) * boneOffsets[boneIndicies[indiciesIndex + 2]]) * boneWeights[indiciesIndex + 2];
+			curNorm += (glm::vec4(indexed_normals[i], 0) * boneOffsets[boneIndicies[indiciesIndex + 3]]) * boneWeights[indiciesIndex + 3];
+
+			final_normals.push_back(glm::vec3(curNorm));
+
+			indiciesIndex += 4;
+		}
+
+		unsigned int vertices_size = indexed_vertices.size() * sizeof(float);
+		unsigned int normalOffset = 3 * vertices_size;
+
+		glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * vertices_size, &final_vertices[0]);
+		check_gl_error();
+
+		glBufferSubData(GL_ARRAY_BUFFER, 3 * vertices_size, 3 * vertices_size, &final_normals[0]);
+		check_gl_error();
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		check_gl_error();
 
 
-		glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
-
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(normalOffset));
+		check_gl_error();
 
 	}
 

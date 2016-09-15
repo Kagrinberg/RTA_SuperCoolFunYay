@@ -48,6 +48,8 @@ private:
 	unsigned int vertexBufferObject;
 	unsigned int indexBufferID;
 	Animation * myAnimation;
+	std::vector<float> boneWeights;
+	std::vector<int> boneIndicies;
 	std::vector<glm::mat4> boneOffsets;
 	int curFrame;
 	bool keyPress;
