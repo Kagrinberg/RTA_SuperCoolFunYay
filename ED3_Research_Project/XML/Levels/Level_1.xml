@@ -23,7 +23,7 @@
 		</Entity>
 
 		<Entity>
-			<Name>BOX</Name>
+			<Name>FBXTest</Name>
 			<Prefab>FBXTest</Prefab>
 		</Entity>
 

@@ -1,0 +1,48 @@
+<Prefab>
+	
+	<Name>Mage</Name>
+
+	<Components>
+
+		<Transform>
+
+			<Position>
+				<X>1</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Position>
+			
+			<Rotation>
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+			</Rotation>
+
+			<Scale>
+				<X>1</X>
+				<Y>1</Y>
+				<Z>1</Z>
+			</Scale>
+
+		</Transform>
+
+		<Renderable>
+
+			<Mesh>
+				<Name>Mage</Name>
+				<Location>FBXOBJ/Hover_Better.fbx</Location>
+			</Mesh>
+
+			<Material>
+				<Name>Crate</Name>
+				<Shininess>3.0f</Shininess>
+				<Diffuse>Textures/PNG/Mage/PPG_3D_FinalBoss_D.png</Diffuse>
+				<Specular>Textures/PNG/Mage/PPG_3D_FinalBoss_S.png</Specular>
+				<Normal>Textures/PNG/Mage/PPG_3D_FinalBoss_N.png</Normal>
+			</Material>
+
+		</Renderable>
+
+	</Components>
+
+</Prefab>

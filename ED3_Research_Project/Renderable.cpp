@@ -27,11 +27,21 @@ void Renderable::LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resou
 		pChildElement->QueryFloatText(&Shininess);
 		pChildElement = pChildElement->NextSiblingElement("Diffuse");
 		const char * diffuseTexture = pChildElement->GetText();
+		unsigned int diffuseID = p_resourceManager->LoadTexture(diffuseTexture);
+
 		pChildElement = pChildElement->NextSiblingElement("Specular");
 		const char * specularTexture = pChildElement->GetText();
-
-		unsigned int diffuseID = p_resourceManager->LoadTexture(diffuseTexture);
 		unsigned int specularID = p_resourceManager->LoadTexture(specularTexture);
+
+		pChildElement = pChildElement->NextSiblingElement("Normal");
+		if (pChildElement != nullptr) {
+			const char * normalTexture = pChildElement->GetText();
+			unsigned int normalID = p_resourceManager->LoadTexture(normalTexture);
+			_Material->setNormalID(normalID);
+		}
+		else {
+			_Material->setNormalID(diffuseID);
+		}
 
 		_Material->setName(name);
 		_Material->setShininess(Shininess);

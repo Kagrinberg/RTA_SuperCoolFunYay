@@ -15,44 +15,54 @@ bool Mesh::LoadEntry(const char * path) {
 
 
 Mesh::~Mesh() {
+
 	delete myAnimations[0];
 
 	if (myAnimations[1])
 	{
 		delete myAnimations[1];
 	}
-	
+
 }
 
-void Mesh::GenerateIndices(){
+void Mesh::GenerateIndices() {
 	std::map<PackedVertex, unsigned int> VertexToOutIndex;
 
-	for(unsigned int i = 0; i < vertices.size(); i++){
-		PackedVertex packed = {vertices[i], uvs[i], normals[i]};
+	for (unsigned int i = 0; i < vertices.size(); i++) {
+		PackedVertex packed;
+		if (biTangents.size() != 0) {
+			packed = { vertices[i], uvs[i], normals[i], biTangents[i] };
+		}
+		else {
+			packed = { vertices[i], uvs[i], normals[i], normals[i] };
+		}
 
 		unsigned int index;
 		bool found = getSameVertexIndex(packed, VertexToOutIndex, index);
 
-		if(found){
+		if (found) {
 			indices.push_back(index);
 		}
-		else{
+		else {
 			indexed_vertices.push_back(vertices[i]);
 			indexed_uvs.push_back(uvs[i]);
 			indexed_normals.push_back(normals[i]);
 			indexed_controlPoints.push_back(controlPoints[i]);
-			unsigned int newindex = (unsigned int)indexed_vertices.size() -1;
+			if (controlPoints.size() == biTangents.size()) {
+				indexed_biTangents.push_back(biTangents[i]);
+			}
+			unsigned int newindex = (unsigned int)indexed_vertices.size() - 1;
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
 		}
 
 	}
 
-	
+
 
 }
 
-void Mesh::GenerateBuffers(){
+void Mesh::GenerateBuffers() {
 
 	//Create Array Object
 	glGenVertexArrays(1, &vertexArrayObject);
@@ -77,25 +87,34 @@ void Mesh::GenerateBuffers(){
 	//	check_gl_error();
 	//}
 	//else {
-		glBufferData(GL_ARRAY_BUFFER, 8 * vertices_size, NULL, GL_STATIC_DRAW);
-		check_gl_error();
+	glBufferData(GL_ARRAY_BUFFER, 11 * vertices_size, NULL, GL_STATIC_DRAW);
+	check_gl_error();
 	//}
 
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 3*vertices_size, &indexed_vertices[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * vertices_size, &indexed_vertices[0]);
 	check_gl_error();
 
-	glBufferSubData(GL_ARRAY_BUFFER, 3*vertices_size, 3*vertices_size, &indexed_normals[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 3 * vertices_size, 3 * vertices_size, &indexed_normals[0]);
 	check_gl_error();
 
-	glBufferSubData(GL_ARRAY_BUFFER, 6*vertices_size, 2*vertices_size, &indexed_uvs[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 6 * vertices_size, 2 * vertices_size, &indexed_uvs[0]);
 	check_gl_error();
+
+	if (indexed_biTangents.size() != 0) {
+		glBufferSubData(GL_ARRAY_BUFFER, 9 * vertices_size, 3 * vertices_size, &indexed_biTangents[0]);
+		check_gl_error();
+	}
+	else {
+		glBufferSubData(GL_ARRAY_BUFFER, 9 * vertices_size, 3 * vertices_size, &indexed_normals[0]);
+		check_gl_error();
+	}
 
 	//create joint buffers
-	if (myAnimations[0]->isAnimated())
+	if (myAnimation->isAnimated())
 	{
-		std::unordered_map<unsigned int, CtrlPoint*> controlMap = myAnimations[0]->getMap();
-	
-		
+		std::unordered_map<unsigned int, CtrlPoint*> controlMap = myAnimation->getMap();
+
+
 
 
 		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
@@ -125,11 +144,12 @@ void Mesh::GenerateBuffers(){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	check_gl_error();
 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0] , GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 	check_gl_error();
 
 	unsigned int normalOffset = 3 * vertices_size;
 	unsigned int textureCoordOffset = 6 * vertices_size;
+	unsigned int bitangentOffset = 9 * vertices_size;
 
 	//unsigned int boneWeight = 8 * vertices_size;
 	//unsigned int boneIndex = 12 * vertices_size;
@@ -142,6 +162,10 @@ void Mesh::GenerateBuffers(){
 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(normalOffset));
 	check_gl_error();
+
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(bitangentOffset));
+	check_gl_error();
+
 
 	//if (myAnimation->isAnimated()) {
 	//	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(boneWeight));
@@ -168,6 +192,8 @@ void Mesh::GenerateBuffers(){
 	glEnableVertexAttribArray(2);
 	check_gl_error();
 
+	glEnableVertexAttribArray(3);
+	check_gl_error();
 }
 
 bool Mesh::LoadMesh(FbxScene* scene)
@@ -182,7 +208,6 @@ bool Mesh::LoadMesh(FbxScene* scene)
 	isSecond = false;
 	myAnimations[0] = nullptr;
 	myAnimations[1] = nullptr;
-
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -198,16 +223,7 @@ bool Mesh::LoadMesh(FbxScene* scene)
 		mesh->GetPolygonVertexUVs(nameList.GetStringAt(0), fuvs);
 
 		FbxGeometryElementBinormal* vertexBinormal = mesh->GetElementBinormal(0);
-		//for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
-		//{
-		//	glm::vec3 outBinormal;
-		//	int index = vertexBinormal->GetIndexArray().GetAt(i);
-		//	outBinormal.x = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[0]);
-		//	outBinormal.y = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[1]);
-		//	outBinormal.z = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[2]);
-		//
-		//	biTangents.push_back(outBinormal);
-		//}
+
 
 
 		for (int polyCount = 0; polyCount < mesh->GetPolygonCount(); ++polyCount)
@@ -224,6 +240,17 @@ bool Mesh::LoadMesh(FbxScene* scene)
 				vert.z = static_cast<float>(fbxVert[2]);
 				vertices.push_back(vert);
 				controlPoints.push_back(polyVertIndex);
+
+
+				if (vertexBinormal != nullptr) {
+					glm::vec3 outBinormal;
+					outBinormal.x = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(polyVertIndex).mData[0]);
+					outBinormal.y = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(polyVertIndex).mData[1]);
+					outBinormal.z = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(polyVertIndex).mData[2]);
+
+					biTangents.push_back(outBinormal);
+				}
+
 			}
 		}
 
@@ -247,41 +274,46 @@ bool Mesh::LoadMesh(FbxScene* scene)
 	return true;
 }
 
-bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result){
+bool Mesh::getSameVertexIndex(PackedVertex & packed, std::map<PackedVertex, unsigned int> & VertexToOutIndex, unsigned int & result) {
 	std::map<PackedVertex, unsigned int>::iterator it = VertexToOutIndex.find(packed);
-	if(it == VertexToOutIndex.end()){
+	if (it == VertexToOutIndex.end()) {
 		return false;
-	}else{
+	}
+	else {
 		result = it->second;
 		return true;
 	}
 }
 
-void Mesh::setActive(){
+void Mesh::setActive() {
 	glBindVertexArray(vertexArrayObject);
 	check_gl_error();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 	check_gl_error();
 
-	if (myAnimations[0]->isAnimated())
+	if (myAnimation->isAnimated())
 	{
-		
+
+		if (GetAsyncKeyState('P'))
+		{
+			m_entityManager->findEntity("Mage")->getTransform()->RotateY(1);
+		}
 
 		//if (GetAsyncKeyState(VK_RIGHT))
 		//{
 		//	if (!keyPress)
 		//	{
-		//		curFrame+=1;
+		//		curFrame += 1;
 		//		keyPress = true;
 		//	}
-		//	
+		//
 		//}
 		//else if (GetAsyncKeyState(VK_LEFT))
 		//{
 		//	if (!keyPress)
 		//	{
-		//		curFrame-=1;
+		//		curFrame -= 1;
 		//		keyPress = true;
 		//	}
 		//}
@@ -296,7 +328,7 @@ void Mesh::setActive(){
 			CurTotalTime = 0.0f;
 		}
 
-		if (curFrame > myAnimations[curAnim]->getAniLength()-1)
+		if (curFrame > myAnimations[curAnim]->getAniLength() - 1)
 		{
 			if (curAnim == 1)
 			{
@@ -304,6 +336,9 @@ void Mesh::setActive(){
 			}
 			curFrame = 0;
 		}
+
+		
+
 		//else if (curFrame < 0)
 		//{
 		//	curFrame = myAnimation->getAniLength() - 1;
@@ -329,7 +364,7 @@ void Mesh::setActive(){
 			keyPress = false;
 		}
 
-		
+
 
 		if (nextFrame > myAnimations[nextAnim]->getAniLength() - 1)
 		{
@@ -352,12 +387,13 @@ void Mesh::setActive(){
 
 		Skeleton mySkeles[2];
 		mySkeles[0] = myAnimations[0]->getSkele();
-		
-		
+
+
 		if (myAnimations[1])
 		{
 			mySkeles[1] = myAnimations[1]->getSkele();
 		}
+
 
 		for (unsigned int k = 0; k < mySkeles[0].mJoints.size(); k++)
 		{
@@ -383,19 +419,19 @@ void Mesh::setActive(){
 			keyframe1 = glm::transpose(keyframe1);
 
 			FbxAMatrix keyMat2 = mySkeles[nextAnim].mJoints[k].mAnimation[nextFrame]->mGlobalTransform;
-			
+
 			glm::mat4 keyframe2;
 			keyframe2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
 			keyframe2[1] = glm::vec4(keyMat2.mData[1][0], keyMat2.mData[1][1], keyMat2.mData[1][2], keyMat2.mData[1][3]);
 			keyframe2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
 			keyframe2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
-			
+
 			keyframe2 = glm::transpose(keyframe2);
-			
+
 			float t = CurTotalTime / singleFrameTime;
 
-			
-			
+
+
 			glm::mat4 keyFrameLerped;
 
 			glm::quat key1Rot = glm::quat_cast(keyframe1);
@@ -411,7 +447,7 @@ void Mesh::setActive(){
 			glm::mat4 identityMat = glm::mat4(1.0f);
 			glm::mat4 rotMatrix = glm::mat4_cast(slerpRot);
 			glm::mat4 transMatrix = glm::translate(identityMat, lerpPos);
-			
+
 
 			keyFrameLerped = rotMatrix * glm::inverse(transMatrix);
 
@@ -487,5 +523,5 @@ void Mesh::setAnimator(Animation * theAnimator)
 
 bool Mesh::isAnimated()
 {
-	return myAnimations[0]->isAnimated();
+	return myAnimation->isAnimated();
 }

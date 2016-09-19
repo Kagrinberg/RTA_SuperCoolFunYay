@@ -29,8 +29,8 @@
 		<Renderable>
 
 			<Mesh>
-				<Name>Box</Name>
-				<Location>FBXOBJ/Mage/SuperPower_Better.fbx</Location>
+				<Name>FBXTest</Name>
+				<Location>FBXOBJ/Box_Idle.fbx</Location>
 			</Mesh>
 
 			<Material>

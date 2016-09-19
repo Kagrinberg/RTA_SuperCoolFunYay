@@ -19,9 +19,9 @@
 			</Rotation>
 
 			<Scale>
-				<X>0.25</X>
-				<Y>0.25</Y>
-				<Z>0.25</Z>
+				<X>0.15</X>
+				<Y>0.15</Y>
+				<Z>0.15</Z>
 			</Scale>
 
 		</Transform>
@@ -59,9 +59,9 @@
 			</Direction>
 
 			<Ambient>
-				<X>0.009</X>
-				<Y>0.009</Y>
-				<Z>0.007</Z>
+				<X>0.00</X>
+				<Y>0.00</Y>
+				<Z>0.00</Z>
 			</Ambient>
 
 			<Diffuse>
@@ -77,8 +77,8 @@
 			</Specular>
 
 			<Constant>1.0</Constant>
-			<Linear>0.9</Linear>
-			<Quadratic>0.32</Quadratic>
+			<Linear>0.09</Linear>
+			<Quadratic>0.032</Quadratic>
 
 			<CutOff>1.0</CutOff>
 			<OuterCutOff>1.0</OuterCutOff>

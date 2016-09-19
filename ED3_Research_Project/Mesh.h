@@ -28,6 +28,7 @@ private:
 		glm::vec3 position;
 		glm::vec2 uv;
 		glm::vec3 normal;
+		glm::vec3 biTangent;
 		bool operator<(const PackedVertex that) const{
 			return memcmp((void*)this, (void*)&that, sizeof(PackedVertex))>0;
 		};
@@ -44,6 +45,8 @@ private:
 	std::vector< glm::vec3 > indexed_vertices;
 	std::vector< glm::vec2 > indexed_uvs;
 	std::vector< glm::vec3 > indexed_normals;
+	std::vector< glm::vec3> indexed_biTangents;
+
 
 	unsigned int vertexArrayObject;
 	unsigned int vertexBufferObject;
