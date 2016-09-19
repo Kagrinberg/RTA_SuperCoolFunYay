@@ -295,7 +295,20 @@ void Mesh::setActive(){
 
 			tempKey = glm::transpose(tempKey);
 
+			FbxAMatrix keyMat2 = mySkele.mJoints[k].mAnimation[curFrame + 1]->mGlobalTransform;
 
+			glm::mat4 tempKey2;
+			tempKey2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
+			tempKey2[1] = glm::vec4(keyMat2.mData[1][0], keyMat2.mData[1][1], keyMat2.mData[1][2], keyMat2.mData[1][3]);
+			tempKey2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
+			tempKey2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
+
+			tempKey2 = glm::transpose(tempKey2);
+
+
+
+
+			glm::mat4 ketFrameLerped = glm::lerp(tempkey, tempkey2, 0.5);
 			
 
 
