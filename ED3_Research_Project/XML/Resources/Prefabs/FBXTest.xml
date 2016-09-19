@@ -30,7 +30,6 @@
 
 			<Mesh>
 				<Name>Box</Name>
-				<Location>FBXOBJ/Mage/Hover_Better.fbx</Location>
 				<Location>FBXOBJ/Mage/SuperPower_Better.fbx</Location>
 			</Mesh>
 

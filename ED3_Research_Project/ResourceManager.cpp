@@ -105,7 +105,7 @@ void ResourceManager::LoadPrefab(const char * path){
 
 }
 
-unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
+unsigned int ResourceManager::LoadMeshFBX(const char * mesh, const char * second_mesh) {
 
 	unsigned int id = Util::fnvHash(mesh);
 	std::map<unsigned int, Util::entry<Mesh>>::iterator it = m_meshes.find(id);
@@ -148,7 +148,20 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 			//
 			//	//m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
 			//}
+			if (mesh != second_mesh)
+			{
+				FbxScene * scene2 = m_fbxManager->LoadFBX(second_mesh);
+				Animation * specialAnimation = new Animation();
+				temp->myAnimations[1] = specialAnimation;
+				specialAnimation->setScene(scene2);
+				specialAnimation->CreateSkeleton();
+				specialAnimation->makeCpts();
+				specialAnimation->createWeights();
 
+
+
+
+			}
 			
 		}
 		

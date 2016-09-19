@@ -7,10 +7,11 @@ void Renderable::LoadFromXML(tinyxml2::XMLElement * e, ResourceManager * p_resou
 
 	tinyxml2::XMLElement * pElement = e->FirstChildElement("Mesh");
 	tinyxml2::XMLElement * pChildElement = pElement->FirstChildElement("Location");
+	tinyxml2::XMLElement * pChildElement2 = pElement->LastChildElement("Location");
 
 	const char * aname = pChildElement->GetText();
 
-	m_meshID = p_resourceManager->LoadMeshFBX(pChildElement->GetText());
+	m_meshID = p_resourceManager->LoadMeshFBX(pChildElement->GetText(), pChildElement2->GetText());
 
 	//m_meshID = p_resourceManager->LoadMesh(pChildElement->GetText());
 

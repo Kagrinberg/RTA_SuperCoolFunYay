@@ -34,7 +34,7 @@ public:
 
 
 	unsigned int LoadMesh(const char * p_model);
-	unsigned int LoadMeshFBX(const char * p_mesh);
+	unsigned int LoadMeshFBX(const char * p_mesh, const char * second_mesh);
 	unsigned int LoadTexture(const char * p_texture);
 	Material * LoadMaterial(const char * material);
 

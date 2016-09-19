@@ -350,12 +350,19 @@ void Mesh::setActive(){
 
 		boneOffsets.clear();
 
-		Skeleton mySkele = myAnimations[0]->getSkele();
+		Skeleton mySkeles[2];
+		mySkeles[0] = myAnimations[0]->getSkele();
 		
-		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
+		
+		if (myAnimations[1])
+		{
+			mySkeles[1] = myAnimations[1]->getSkele();
+		}
+
+		for (unsigned int k = 0; k < mySkeles[0].mJoints.size(); k++)
 		{
 
-			FbxAMatrix BindposeInverse = mySkele.mJoints[k].mGlobalBindposeInverse;
+			FbxAMatrix BindposeInverse = mySkeles[curAnim].mJoints[k].mGlobalBindposeInverse;
 
 			glm::mat4 curBoneOffset;
 			curBoneOffset[0] = glm::vec4(BindposeInverse.mData[0][0], BindposeInverse.mData[0][1], BindposeInverse.mData[0][2], BindposeInverse.mData[0][3]);
@@ -365,7 +372,7 @@ void Mesh::setActive(){
 
 			curBoneOffset = glm::transpose(curBoneOffset);
 
-			FbxAMatrix keyMat = mySkele.mJoints[k].mAnimation[curFrame]->mGlobalTransform;
+			FbxAMatrix keyMat = mySkeles[curAnim].mJoints[k].mAnimation[curFrame]->mGlobalTransform;
 
 			glm::mat4 keyframe1;
 			keyframe1[0] = glm::vec4(keyMat.mData[0][0], keyMat.mData[0][1], keyMat.mData[0][2], keyMat.mData[0][3]);
@@ -375,7 +382,7 @@ void Mesh::setActive(){
 
 			keyframe1 = glm::transpose(keyframe1);
 
-			FbxAMatrix keyMat2 = mySkele.mJoints[k].mAnimation[nextFrame]->mGlobalTransform;
+			FbxAMatrix keyMat2 = mySkeles[nextAnim].mJoints[k].mAnimation[nextFrame]->mGlobalTransform;
 			
 			glm::mat4 keyframe2;
 			keyframe2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
@@ -387,19 +394,38 @@ void Mesh::setActive(){
 			
 			float t = CurTotalTime / singleFrameTime;
 
-			glm::mat4 keyFrameLerped =(1-t) * keyframe1 + t * keyframe2 ;
+			
+			
+			glm::mat4 keyFrameLerped;
+
+			glm::quat key1Rot = glm::quat_cast(keyframe1);
+			glm::quat key2Rot = glm::quat_cast(keyframe2);
+
+			glm::vec3 key1Pos = glm::vec3(keyframe1[3][0], keyframe1[3][1], keyframe1[3][2]);
+			glm::vec3 key2Pos = glm::vec3(keyframe2[3][0], keyframe2[3][1], keyframe2[3][2]);
+
+			glm::quat slerpRot = glm::slerp(key1Rot, key2Rot, t);
+			glm::vec3 lerpPos = glm::lerp(key1Pos, key2Pos, t);
+
+
+			glm::mat4 identityMat = glm::mat4(1.0f);
+			glm::mat4 rotMatrix = glm::mat4_cast(slerpRot);
+			glm::mat4 transMatrix = glm::translate(identityMat, lerpPos);
 			
 
+			keyFrameLerped = rotMatrix * glm::inverse(transMatrix);
 
 
+
+			//keyFrameLerped =(1-t) * keyframe1 + t * keyframe2 ;
 
 			glm::mat4 finalOffset = curBoneOffset * keyFrameLerped;
 
 			boneOffsets.push_back(finalOffset);
 
 
-			std::string uniqueName = "jointSphere";
-			uniqueName.append(std::to_string(k));
+			//std::string uniqueName = "jointSphere";
+			//uniqueName.append(std::to_string(k));
 
 			//m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(glm::vec3(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2]));
 		}
