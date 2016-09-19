@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include "EntityManager.h"
 #include "glm/gtx/compatibility.hpp"
+#include <GLFW\glfw3.h>
 
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
@@ -14,9 +15,13 @@ bool Mesh::LoadEntry(const char * path) {
 
 
 Mesh::~Mesh() {
+	delete myAnimations[0];
 
-	delete myAnimation;
-
+	if (myAnimations[1])
+	{
+		delete myAnimations[1];
+	}
+	
 }
 
 void Mesh::GenerateIndices(){
@@ -86,9 +91,9 @@ void Mesh::GenerateBuffers(){
 	check_gl_error();
 
 	//create joint buffers
-	if (myAnimation->isAnimated())
+	if (myAnimations[0]->isAnimated())
 	{
-		std::unordered_map<unsigned int, CtrlPoint*> controlMap = myAnimation->getMap();
+		std::unordered_map<unsigned int, CtrlPoint*> controlMap = myAnimations[0]->getMap();
 	
 		
 
@@ -168,7 +173,16 @@ void Mesh::GenerateBuffers(){
 bool Mesh::LoadMesh(FbxScene* scene)
 {
 	curFrame = 0;
+	nextFrame = 0;
 	keyPress = false;
+	lastTime = 0.0f;
+	CurTotalTime = 0.0f;
+	curAnim = 0;
+	nextAnim = 0;
+	isSecond = false;
+	myAnimations[0] = nullptr;
+	myAnimations[1] = nullptr;
+
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -184,16 +198,16 @@ bool Mesh::LoadMesh(FbxScene* scene)
 		mesh->GetPolygonVertexUVs(nameList.GetStringAt(0), fuvs);
 
 		FbxGeometryElementBinormal* vertexBinormal = mesh->GetElementBinormal(0);
-		for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
-		{
-			glm::vec3 outBinormal;
-			int index = vertexBinormal->GetIndexArray().GetAt(i);
-			outBinormal.x = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[0]);
-			outBinormal.y = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[1]);
-			outBinormal.z = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[2]);
-
-			biTangents.push_back(outBinormal);
-		}
+		//for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
+		//{
+		//	glm::vec3 outBinormal;
+		//	int index = vertexBinormal->GetIndexArray().GetAt(i);
+		//	outBinormal.x = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[0]);
+		//	outBinormal.y = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[1]);
+		//	outBinormal.z = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[2]);
+		//
+		//	biTangents.push_back(outBinormal);
+		//}
 
 
 		for (int polyCount = 0; polyCount < mesh->GetPolygonCount(); ++polyCount)
@@ -250,86 +264,136 @@ void Mesh::setActive(){
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 	check_gl_error();
 
-	if (myAnimation->isAnimated())
+	if (myAnimations[0]->isAnimated())
 	{
-		if (GetAsyncKeyState(VK_RIGHT))
+		
+
+		//if (GetAsyncKeyState(VK_RIGHT))
+		//{
+		//	if (!keyPress)
+		//	{
+		//		curFrame+=1;
+		//		keyPress = true;
+		//	}
+		//	
+		//}
+		//else if (GetAsyncKeyState(VK_LEFT))
+		//{
+		//	if (!keyPress)
+		//	{
+		//		curFrame-=1;
+		//		keyPress = true;
+		//	}
+		//}
+		//else
+		//{
+		//	keyPress = false;
+		//}
+
+		if (CurTotalTime > singleFrameTime)
 		{
-			if (!keyPress)
-			{
-				curFrame+=5;
-				keyPress = true;
-			}
-			
+			curFrame++;
+			CurTotalTime = 0.0f;
 		}
-		else if (GetAsyncKeyState(VK_LEFT))
+
+		if (curFrame > myAnimations[curAnim]->getAniLength()-1)
+		{
+			if (curAnim == 1)
+			{
+				curAnim = 0;
+			}
+			curFrame = 0;
+		}
+		//else if (curFrame < 0)
+		//{
+		//	curFrame = myAnimation->getAniLength() - 1;
+		//}
+
+		nextFrame = curFrame + 1;
+
+		if (GetAsyncKeyState(VK_SPACE))
 		{
 			if (!keyPress)
 			{
-				curFrame-=5;
+				if (curAnim == 0 && nextAnim == 0 && myAnimations[1] != nullptr)
+				{
+					nextAnim = 1;
+					nextFrame = 0;
+				}
 				keyPress = true;
 			}
+
 		}
 		else
 		{
 			keyPress = false;
 		}
 
-		if (curFrame > myAnimation->getAniLength()-1)
+		
+
+		if (nextFrame > myAnimations[nextAnim]->getAniLength() - 1)
 		{
-			curFrame = 0;
+			if (nextAnim == 1)
+			{
+				nextAnim = 0;
+			}
+			nextFrame = 0;
 		}
-		else if (curFrame < 0)
-		{
-			curFrame = myAnimation->getAniLength() - 1;
-		}
+
+
+		singleFrameTime = static_cast<float>(1.0f / myAnimations[curAnim]->getAniLength());
+
+		float deltaTime = static_cast<float>(glfwGetTime()) - lastTime;
+		lastTime = static_cast<float>(glfwGetTime());
+		CurTotalTime += deltaTime;
+
 
 		boneOffsets.clear();
 
-		Skeleton mySkele = myAnimation->getSkele();
+		Skeleton mySkele = myAnimations[0]->getSkele();
 		
 		for (unsigned int k = 0; k < mySkele.mJoints.size(); k++)
 		{
 
 			FbxAMatrix BindposeInverse = mySkele.mJoints[k].mGlobalBindposeInverse;
 
-			glm::mat4 tempBone;
-			tempBone[0] = glm::vec4(BindposeInverse.mData[0][0], BindposeInverse.mData[0][1], BindposeInverse.mData[0][2], BindposeInverse.mData[0][3]);
-			tempBone[1] = glm::vec4(BindposeInverse.mData[1][0], BindposeInverse.mData[1][1], BindposeInverse.mData[1][2], BindposeInverse.mData[1][3]);
-			tempBone[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
-			tempBone[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
+			glm::mat4 curBoneOffset;
+			curBoneOffset[0] = glm::vec4(BindposeInverse.mData[0][0], BindposeInverse.mData[0][1], BindposeInverse.mData[0][2], BindposeInverse.mData[0][3]);
+			curBoneOffset[1] = glm::vec4(BindposeInverse.mData[1][0], BindposeInverse.mData[1][1], BindposeInverse.mData[1][2], BindposeInverse.mData[1][3]);
+			curBoneOffset[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
+			curBoneOffset[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
 
-			tempBone = glm::transpose(tempBone);
+			curBoneOffset = glm::transpose(curBoneOffset);
 
 			FbxAMatrix keyMat = mySkele.mJoints[k].mAnimation[curFrame]->mGlobalTransform;
 
-			glm::mat4 tempKey;
-			tempKey[0] = glm::vec4(keyMat.mData[0][0], keyMat.mData[0][1], keyMat.mData[0][2], keyMat.mData[0][3]);
-			tempKey[1] = glm::vec4(keyMat.mData[1][0], keyMat.mData[1][1], keyMat.mData[1][2], keyMat.mData[1][3]);
-			tempKey[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
-			tempKey[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
+			glm::mat4 keyframe1;
+			keyframe1[0] = glm::vec4(keyMat.mData[0][0], keyMat.mData[0][1], keyMat.mData[0][2], keyMat.mData[0][3]);
+			keyframe1[1] = glm::vec4(keyMat.mData[1][0], keyMat.mData[1][1], keyMat.mData[1][2], keyMat.mData[1][3]);
+			keyframe1[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
+			keyframe1[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
 
-			tempKey = glm::transpose(tempKey);
+			keyframe1 = glm::transpose(keyframe1);
 
-			FbxAMatrix keyMat2 = mySkele.mJoints[k].mAnimation[curFrame + 1]->mGlobalTransform;
+			FbxAMatrix keyMat2 = mySkele.mJoints[k].mAnimation[nextFrame]->mGlobalTransform;
+			
+			glm::mat4 keyframe2;
+			keyframe2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
+			keyframe2[1] = glm::vec4(keyMat2.mData[1][0], keyMat2.mData[1][1], keyMat2.mData[1][2], keyMat2.mData[1][3]);
+			keyframe2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
+			keyframe2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
+			
+			keyframe2 = glm::transpose(keyframe2);
+			
+			float t = CurTotalTime / singleFrameTime;
 
-			glm::mat4 tempKey2;
-			tempKey2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
-			tempKey2[1] = glm::vec4(keyMat2.mData[1][0], keyMat2.mData[1][1], keyMat2.mData[1][2], keyMat2.mData[1][3]);
-			tempKey2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
-			tempKey2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
-
-			tempKey2 = glm::transpose(tempKey2);
-
-
-
-
-			glm::mat4 ketFrameLerped = glm::lerp(tempkey, tempkey2, 0.5);
+			glm::mat4 keyFrameLerped =(1-t) * keyframe1 + t * keyframe2 ;
 			
 
 
 
 
-			glm::mat4 finalOffset =  tempBone * tempKey;
+			glm::mat4 finalOffset = curBoneOffset * keyFrameLerped;
 
 			boneOffsets.push_back(finalOffset);
 
@@ -397,5 +461,5 @@ void Mesh::setAnimator(Animation * theAnimator)
 
 bool Mesh::isAnimated()
 {
-	return myAnimation->isAnimated();
+	return myAnimations[0]->isAnimated();
 }

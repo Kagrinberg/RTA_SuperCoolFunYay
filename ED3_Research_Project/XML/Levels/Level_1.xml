@@ -21,11 +21,6 @@
 			<Name>GroundPlane</Name>
 			<Prefab>GroundPlane</Prefab>
 		</Entity>
-		
-		<Entity>
-			<Name>Sphere</Name>
-			<Prefab>FBXSphere</Prefab>
-		</Entity>
 
 		<Entity>
 			<Name>BOX</Name>

@@ -19,9 +19,9 @@
 			</Rotation>
 
 			<Scale>
-				<X>.01</X>
-				<Y>.01</Y>
-				<Z>.01</Z>
+				<X>1</X>
+				<Y>1</Y>
+				<Z>1</Z>
 			</Scale>
 
 		</Transform>
@@ -30,14 +30,15 @@
 
 			<Mesh>
 				<Name>Box</Name>
-				<Location>FBXOBJ/Teddy_Better.fbx</Location>
+				<Location>FBXOBJ/Mage/Hover_Better.fbx</Location>
+				<Location>FBXOBJ/Mage/SuperPower_Better.fbx</Location>
 			</Mesh>
 
 			<Material>
 				<Name>Crate</Name>
 				<Shininess>120.0f</Shininess>
-				<Diffuse>Textures/PNG/Teddy_D.png</Diffuse>
-				<Specular>Textures/PNG/Teddy_D.png</Specular>
+				<Diffuse>FBXOBJ/Mage/Mage with Bind and Textures.fbm/PPG_3D_FinalBoss_D.png</Diffuse>
+				<Specular>FBXOBJ/Mage/Mage with Bind and Textures.fbm/PPG_3D_FinalBoss_E.png</Specular>
 			</Material>
 
 		</Renderable>

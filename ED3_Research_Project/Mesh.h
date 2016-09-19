@@ -52,12 +52,23 @@ private:
 	std::vector<float> boneWeights;
 	std::vector<int> boneIndicies;
 	std::vector<glm::mat4> boneOffsets;
+	int curAnim;
+	int nextAnim;
 	int curFrame;
+	int nextFrame;
+
+	bool isSecond;
 	bool keyPress;
+
+
+	float singleFrameTime;
+	float CurTotalTime;
+	float lastTime;
 
 public:
 
 	EntityManager * m_entityManager;
+	Animation * myAnimations[2];
 
 	~Mesh();
 
