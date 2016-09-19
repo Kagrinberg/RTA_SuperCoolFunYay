@@ -21,9 +21,9 @@
 			</Direction>
 
 			<Ambient>
-				<X>0.5f</X>
-				<Y>0.5f</Y>
-				<Z>0.4f</Z>
+				<X>0.0f</X>
+				<Y>0.0f</Y>
+				<Z>0.0f</Z>
 			</Ambient>
 
 			<Diffuse>

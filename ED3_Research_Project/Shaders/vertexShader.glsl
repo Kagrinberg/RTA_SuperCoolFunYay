@@ -4,11 +4,6 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
 layout (location = 2) in vec3 normal;
 
-//layout (std140) uniform Matrices
-//{
-//    mat4 projection;
-//    mat4 view;
-//};
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -26,6 +21,6 @@ void main () {
     Normal = mat3(transpose(inverse(model))) * normal;  
 
 
-    TexCoords = texCoords;
+    TexCoords = vec2(texCoords.x, texCoords.y);
 
 }

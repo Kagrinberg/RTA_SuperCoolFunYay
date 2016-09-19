@@ -74,13 +74,18 @@ void RenderingManager::RenderAll(Camera & c, LightingManager * lm) {
 			Material * material = m_resourceManager->getMaterial(materialID);
 			unsigned int diffuseID = material->getDiffuseID();
 			unsigned int specularID = material->getSpecularID();
+			unsigned int normalID = material->getNormalID();
 			unsigned int texture0ID = m_resourceManager->getTexture(diffuseID)->getTextureID();
 			unsigned int texture1ID = m_resourceManager->getTexture(specularID)->getTextureID();
+			unsigned int texture2ID = m_resourceManager->getTexture(normalID)->getTextureID();
 
 			unsigned int matDiffuseLoc = glGetUniformLocation(program, "material.diffuse");
 			check_gl_error();
 
 			unsigned int matSpecularLoc = glGetUniformLocation(program, "material.specular");
+			check_gl_error();
+
+			unsigned int matNormalLoc = glGetUniformLocation(program, "material.normalMap");
 			check_gl_error();
 
 			unsigned int matShininessLoc = glGetUniformLocation(program, "material.shininess");
@@ -91,6 +96,10 @@ void RenderingManager::RenderAll(Camera & c, LightingManager * lm) {
 
 			glUniform1i(matSpecularLoc, 1);
 			check_gl_error();
+
+			glUniform1i(matNormalLoc, 2);
+			check_gl_error();
+
 
 			glUniform1f(matShininessLoc, material->getShininess());
 			check_gl_error();
@@ -107,6 +116,11 @@ void RenderingManager::RenderAll(Camera & c, LightingManager * lm) {
 			glBindTexture(GL_TEXTURE_2D, texture1ID);
 			check_gl_error();
 
+			glActiveTexture(GL_TEXTURE3);
+			check_gl_error();
+
+			glBindTexture(GL_TEXTURE_2D, texture2ID);
+			check_gl_error();
 		}
 
 		mesh->setActive();

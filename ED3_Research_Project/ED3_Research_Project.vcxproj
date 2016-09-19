@@ -62,13 +62,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\GLEW\include;..\FBX\2016.1.1\include;..\glfw-3.2.1.bin.WIN32\include;..\Simple OpenGL Image Library\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\GLEW\include;..\FBX\2016.1.1\include;..\GLFW\Include;..\Simple OpenGL Image Library\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\GLEW\Lib\Release;..\Simple OpenGL Image Library\lib;..\glfw-3.2.1.bin.WIN32\lib-vc2015</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\GLEW\Lib\R;..\Simple OpenGL Image Library\lib;..\GLFW\Lib\R</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;..\FBX\2016.1.1\lib\vs2015\x86\release\libfbxsdk-md.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>

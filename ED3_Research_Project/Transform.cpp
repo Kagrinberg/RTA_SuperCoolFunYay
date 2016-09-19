@@ -59,3 +59,10 @@ glm::mat4 * Transform::getMatrix() {
 
 	return &m_Matrix;
 }
+
+
+void Transform::RotateY(float degrees) {
+	
+	m_vRotation.y += degrees;
+
+}

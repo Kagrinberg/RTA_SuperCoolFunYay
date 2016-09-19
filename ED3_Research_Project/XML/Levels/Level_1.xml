@@ -28,8 +28,8 @@
 		</Entity>
 
 		<Entity>
-			<Name>BOX</Name>
-			<Prefab>FBXTest</Prefab>
+			<Name>Mage</Name>
+			<Prefab>Mage</Prefab>
 		</Entity>
 
 		

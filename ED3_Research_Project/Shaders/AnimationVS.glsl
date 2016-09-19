@@ -3,26 +3,35 @@
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
 layout (location = 2) in vec3 normal;
+layout (location = 3) in vec3 bitangent;
+
+out VS_OUT {
+    vec3 FragPos;
+    vec2 TexCoords;
+	mat3 TBN;
+	vec3 Normal;
+} vs_out;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 Normal;
-out vec3 FragPos;
-out vec2 TexCoords;
-
 void main () {
 
 	gl_Position = projection *view * model * vec4(position,1);
+    vs_out.FragPos = vec3(model * vec4(position.xyz, 1.0f));
+    vs_out.TexCoords = vec2(texCoords.x, 1.0 - texCoords.y);
 
-    FragPos = vec3(model * vec4(position.xyz, 1.0f));
+	vs_out.Normal = mat3(transpose(inverse(model))) * normal;  
 
+	vec3 tangent = cross(normal, bitangent);
 
-    Normal = (mat4(transpose(inverse(model))) * vec4(normal,0)).xyz;  
-
-
-    TexCoords = vec2(texCoords.x, 1.0f - texCoords.y);
+	mat3 normalMatrix = mat3(model);
+    vec3 T = normalize(normalMatrix * tangent);
+    vec3 B = normalize(normalMatrix * bitangent);
+    vec3 N = normalize(normalMatrix * normal);    
+    
+    vs_out.TBN = mat3(T, B, N);  
 
 
 }
