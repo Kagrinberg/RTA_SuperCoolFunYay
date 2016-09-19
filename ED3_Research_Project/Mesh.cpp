@@ -183,17 +183,17 @@ bool Mesh::LoadMesh(FbxScene* scene)
 		mesh->GetUVSetNames(nameList);
 		mesh->GetPolygonVertexUVs(nameList.GetStringAt(0), fuvs);
 
-		FbxGeometryElementBinormal* vertexBinormal = mesh->GetElementBinormal(0);
-		for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
-		{
-			glm::vec3 outBinormal;
-			int index = vertexBinormal->GetIndexArray().GetAt(i);
-			outBinormal.x = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[0]);
-			outBinormal.y = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[1]);
-			outBinormal.z = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[2]);
-
-			biTangents.push_back(outBinormal);
-		}
+		//FbxGeometryElementBinormal* vertexBinormal = mesh->GetElementBinormal(0);
+		//for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
+		//{
+		//	glm::vec3 outBinormal;
+		//	int index = vertexBinormal->GetIndexArray().GetAt(i);
+		//	outBinormal.x = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[0]);
+		//	outBinormal.y = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[1]);
+		//	outBinormal.z = static_cast<float>(vertexBinormal->GetDirectArray().GetAt(index).mData[2]);
+		//
+		//	biTangents.push_back(outBinormal);
+		//}
 
 
 		for (int polyCount = 0; polyCount < mesh->GetPolygonCount(); ++polyCount)

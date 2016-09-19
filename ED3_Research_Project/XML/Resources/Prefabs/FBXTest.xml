@@ -19,9 +19,9 @@
 			</Rotation>
 
 			<Scale>
-				<X>.01</X>
-				<Y>.01</Y>
-				<Z>.01</Z>
+				<X>1</X>
+				<Y>1</Y>
+				<Z>1</Z>
 			</Scale>
 
 		</Transform>
@@ -30,7 +30,7 @@
 
 			<Mesh>
 				<Name>Box</Name>
-				<Location>FBXOBJ/Teddy_Better.fbx</Location>
+				<Location>FBXOBJ/Mage/Cast Spell 1.fbx</Location>
 			</Mesh>
 
 			<Material>
