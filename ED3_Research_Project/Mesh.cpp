@@ -440,22 +440,41 @@ void Mesh::setActive() {
 			glm::vec3 key1Pos = glm::vec3(keyframe1[3][0], keyframe1[3][1], keyframe1[3][2]);
 			glm::vec3 key2Pos = glm::vec3(keyframe2[3][0], keyframe2[3][1], keyframe2[3][2]);
 
+			glm::vec3 key1Scale;
+			key1Scale[0] = glm::length(glm::vec3(keyframe1[0][0], keyframe1[1][0], keyframe1[2][0]));
+			key1Scale[1] = glm::length(glm::vec3(keyframe1[0][1], keyframe1[1][1], keyframe1[2][1]));
+			key1Scale[2] = glm::length(glm::vec3(keyframe1[0][2], keyframe1[1][2], keyframe1[2][2]));
+
+			glm::vec3 key2Scale;
+			key2Scale[0] = glm::length(glm::vec3(keyframe2[0][0], keyframe2[1][0], keyframe2[2][0]));
+			key2Scale[1] = glm::length(glm::vec3(keyframe2[0][1], keyframe2[1][1], keyframe2[2][1]));
+			key2Scale[2] = glm::length(glm::vec3(keyframe2[0][2], keyframe2[1][2], keyframe2[2][2]));
+
+
 			glm::quat slerpRot = glm::slerp(key1Rot, key2Rot, t);
 			glm::vec3 lerpPos = glm::lerp(key1Pos, key2Pos, t);
+			glm::vec3 lerpScale = glm::lerp(key1Scale, key2Scale, t);
+
 
 
 			glm::mat4 identityMat = glm::mat4(1.0f);
 			glm::mat4 rotMatrix = glm::mat4_cast(slerpRot);
 			glm::mat4 transMatrix = glm::translate(identityMat, lerpPos);
 
+			glm::mat4 scaleMatrix = glm::scale(identityMat, lerpScale);
 
-			keyFrameLerped = rotMatrix * glm::inverse(transMatrix);
+
+			keyFrameLerped = scaleMatrix * rotMatrix * transMatrix;
+
 
 
 
 			//keyFrameLerped =(1-t) * keyframe1 + t * keyframe2 ;
 
-			glm::mat4 finalOffset = curBoneOffset * keyFrameLerped;
+			glm::mat4 finalOffset = keyFrameLerped * curBoneOffset;
+
+			finalOffset = glm::transpose(finalOffset);
+
 
 			boneOffsets.push_back(finalOffset);
 
