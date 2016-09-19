@@ -105,7 +105,7 @@ void ResourceManager::LoadPrefab(const char * path){
 
 }
 
-unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
+unsigned int ResourceManager::LoadMeshFBX(const char * mesh, const char * second_mesh) {
 
 	unsigned int id = Util::fnvHash(mesh);
 	std::map<unsigned int, Util::entry<Mesh>>::iterator it = m_meshes.find(id);
@@ -120,33 +120,49 @@ unsigned int ResourceManager::LoadMeshFBX(const char * mesh) {
 		Animation * myAnimation = new Animation();
 		//myAnimation->setMesh(temp);
 		temp->setAnimator(myAnimation);
+		temp->myAnimations[0] = myAnimation;
 		myAnimation->setScene(scene);
 		myAnimation->CreateSkeleton();
 		if (myAnimation->isAnimated())
 		{
 			myAnimation->makeCpts();
 			myAnimation->createWeights();
+
+			temp->m_entityManager = m_entityManager;
 			//myAnimation->checkControls();
 
 
 			//push back joint spheres into m_meshes
-			for (unsigned int i = 0; i < myAnimation->getSkele().mJoints.size(); i++)
+			//for (unsigned int i = 0; i < myAnimation->getSkele().mJoints.size(); i++)
+			//{
+			//	std::string uniqueName = "jointSphere";
+			//	uniqueName.append(std::to_string(i));
+			//
+			//	//m_entityManager->addEntity(uniqueName.c_str(), "FBXSphere");
+			//
+			//	glm::vec3 jointPos;
+			//	jointPos.x = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][0]);
+			//	jointPos.y = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][1]);
+			//	jointPos.z = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][2]);
+			//
+			//
+			//	//m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
+			//}
+			if (mesh != second_mesh)
 			{
-				std::string uniqueName = "jointSphere";
-				uniqueName.append(std::to_string(i));
-			
-				//m_entityManager->addEntity(uniqueName.c_str(), "FBXSphere");
-
-				glm::vec3 jointPos;
-				jointPos.x = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][0]);
-				jointPos.y = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][1]);
-				jointPos.z = static_cast<float>(myAnimation->getSkele().mJoints[i].mGlobalBindposeInverse.mData[3][2]);
+				FbxScene * scene2 = m_fbxManager->LoadFBX(second_mesh);
+				Animation * specialAnimation = new Animation();
+				temp->myAnimations[1] = specialAnimation;
+				specialAnimation->setScene(scene2);
+				specialAnimation->CreateSkeleton();
+				specialAnimation->makeCpts();
+				specialAnimation->createWeights();
 
 
-				//m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(jointPos);
+
+
 			}
-
-			temp->m_entityManager = m_entityManager;
+			
 		}
 		
 		temp->GenerateBuffers();

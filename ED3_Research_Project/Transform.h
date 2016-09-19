@@ -22,6 +22,7 @@ public:
 	glm::mat4 * getMatrix();
 
 	void setPosition(glm::vec3 p_position) { m_vPosition = p_position; };
+	void RotateY(float degrees);
 
 };
 

@@ -29,15 +29,15 @@
 		<Renderable>
 
 			<Mesh>
-				<Name>Box</Name>
-				<Location>FBXOBJ/Mage/Cast Spell 1.fbx</Location>
+				<Name>FBXTest</Name>
+				<Location>FBXOBJ/Box_Idle.fbx</Location>
 			</Mesh>
 
 			<Material>
 				<Name>Crate</Name>
 				<Shininess>120.0f</Shininess>
-				<Diffuse>Textures/PNG/Teddy_D.png</Diffuse>
-				<Specular>Textures/PNG/Teddy_D.png</Specular>
+				<Diffuse>FBXOBJ/Mage/Mage with Bind and Textures.fbm/PPG_3D_FinalBoss_D.png</Diffuse>
+				<Specular>FBXOBJ/Mage/Mage with Bind and Textures.fbm/PPG_3D_FinalBoss_E.png</Specular>
 			</Material>
 
 		</Renderable>
