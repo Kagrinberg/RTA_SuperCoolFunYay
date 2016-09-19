@@ -406,7 +406,7 @@ void Mesh::setActive() {
 			curBoneOffset[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
 			curBoneOffset[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
 
-			curBoneOffset = glm::transpose(curBoneOffset);
+			//curBoneOffset = glm::transpose(curBoneOffset);
 
 			FbxAMatrix keyMat = mySkeles[curAnim].mJoints[k].mAnimation[curFrame]->mGlobalTransform;
 
@@ -416,7 +416,7 @@ void Mesh::setActive() {
 			keyframe1[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
 			keyframe1[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
 
-			keyframe1 = glm::transpose(keyframe1);
+			//keyframe1 = glm::transpose(keyframe1);
 
 			FbxAMatrix keyMat2 = mySkeles[nextAnim].mJoints[k].mAnimation[nextFrame]->mGlobalTransform;
 
@@ -426,7 +426,7 @@ void Mesh::setActive() {
 			keyframe2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
 			keyframe2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
 
-			keyframe2 = glm::transpose(keyframe2);
+			//keyframe2 = glm::transpose(keyframe2);
 
 			float t = CurTotalTime / singleFrameTime;
 
@@ -457,17 +457,16 @@ void Mesh::setActive() {
 
 
 
-			glm::mat4 identityMat = glm::mat4(1.0f);
+			//glm::mat4 identityMat = glm::mat4(1.0f);
+
 			glm::mat4 rotMatrix = glm::mat4_cast(slerpRot);
-			glm::mat4 transMatrix = glm::translate(identityMat, lerpPos);
-
-			glm::mat4 scaleMatrix = glm::scale(identityMat, lerpScale);
-
-
-			keyFrameLerped = scaleMatrix * rotMatrix * transMatrix;
+			rotMatrix[3] = glm::vec4(lerpPos, 1.0f);
+			//glm::mat4 transMatrix = glm::translate(identityMat, lerpPos);
+			//
+			//glm::mat4 scaleMatrix = glm::scale(identityMat, lerpScale);
 
 
-
+			keyFrameLerped = rotMatrix;//scaleMatrix * rotMatrix * transMatrix;
 
 			//keyFrameLerped =(1-t) * keyframe1 + t * keyframe2 ;
 

@@ -30,7 +30,7 @@
 
 			<Mesh>
 				<Name>FBXTest</Name>
-				<Location>FBXOBJ/Box_Idle.fbx</Location>
+				<Location>FBXOBJ/Mage/SuperPower_Better.fbx</Location>
 			</Mesh>
 
 			<Material>
