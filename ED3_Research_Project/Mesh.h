@@ -55,18 +55,26 @@ private:
 	std::vector<float> boneWeights;
 	std::vector<int> boneIndicies;
 	std::vector<glm::mat4> boneOffsets;
-	int curAnim;
-	int nextAnim;
-	int curFrame;
-	int nextFrame;
 
-	bool isSecond;
 	bool keyPress;
 
 
 	float singleFrameTime;
 	float CurTotalTime;
 	float lastTime;
+
+	float singleFrameTime1;
+	float CurTotalTime1;
+	float lastTime1;
+
+	bool Anim0;
+	bool Anim1;
+
+	int cur0;
+	int next0;
+
+	int cur1;
+	int next1;
 
 public:
 
@@ -91,6 +99,8 @@ public:
 	bool isAnimated();
 
 	unsigned int getVAO() { return vertexArrayObject; };
+
+	glm::mat4 combineMat4(glm::mat4 matrix1, glm::mat4 matrix2, float t);
 
 };
 

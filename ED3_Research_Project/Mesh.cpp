@@ -198,16 +198,22 @@ void Mesh::GenerateBuffers() {
 
 bool Mesh::LoadMesh(FbxScene* scene)
 {
-	curFrame = 0;
-	nextFrame = 0;
 	keyPress = false;
 	lastTime = 0.0f;
 	CurTotalTime = 0.0f;
-	curAnim = 0;
-	nextAnim = 0;
-	isSecond = false;
+
 	myAnimations[0] = nullptr;
 	myAnimations[1] = nullptr;
+
+	Anim0 = true;
+	Anim1 = false;
+
+	cur0 = 0;
+	next0 = 0;
+
+	cur1 = 0;
+	next1 = 0;
+
 	for (int i = 0; i < scene->GetSrcObjectCount< FbxMesh >(); ++i)
 	{
 		FbxMesh* mesh = scene->GetSrcObject< FbxMesh >(i);
@@ -300,60 +306,13 @@ void Mesh::setActive() {
 			m_entityManager->findEntity("Mage")->getTransform()->RotateY(1);
 		}
 
-		//if (GetAsyncKeyState(VK_RIGHT))
-		//{
-		//	if (!keyPress)
-		//	{
-		//		curFrame += 1;
-		//		keyPress = true;
-		//	}
-		//
-		//}
-		//else if (GetAsyncKeyState(VK_LEFT))
-		//{
-		//	if (!keyPress)
-		//	{
-		//		curFrame -= 1;
-		//		keyPress = true;
-		//	}
-		//}
-		//else
-		//{
-		//	keyPress = false;
-		//}
-
-		if (CurTotalTime > singleFrameTime)
-		{
-			curFrame++;
-			CurTotalTime = 0.0f;
-		}
-
-		if (curFrame > myAnimations[curAnim]->getAniLength() - 1)
-		{
-			if (curAnim == 1)
-			{
-				curAnim = 0;
-			}
-			curFrame = 0;
-		}
-
-		
-
-		//else if (curFrame < 0)
-		//{
-		//	curFrame = myAnimation->getAniLength() - 1;
-		//}
-
-		nextFrame = curFrame + 1;
-
 		if (GetAsyncKeyState(VK_SPACE))
 		{
 			if (!keyPress)
 			{
-				if (curAnim == 0 && nextAnim == 0 && myAnimations[1] != nullptr)
+				if (myAnimations[1] != nullptr && !Anim1)
 				{
-					nextAnim = 1;
-					nextFrame = 0;
+					Anim1 = true;
 				}
 				keyPress = true;
 			}
@@ -364,23 +323,67 @@ void Mesh::setActive() {
 			keyPress = false;
 		}
 
-
-
-		if (nextFrame > myAnimations[nextAnim]->getAniLength() - 1)
+		if (Anim0)
 		{
-			if (nextAnim == 1)
+			singleFrameTime = static_cast<float>(1.0f / myAnimations[0]->getAniLength());
+			float deltaTime = static_cast<float>(glfwGetTime()) - lastTime;
+			lastTime = static_cast<float>(glfwGetTime());
+			CurTotalTime += deltaTime;
+
+			if (CurTotalTime > singleFrameTime)
 			{
-				nextAnim = 0;
+				cur0++;
+				CurTotalTime = 0.0f;
+				if (Anim1)
+				{
+					Anim0 = false;
+					cur0 = 0;
+					next0 = 0;
+				}
 			}
-			nextFrame = 0;
+
+			if (cur0 > myAnimations[0]->getAniLength() - 1)
+			{
+				cur0 = 0;
+			}
+
+			next0 = cur0 + 1;
+
+			if (next0 > myAnimations[0]->getAniLength() - 1)
+			{
+				next0 = 0;
+			}
+
 		}
+		
+		if(Anim1)
+		{
+			singleFrameTime1 = static_cast<float>(1.0f / myAnimations[1]->getAniLength());
+			float deltaTime1 = static_cast<float>(glfwGetTime()) - lastTime1;
+			lastTime1 = static_cast<float>(glfwGetTime());
+			CurTotalTime1 += deltaTime1;
 
+			if (CurTotalTime1 > singleFrameTime1)
+			{
+				cur1++;
+				CurTotalTime1 = 0.0f;
+			}
 
-		singleFrameTime = static_cast<float>(1.0f / myAnimations[curAnim]->getAniLength());
+			if (cur1 > myAnimations[1]->getAniLength() - 1)
+			{
+				Anim1 = false;
+				Anim0 = true;
+				cur1 = 0;
+			}
 
-		float deltaTime = static_cast<float>(glfwGetTime()) - lastTime;
-		lastTime = static_cast<float>(glfwGetTime());
-		CurTotalTime += deltaTime;
+			next1 = cur1 + 1;
+
+			if (next1 > myAnimations[1]->getAniLength() - 1)
+			{
+				next1 = 0;
+			}
+		}
+		
 
 
 		boneOffsets.clear();
@@ -398,7 +401,7 @@ void Mesh::setActive() {
 		for (unsigned int k = 0; k < mySkeles[0].mJoints.size(); k++)
 		{
 
-			FbxAMatrix BindposeInverse = mySkeles[curAnim].mJoints[k].mGlobalBindposeInverse;
+			FbxAMatrix BindposeInverse = mySkeles[0].mJoints[k].mGlobalBindposeInverse;
 
 			glm::mat4 curBoneOffset;
 			curBoneOffset[0] = glm::vec4(BindposeInverse.mData[0][0], BindposeInverse.mData[0][1], BindposeInverse.mData[0][2], BindposeInverse.mData[0][3]);
@@ -406,69 +409,65 @@ void Mesh::setActive() {
 			curBoneOffset[2] = glm::vec4(BindposeInverse.mData[2][0], BindposeInverse.mData[2][1], BindposeInverse.mData[2][2], BindposeInverse.mData[2][3]);
 			curBoneOffset[3] = glm::vec4(BindposeInverse.mData[3][0], BindposeInverse.mData[3][1], BindposeInverse.mData[3][2], BindposeInverse.mData[3][3]);
 
-			//curBoneOffset = glm::transpose(curBoneOffset);
-
-			FbxAMatrix keyMat = mySkeles[curAnim].mJoints[k].mAnimation[curFrame]->mGlobalTransform;
-
-			glm::mat4 keyframe1;
-			keyframe1[0] = glm::vec4(keyMat.mData[0][0], keyMat.mData[0][1], keyMat.mData[0][2], keyMat.mData[0][3]);
-			keyframe1[1] = glm::vec4(keyMat.mData[1][0], keyMat.mData[1][1], keyMat.mData[1][2], keyMat.mData[1][3]);
-			keyframe1[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
-			keyframe1[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
-
-			//keyframe1 = glm::transpose(keyframe1);
-
-			FbxAMatrix keyMat2 = mySkeles[nextAnim].mJoints[k].mAnimation[nextFrame]->mGlobalTransform;
-
-			glm::mat4 keyframe2;
-			keyframe2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
-			keyframe2[1] = glm::vec4(keyMat2.mData[1][0], keyMat2.mData[1][1], keyMat2.mData[1][2], keyMat2.mData[1][3]);
-			keyframe2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
-			keyframe2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
-
-			//keyframe2 = glm::transpose(keyframe2);
-
-			float t = CurTotalTime / singleFrameTime;
-
-
-
 			glm::mat4 keyFrameLerped;
 
-			glm::quat key1Rot = glm::quat_cast(keyframe1);
-			glm::quat key2Rot = glm::quat_cast(keyframe2);
+			if (Anim0)
+			{
+				FbxAMatrix keyMat = mySkeles[0].mJoints[k].mAnimation[cur0]->mGlobalTransform;
 
-			glm::vec3 key1Pos = glm::vec3(keyframe1[3][0], keyframe1[3][1], keyframe1[3][2]);
-			glm::vec3 key2Pos = glm::vec3(keyframe2[3][0], keyframe2[3][1], keyframe2[3][2]);
+				glm::mat4 keyframe1;
+				keyframe1[0] = glm::vec4(keyMat.mData[0][0], keyMat.mData[0][1], keyMat.mData[0][2], keyMat.mData[0][3]);
+				keyframe1[1] = glm::vec4(keyMat.mData[1][0], keyMat.mData[1][1], keyMat.mData[1][2], keyMat.mData[1][3]);
+				keyframe1[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
+				keyframe1[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
 
-			glm::vec3 key1Scale;
-			key1Scale[0] = glm::length(glm::vec3(keyframe1[0][0], keyframe1[1][0], keyframe1[2][0]));
-			key1Scale[1] = glm::length(glm::vec3(keyframe1[0][1], keyframe1[1][1], keyframe1[2][1]));
-			key1Scale[2] = glm::length(glm::vec3(keyframe1[0][2], keyframe1[1][2], keyframe1[2][2]));
+				FbxAMatrix keyMat2 = mySkeles[0].mJoints[k].mAnimation[next0]->mGlobalTransform;
 
-			glm::vec3 key2Scale;
-			key2Scale[0] = glm::length(glm::vec3(keyframe2[0][0], keyframe2[1][0], keyframe2[2][0]));
-			key2Scale[1] = glm::length(glm::vec3(keyframe2[0][1], keyframe2[1][1], keyframe2[2][1]));
-			key2Scale[2] = glm::length(glm::vec3(keyframe2[0][2], keyframe2[1][2], keyframe2[2][2]));
+				glm::mat4 keyframe2;
+				keyframe2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
+				keyframe2[1] = glm::vec4(keyMat2.mData[1][0], keyMat2.mData[1][1], keyMat2.mData[1][2], keyMat2.mData[1][3]);
+				keyframe2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
+				keyframe2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
 
-
-			glm::quat slerpRot = glm::slerp(key1Rot, key2Rot, t);
-			glm::vec3 lerpPos = glm::lerp(key1Pos, key2Pos, t);
-			glm::vec3 lerpScale = glm::lerp(key1Scale, key2Scale, t);
-
+				float t = CurTotalTime / singleFrameTime;
 
 
-			//glm::mat4 identityMat = glm::mat4(1.0f);
+				keyFrameLerped = combineMat4(keyframe1, keyframe2, t);
+			}
 
-			glm::mat4 rotMatrix = glm::mat4_cast(slerpRot);
-			rotMatrix[3] = glm::vec4(lerpPos, 1.0f);
-			//glm::mat4 transMatrix = glm::translate(identityMat, lerpPos);
-			//
-			//glm::mat4 scaleMatrix = glm::scale(identityMat, lerpScale);
+			if (Anim1)
+			{
+				FbxAMatrix keyMat = mySkeles[1].mJoints[k].mAnimation[cur1]->mGlobalTransform;
+
+				glm::mat4 keyframe1;
+				keyframe1[0] = glm::vec4(keyMat.mData[0][0], keyMat.mData[0][1], keyMat.mData[0][2], keyMat.mData[0][3]);
+				keyframe1[1] = glm::vec4(keyMat.mData[1][0], keyMat.mData[1][1], keyMat.mData[1][2], keyMat.mData[1][3]);
+				keyframe1[2] = glm::vec4(keyMat.mData[2][0], keyMat.mData[2][1], keyMat.mData[2][2], keyMat.mData[2][3]);
+				keyframe1[3] = glm::vec4(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2], keyMat.mData[3][3]);
+
+				FbxAMatrix keyMat2 = mySkeles[1].mJoints[k].mAnimation[next1]->mGlobalTransform;
+
+				glm::mat4 keyframe2;
+				keyframe2[0] = glm::vec4(keyMat2.mData[0][0], keyMat2.mData[0][1], keyMat2.mData[0][2], keyMat2.mData[0][3]);
+				keyframe2[1] = glm::vec4(keyMat2.mData[1][0], keyMat2.mData[1][1], keyMat2.mData[1][2], keyMat2.mData[1][3]);
+				keyframe2[2] = glm::vec4(keyMat2.mData[2][0], keyMat2.mData[2][1], keyMat2.mData[2][2], keyMat2.mData[2][3]);
+				keyframe2[3] = glm::vec4(keyMat2.mData[3][0], keyMat2.mData[3][1], keyMat2.mData[3][2], keyMat2.mData[3][3]);
+
+				float t = CurTotalTime1 / singleFrameTime1;
 
 
-			keyFrameLerped = rotMatrix;//scaleMatrix * rotMatrix * transMatrix;
+				if (!Anim0)
+				{
+					keyFrameLerped = combineMat4(keyframe1, keyframe2, t);
+				}
+				else
+				{
+					glm::mat4 SecondAnim = combineMat4(keyframe1, keyframe2, t);
+					keyFrameLerped = combineMat4(keyFrameLerped, SecondAnim, t);
+				}
 
-			//keyFrameLerped =(1-t) * keyframe1 + t * keyframe2 ;
+			}
+			
 
 			glm::mat4 finalOffset = keyFrameLerped * curBoneOffset;
 
@@ -478,17 +477,9 @@ void Mesh::setActive() {
 			boneOffsets.push_back(finalOffset);
 
 
-			//std::string uniqueName = "jointSphere";
-			//uniqueName.append(std::to_string(k));
-
-			//m_entityManager->findEntity(uniqueName.c_str())->getTransform()->setPosition(glm::vec3(keyMat.mData[3][0], keyMat.mData[3][1], keyMat.mData[3][2]));
+			//keyFrameLerped =(1-t) * keyframe1 + t * keyframe2; //Simple lerp, not good for animation with rotations
 		}
 
-
-		//unsigned int location = glGetUniformLocation(6, "BoneOffset");
-		//
-		//
-		//glUniformMatrix4fv(location, boneOffsets.size(), GL_FALSE, glm::value_ptr(boneOffsets[0]));
 
 		std::vector< glm::vec3 > final_vertices;
 		std::vector< glm::vec3 > final_normals;
@@ -542,4 +533,33 @@ void Mesh::setAnimator(Animation * theAnimator)
 bool Mesh::isAnimated()
 {
 	return myAnimation->isAnimated();
+}
+
+glm::mat4 Mesh::combineMat4(glm::mat4 matrix1, glm::mat4 matrix2, float t)
+{
+	glm::quat key1Rot = glm::quat_cast(matrix1);
+	glm::quat key2Rot = glm::quat_cast(matrix2);
+
+	glm::vec3 key1Pos = glm::vec3(matrix1[3][0], matrix1[3][1], matrix1[3][2]);
+	glm::vec3 key2Pos = glm::vec3(matrix2[3][0], matrix2[3][1], matrix2[3][2]);
+
+	glm::vec3 key1Scale;
+	key1Scale[0] = glm::length(glm::vec3(matrix1[0][0], matrix1[1][0], matrix1[2][0]));
+	key1Scale[1] = glm::length(glm::vec3(matrix1[0][1], matrix1[1][1], matrix1[2][1]));
+	key1Scale[2] = glm::length(glm::vec3(matrix1[0][2], matrix1[1][2], matrix1[2][2]));
+
+	glm::vec3 key2Scale;
+	key2Scale[0] = glm::length(glm::vec3(matrix2[0][0], matrix2[1][0], matrix2[2][0]));
+	key2Scale[1] = glm::length(glm::vec3(matrix2[0][1], matrix2[1][1], matrix2[2][1]));
+	key2Scale[2] = glm::length(glm::vec3(matrix2[0][2], matrix2[1][2], matrix2[2][2]));
+
+
+	glm::quat slerpRot = glm::slerp(key1Rot, key2Rot, t);
+	glm::vec3 lerpPos = glm::lerp(key1Pos, key2Pos, t);
+	glm::vec3 lerpScale = glm::lerp(key1Scale, key2Scale, t);
+
+	glm::mat4 rotMatrix = glm::mat4_cast(slerpRot);
+	rotMatrix[3] = glm::vec4(lerpPos, 1.0f);
+
+	return rotMatrix;
 }
