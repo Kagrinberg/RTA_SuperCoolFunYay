@@ -6,6 +6,7 @@
 #include "glm/gtx/compatibility.hpp"
 #include <GLFW\glfw3.h>
 
+
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
 bool Mesh::LoadEntry(const char * path) {
@@ -28,7 +29,8 @@ Mesh::~Mesh() {
 void Mesh::GenerateIndices() {
 	std::map<PackedVertex, unsigned int> VertexToOutIndex;
 
-	for (unsigned int i = 0; i < vertices.size(); i++) {
+	size_t vertSize = vertices.size();
+	for (unsigned int i = 0; i < vertSize; i++) {
 		PackedVertex packed;
 		if (biTangents.size() != 0) {
 			packed = { vertices[i], uvs[i], normals[i], biTangents[i] };
@@ -55,11 +57,7 @@ void Mesh::GenerateIndices() {
 			indices.push_back(newindex);
 			VertexToOutIndex[packed] = newindex;
 		}
-
 	}
-
-
-
 }
 
 void Mesh::GenerateBuffers() {
@@ -116,8 +114,8 @@ void Mesh::GenerateBuffers() {
 
 
 
-
-		for (unsigned int i = 0; i < indexed_controlPoints.size(); i++)
+		size_t controlPointSize = indexed_controlPoints.size();
+		for (unsigned int i = 0; i < controlPointSize; i++)
 		{
 			CtrlPoint * temp = controlMap[indexed_controlPoints[i]];
 
@@ -260,20 +258,19 @@ bool Mesh::LoadMesh(FbxScene* scene)
 			}
 		}
 
-
-
-		for (int i = 0; i < fnormals.Size(); i++) {
+		size_t normalsSize = fnormals.Size();
+		for (size_t i = 0; i < normalsSize; i++) {
 
 			glm::vec3 normal = glm::vec3(fnormals[i][0], fnormals[i][1], fnormals[i][2]);
 			normals.push_back(normal);
 		}
 
-		for (int i = 0; i < fuvs.Size(); i++) {
+		size_t uvsSize = fuvs.Size();
+		for (size_t i = 0; i < uvsSize; i++) {
 
 			glm::vec2 uv = glm::vec2(fuvs[i][0], fuvs[i][1]);
 			uvs.push_back(uv);
 		}
-
 	}
 
 	GenerateIndices();
@@ -303,7 +300,9 @@ void Mesh::setActive() {
 
 		if (GetAsyncKeyState('P'))
 		{
-			m_entityManager->findEntity("Mage")->getTransform()->RotateY(1);
+			Entity* mage = m_entityManager->findEntity("FBXTest");
+			Transform* tranform = mage->getTransform();
+			tranform->RotateY(1);
 		}
 
 		if (GetAsyncKeyState(VK_SPACE))
@@ -316,7 +315,6 @@ void Mesh::setActive() {
 				}
 				keyPress = true;
 			}
-
 		}
 		else
 		{
@@ -397,8 +395,8 @@ void Mesh::setActive() {
 			mySkeles[1] = myAnimations[1]->getSkele();
 		}
 
-
-		for (unsigned int k = 0; k < mySkeles[0].mJoints.size(); k++)
+		size_t mySkelesSize = mySkeles[0].mJoints.size();
+		for (unsigned int k = 0; k < mySkelesSize; k++)
 		{
 
 			FbxAMatrix BindposeInverse = mySkeles[0].mJoints[k].mGlobalBindposeInverse;
@@ -485,7 +483,8 @@ void Mesh::setActive() {
 		std::vector< glm::vec3 > final_normals;
 
 		int indiciesIndex = 0;
-		for (unsigned int i = 0; i < indexed_vertices.size(); i++)
+		size_t indexedVertSize = indexed_vertices.size();
+		for (unsigned int i = 0; i < indexedVertSize; i++)
 		{
 
 			glm::vec4 curPosition = glm::vec4(indexed_vertices[i], 1) * boneOffsets[boneIndicies[indiciesIndex]] * boneWeights[indiciesIndex];
@@ -505,7 +504,7 @@ void Mesh::setActive() {
 			indiciesIndex += 4;
 		}
 
-		unsigned int vertices_size = indexed_vertices.size() * sizeof(float);
+		unsigned int vertices_size = indexedVertSize * sizeof(float);
 		unsigned int normalOffset = 3 * vertices_size;
 
 		glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * vertices_size, &final_vertices[0]);

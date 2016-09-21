@@ -33,7 +33,8 @@ void Animation::setScene(FbxScene* inFBXScene)
 
 int Animation::getJoint(std::string jName)
 {
-	for (unsigned int i = 0; i < mSkeleton.mJoints.size(); i++)
+	size_t skeleJointSize = mSkeleton.mJoints.size();
+	for (unsigned int i = 0; i < skeleJointSize; i++)
 	{
 		if (mSkeleton.mJoints[i].mName == jName)
 		{
@@ -205,9 +206,10 @@ void Animation::createWeights()
 
 		//loop thru joints
 
-
-		for (unsigned int curJoint = 0; curJoint < mSkeleton.mJoints.size(); curJoint++)
+		size_t skellyJointSize = mSkeleton.mJoints.size();
+		for (unsigned int curJoint = 0; curJoint < skellyJointSize; curJoint++)
 		{
+
 			if (0 == mSkeleton.mJoints[curJoint].mAnimation.size())
 			{
 				mSkeleton.mJoints[curJoint].mGlobalBindposeInverse.SetIdentity();
