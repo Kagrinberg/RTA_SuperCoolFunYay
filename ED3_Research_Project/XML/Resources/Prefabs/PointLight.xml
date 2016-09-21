@@ -65,9 +65,9 @@
 			</Ambient>
 
 			<Diffuse>
-				<X>0.9</X>
-				<Y>0.9</Y>
-				<Z>0.7</Z>
+				<X>1</X>
+				<Y>1</Y>
+				<Z>1</Z>
 			</Diffuse>
 
 			<Specular>

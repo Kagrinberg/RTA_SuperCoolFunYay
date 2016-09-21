@@ -321,37 +321,10 @@ void Mesh::setActive() {
 			keyPress = false;
 		}
 
-		if (Anim1)
+		if (Anim1 && cur1 == myAnimations[1]->getAniLength() - 1)
 		{
-			singleFrameTime1 = static_cast<float>(1.0f / myAnimations[1]->getAniLength());
-			float deltaTime1 = static_cast<float>(glfwGetTime()) - lastTime1;
-			lastTime1 = static_cast<float>(glfwGetTime());
-			CurTotalTime1 += deltaTime1;
-
-			if (CurTotalTime1 > singleFrameTime1)
-			{
-				cur1++;
-				CurTotalTime1 = 0.0f;
-			}
-
-			
-
-			if (cur1 > myAnimations[1]->getAniLength() - 1)
-			{
-				Anim1 = false;
-				cur1 = 0;
-			}
-			else if (cur1 == myAnimations[1]->getAniLength() - 1)
-			{
-				Anim0 = true;
-			}
-
-			next1 = cur1 + 1;
-
-			if (next1 > myAnimations[1]->getAniLength() - 1)
-			{
-				next1 = 0;
-			}
+			Anim0 = true;
+			lastTime = static_cast<float>(glfwGetTime());
 		}
 
 		if (Anim0)
@@ -385,6 +358,36 @@ void Mesh::setActive() {
 				next0 = 0;
 			}
 
+		}
+
+		if (Anim1)
+		{
+			singleFrameTime1 = static_cast<float>(1.0f / myAnimations[1]->getAniLength());
+			float deltaTime1 = static_cast<float>(glfwGetTime()) - lastTime1;
+			lastTime1 = static_cast<float>(glfwGetTime());
+			CurTotalTime1 += deltaTime1;
+
+			if (CurTotalTime1 > singleFrameTime1)
+			{
+				cur1++;
+				CurTotalTime1 = 0.0f;
+			}
+
+
+
+			if (cur1 > myAnimations[1]->getAniLength() - 1)
+			{
+				Anim1 = false;
+				cur1 = 0;
+			}
+			
+
+			next1 = cur1 + 1;
+
+			if (next1 > myAnimations[1]->getAniLength() - 1)
+			{
+				next1 = 0;
+			}
 		}
 		
 
